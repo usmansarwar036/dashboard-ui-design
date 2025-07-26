@@ -1,4 +1,24 @@
-import { ChartColumn, Home, NotepadText, Package, PackagePlus, Settings, ShoppingBag, UserCheck, UserPlus, Users } from "lucide-react";
+import {
+    Home,
+    ShieldCheck,
+    Wallet,
+    UserCircle,
+    RotateCcw,
+    Users,
+    UsersRound,
+    LogIn,
+    UserPlus,
+    KeyRound,
+    Bell,
+    Clock,
+    MailCheck,
+    Headphones,
+    LockKeyhole,
+    Banknote,
+    Coins,
+    Wrench,
+    Share2,
+} from "lucide-react";
 
 import ProfileImage from "@/assets/profile-image.jpg";
 import ProductImage from "@/assets/product-image.jpg";
@@ -13,64 +33,124 @@ export const navbarLinks = [
                 path: "/",
             },
             {
-                label: "Analytics",
-                icon: ChartColumn,
-                path: "/analytics",
+                label: "Profile",
+                icon: UserCircle,
+                path: "/profile",
             },
             {
-                label: "Reports",
-                icon: NotepadText,
-                path: "/reports",
+                label: "Notification",
+                icon: Bell,
+                path: "/notification",
+            },
+            {
+                label: "Activity Logs",
+                icon: Clock,
+                path: "/logs",
             },
         ],
     },
     {
-        title: "Customers",
+        title: "Credits",
         links: [
+            {
+                label: "Wallet",
+                icon: Banknote,
+                path: "/wallet",
+            },
+            {
+                label: "Deposit",
+                icon: Coins,
+                path: "/deposit",
+            },
+            {
+                label: "Manage",
+                icon: Wrench,
+                path: "/manage-credits",
+            },
+        ],
+    },
+    {
+        title: "Support",
+        links: [
+            {
+                label: "Tickets",
+                icon: Headphones,
+                path: "/tickets",
+            },
+        ],
+    },
+    {
+        title: "Earn",
+        links: [
+            {
+                label: "Invite Others",
+                icon: Share2,
+                path: "/invite",
+            },
+        ],
+    },
+    {
+        title: "Transactions",
+        links: [
+            {
+                label: "Transactions",
+                icon: Wallet,
+                path: "/transactions",
+            },
+            {
+                label: "Refunded",
+                icon: RotateCcw,
+                path: "/refunded",
+            },
+        ],
+    },
+    {
+        title: "Management",
+        links: [
+            {
+                label: "Members",
+                icon: Users,
+                path: "/members",
+            },
+            {
+                label: "Roles",
+                icon: ShieldCheck,
+                path: "/roles",
+            },
             {
                 label: "Customers",
-                icon: Users,
+                icon: UsersRound,
                 path: "/customers",
             },
+        ],
+    },
+    {
+        title: "Authentication",
+        links: [
             {
-                label: "New customer",
+                label: "Login",
+                icon: LogIn,
+                path: "/login",
+            },
+            {
+                label: "Register",
                 icon: UserPlus,
-                path: "/new-customer",
+                path: "/register",
             },
             {
-                label: "Verified customers",
-                icon: UserCheck,
-                path: "/verified-customers",
-            },
-        ],
-    },
-    {
-        title: "Products",
-        links: [
-            {
-                label: "Products",
-                icon: Package,
-                path: "/products",
+                label: "Forgot Password",
+                icon: KeyRound,
+                path: "/forgot-password",
             },
             {
-                label: "New product",
-                icon: PackagePlus,
-                path: "/new-product",
+                label: "Verify Email",
+                icon: MailCheck,
+                path: "/verify-email",
             },
             {
-                label: "Inventory",
-                icon: ShoppingBag,
-                path: "/inventory",
-            },
-        ],
-    },
-    {
-        title: "Settings",
-        links: [
-            {
-                label: "Settings",
-                icon: Settings,
-                path: "/settings",
+                label: "Profile Lock",
+                icon: LockKeyhole,
+                path: "/profile-lock",
             },
         ],
     },

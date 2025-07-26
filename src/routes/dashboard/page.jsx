@@ -6,7 +6,7 @@ import { overviewData, recentSalesData, topProducts } from "@/constants";
 
 import { Footer } from "@/layouts/footer";
 
-import { CreditCard, DollarSign, Package, PencilLine, Star, Trash, TrendingUp, Users } from "lucide-react";
+import { CreditCard, DollarSign, Package, PencilLine, Star, Trash, TrendingUp, TrendingDown, Users } from "lucide-react";
 
 const DashboardPage = () => {
     const { theme } = useTheme();
@@ -15,71 +15,82 @@ const DashboardPage = () => {
         <div className="flex flex-col gap-y-4">
             <h1 className="title">Dashboard</h1>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                <div className="card">
-                    <div className="card-header">
-                        <div className="w-fit rounded-lg bg-blue-500/20 p-2 text-blue-500 transition-colors dark:bg-blue-600/20 dark:text-blue-600">
-                            <Package size={26} />
-                        </div>
-                        <p className="card-title">Total Products</p>
+                {/* Total Products */}
+                <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-slate-900 md:p-6">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gray-100 dark:bg-gray-800 dark:text-gray-400">
+                        <Package size={20} />
                     </div>
-                    <div className="card-body bg-slate-100 transition-colors dark:bg-slate-950">
-                        <p className="text-3xl font-bold text-slate-900 transition-colors dark:text-slate-50">25,154</p>
-                        <span className="flex w-fit items-center gap-x-2 rounded-full border border-blue-500 px-2 py-1 font-medium text-blue-500 dark:border-blue-600 dark:text-blue-600">
+
+                    <div className="mt-5 flex items-end justify-between">
+                        <div>
+                            <span className="text-sm text-gray-500 dark:text-gray-400">Total Products</span>
+                            <h4 className="mt-2 text-[30px] font-bold text-gray-800 dark:text-white/90">3,782</h4>
+                        </div>
+                        <span className="flex items-center gap-1 rounded-full bg-green-50 py-0.5 pl-2 pr-2.5 text-sm font-medium text-green-600 dark:bg-green-500/15 dark:text-green-500">
                             <TrendingUp size={18} />
-                            25%
+                            11.01%
                         </span>
                     </div>
                 </div>
-                <div className="card">
-                    <div className="card-header">
-                        <div className="rounded-lg bg-blue-500/20 p-2 text-blue-500 transition-colors dark:bg-blue-600/20 dark:text-blue-600">
-                            <DollarSign size={26} />
-                        </div>
-                        <p className="card-title">Total Paid Orders</p>
+
+                {/* Total Paid Orders */}
+                <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-slate-900 md:p-6">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gray-100 dark:bg-gray-800 dark:text-gray-400">
+                        <DollarSign size={20} />
                     </div>
-                    <div className="card-body bg-slate-100 transition-colors dark:bg-slate-950">
-                        <p className="text-3xl font-bold text-slate-900 transition-colors dark:text-slate-50">$16,000</p>
-                        <span className="flex w-fit items-center gap-x-2 rounded-full border border-blue-500 px-2 py-1 font-medium text-blue-500 dark:border-blue-600 dark:text-blue-600">
+
+                    <div className="mt-5 flex items-end justify-between">
+                        <div>
+                            <span className="text-sm text-gray-500 dark:text-gray-400">Total Paid Orders</span>
+                            <h4 className="mt-2 text-[30px] font-bold text-gray-800 dark:text-white/90">$16,000</h4>
+                        </div>
+                        <span className="flex items-center gap-1 rounded-full bg-green-50 py-0.5 pl-2 pr-2.5 text-sm font-medium text-green-600 dark:bg-green-500/15 dark:text-green-500">
                             <TrendingUp size={18} />
                             12%
                         </span>
                     </div>
                 </div>
-                <div className="card">
-                    <div className="card-header">
-                        <div className="rounded-lg bg-blue-500/20 p-2 text-blue-500 transition-colors dark:bg-blue-600/20 dark:text-blue-600">
-                            <Users size={26} />
-                        </div>
-                        <p className="card-title">Total Customers</p>
+
+                {/* Total Customers */}
+                <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-slate-900 md:p-6">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gray-100 dark:bg-gray-800 dark:text-gray-400">
+                        <Users size={20} />
                     </div>
-                    <div className="card-body bg-slate-100 transition-colors dark:bg-slate-950">
-                        <p className="text-3xl font-bold text-slate-900 transition-colors dark:text-slate-50">15,400k</p>
-                        <span className="flex w-fit items-center gap-x-2 rounded-full border border-blue-500 px-2 py-1 font-medium text-blue-500 dark:border-blue-600 dark:text-blue-600">
-                            <TrendingUp size={18} />
+
+                    <div className="mt-5 flex items-end justify-between">
+                        <div>
+                            <span className="text-sm text-gray-500 dark:text-gray-400">Total Customers</span>
+                            <h4 className="mt-2 text-[30px] font-bold text-gray-800 dark:text-white/90">15,400k</h4>
+                        </div>
+                        <span className="flex items-center gap-1 rounded-full bg-red-50 py-0.5 pl-2 pr-2.5 text-sm font-medium text-red-600 dark:bg-red-500/15 dark:text-red-500">
+                            <TrendingDown size={18} />
                             15%
                         </span>
                     </div>
                 </div>
-                <div className="card">
-                    <div className="card-header">
-                        <div className="rounded-lg bg-blue-500/20 p-2 text-blue-500 transition-colors dark:bg-blue-600/20 dark:text-blue-600">
-                            <CreditCard size={26} />
-                        </div>
-                        <p className="card-title">Sales</p>
+
+                {/* Sales */}
+                <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-slate-900 md:p-6">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gray-100 dark:bg-gray-800 dark:text-gray-400">
+                        <CreditCard size={20} />
                     </div>
-                    <div className="card-body bg-slate-100 transition-colors dark:bg-slate-950">
-                        <p className="text-3xl font-bold text-slate-900 transition-colors dark:text-slate-50">12,340</p>
-                        <span className="flex w-fit items-center gap-x-2 rounded-full border border-blue-500 px-2 py-1 font-medium text-blue-500 dark:border-blue-600 dark:text-blue-600">
-                            <TrendingUp size={18} />
+
+                    <div className="mt-5 flex items-end justify-between">
+                        <div>
+                            <span className="text-sm text-gray-500 dark:text-gray-400">Sales</span>
+                            <h4 className="mt-2 text-[30px] font-bold text-gray-800 dark:text-white/90">12,340</h4>
+                        </div>
+                        <span className="flex items-center gap-1 rounded-full bg-red-50 py-0.5 pl-2 pr-2.5 text-sm font-medium text-red-600 dark:bg-red-500/15 dark:text-red-500">
+                            <TrendingDown size={18} />
                             19%
                         </span>
                     </div>
                 </div>
             </div>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-7">
-                <div className="card col-span-1 md:col-span-2 lg:col-span-4">
+                <div className="card col-span-1 rounded-2xl md:col-span-2 lg:col-span-4">
                     <div className="card-header">
-                        <p className="card-title">Overview</p>
+                        <p className="card-title text-lg font-extrabold">Monthly Sales</p>
                     </div>
                     <div className="card-body p-0">
                         <ResponsiveContainer
@@ -237,7 +248,6 @@ const DashboardPage = () => {
                     </div>
                 </div>
             </div>
-            <Footer />
         </div>
     );
 };
