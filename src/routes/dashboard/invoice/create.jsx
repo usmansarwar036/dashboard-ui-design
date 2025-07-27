@@ -64,7 +64,7 @@ export default function CreateInvoicePage() {
                 ].map((f) => (
                     <div
                         key={f.name}
-                        className="my-4 w-full px-2 lg:w-1/2"
+                        className="my-2 w-full px-2 lg:w-1/2"
                     >
                         <label className="mb-1 block text-sm font-medium capitalize text-gray-700 dark:text-gray-400">{f.label}</label>
                         <input
@@ -79,7 +79,7 @@ export default function CreateInvoicePage() {
                 ))}
 
                 {/* Payment Condition */}
-                <div className="my-4 w-full px-2 lg:w-1/2">
+                <div className="my-2 w-full px-2 lg:w-1/2">
                     <label className="mb-1 block text-sm font-medium capitalize text-gray-700 dark:text-gray-400">Payment Condition</label>
                     <select
                         name="paymentCondition"
@@ -96,7 +96,7 @@ export default function CreateInvoicePage() {
                 </div>
 
                 {/* Currency */}
-                <div className="my-4 w-full px-2 lg:w-1/2">
+                <div className="my-2 w-full px-2 lg:w-1/2">
                     <label className="mb-1 block text-sm font-medium capitalize text-gray-700 dark:text-gray-400">Currency</label>
                     <select
                         name="currency"
@@ -110,7 +110,7 @@ export default function CreateInvoicePage() {
                 </div>
 
                 {/* Rich Text */}
-                <div className="my-4 w-full px-2">
+                <div className="my-2 w-full px-2">
                     <label className="mb-1 block text-sm font-medium capitalize text-gray-700 dark:text-gray-400">Additional Note</label>
                     <ReactQuill
                         theme="snow"
