@@ -18,6 +18,7 @@ import {
     Coins,
     Wrench,
     Share2,
+    FileText,
 } from "lucide-react";
 
 import ProfileImage from "@/assets/profile-image.jpg";
@@ -101,6 +102,11 @@ export const navbarLinks = [
                 label: "Refunded",
                 icon: RotateCcw,
                 path: "/refunded",
+            },
+            {
+                label: "Invoices",
+                icon: FileText,
+                path: "/invoices",
             },
         ],
     },

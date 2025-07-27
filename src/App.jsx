@@ -26,6 +26,8 @@ import WalletPage from "./routes/dashboard/management/wallet";
 import ManageCreditsPage from "./routes/dashboard/management/manage-credits";
 import DepositPage from "./routes/dashboard/management/deposit";
 import InvitePage from "./routes/dashboard/earn/invite";
+import InvoicesPage from "./routes/dashboard/invoice/invoices";
+import CreateInvoicePage from "./routes/dashboard/invoice/create";
 
 function App() {
     const router = createBrowserRouter([
@@ -46,6 +48,8 @@ function App() {
                 { path: "deposit", element: <DepositPage /> },
                 { path: "manage-credits", element: <ManageCreditsPage /> },
                 { path: "invite", element: <InvitePage /> },
+                { path: "invoices", element: <InvoicesPage /> },
+                { path: "invoices/create", element: <CreateInvoicePage /> },
 
                 {
                     path: "roles",
