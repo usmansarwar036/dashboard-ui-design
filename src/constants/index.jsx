@@ -19,6 +19,7 @@ import {
     Wrench,
     Share2,
     FileText,
+    Plane,
 } from "lucide-react";
 
 import ProfileImage from "@/assets/profile-image.jpg";
@@ -47,6 +48,16 @@ export const navbarLinks = [
                 label: "Activity Logs",
                 icon: Clock,
                 path: "/logs",
+            },
+        ],
+    },
+    {
+        title: "Bookings",
+        links: [
+            {
+                label: "Flight",
+                icon: Plane,
+                path: "/bookings/flights",
             },
         ],
     },

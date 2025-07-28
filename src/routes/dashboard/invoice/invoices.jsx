@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { TrendingUp, TrendingDown, Clock4, CheckCircle2, XCircle } from "lucide-react";
+import { TrendingUp, TrendingDown, Clock4, CheckCircle2, XCircle, Eye } from "lucide-react";
 import { Link } from "react-router-dom";
 
 export default function InvoicesPage() {
@@ -122,6 +122,7 @@ export default function InvoicesPage() {
                             <th className="px-4 py-3">Due Date</th>
                             <th className="px-4 py-3">Amount</th>
                             <th className="px-4 py-3">Status</th>
+                            <th className="px-4 py-3">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -150,6 +151,13 @@ export default function InvoicesPage() {
                                 <td className="px-4 py-3 font-semibold">${inv.amount}</td>
                                 <td className="px-4 py-3">
                                     <span className={`rounded-full px-3 py-1 text-xs font-medium capitalize ${badge[inv.status]}`}>{inv.status}</span>
+                                </td>
+                                <td className="px-4 py-3 text-center">
+                                    <a href="/invoices/details">
+                                        <button className="rounded-lg p-2 text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800">
+                                            <Eye size={18} />
+                                        </button>
+                                    </a>
                                 </td>
                             </tr>
                         ))}

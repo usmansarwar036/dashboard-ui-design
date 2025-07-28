@@ -28,6 +28,8 @@ import DepositPage from "./routes/dashboard/management/deposit";
 import InvitePage from "./routes/dashboard/earn/invite";
 import InvoicesPage from "./routes/dashboard/invoice/invoices";
 import CreateInvoicePage from "./routes/dashboard/invoice/create";
+import FlightBookingsPage from "./routes/dashboard/bookings/flights";
+import InvoiceDetailsPage from "./routes/dashboard/invoice/details";
 
 function App() {
     const router = createBrowserRouter([
@@ -50,6 +52,8 @@ function App() {
                 { path: "invite", element: <InvitePage /> },
                 { path: "invoices", element: <InvoicesPage /> },
                 { path: "invoices/create", element: <CreateInvoicePage /> },
+                { path: "invoices/details", element: <InvoiceDetailsPage /> },
+                { path: "bookings/flights", element: <FlightBookingsPage /> },
 
                 {
                     path: "roles",
