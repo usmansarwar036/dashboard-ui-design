@@ -52,7 +52,7 @@ function App() {
                 { path: "invite", element: <InvitePage /> },
                 { path: "invoices", element: <InvoicesPage /> },
                 { path: "invoices/create", element: <CreateInvoicePage /> },
-                { path: "invoices/details", element: <InvoiceDetailsPage /> },
+                { path: "invoices-details", element: <InvoiceDetailsPage /> },
                 { path: "bookings/flights", element: <FlightBookingsPage /> },
 
                 {
