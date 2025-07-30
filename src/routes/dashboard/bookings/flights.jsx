@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Plane, Filter, X } from "lucide-react";
 import { Range } from "react-range";
 import { useState, useMemo } from "react";
+import { parse, isAfter, isBefore, format } from "date-fns";
 
 export default function FlightBookingsPage() {
     const flights = [
@@ -9,7 +10,8 @@ export default function FlightBookingsPage() {
             id: 1,
             airline: "Japan Airlines",
             logo: "https://placehold.co/32x32?text=JA",
-            date: "Thu, Dec 21 2023",
+            date: "2023-12-21",
+            bookedOn: "2023-12-20",
             from: { city: "New York", time: "09:40", code: "LGA" },
             to: { city: "Tokyo", time: "17:00", code: "HND" },
             duration: "7h 20m",
@@ -28,7 +30,8 @@ export default function FlightBookingsPage() {
             id: 2,
             airline: "Qatar Airways",
             logo: "https://placehold.co/32x32?text=QA",
-            date: "Fri, Jan 05 2024",
+            date: "2024-05-21",
+            bookedOn: "2023-12-20",
             from: { city: "Lahore", time: "02:30", code: "LHE" },
             to: { city: "Doha", time: "05:00", code: "DOH" },
             duration: "3h 30m",
@@ -47,7 +50,8 @@ export default function FlightBookingsPage() {
             id: 3,
             airline: "Emirates",
             logo: "https://placehold.co/32x32?text=EK",
-            date: "Mon, Feb 12 2024",
+            date: "2024-02-21",
+            bookedOn: "2023-12-20",
             from: { city: "Dubai", time: "06:45", code: "DXB" },
             to: { city: "London", time: "11:20", code: "LHR" },
             duration: "7h 35m",
@@ -66,7 +70,8 @@ export default function FlightBookingsPage() {
             id: 4,
             airline: "United Airlines",
             logo: "https://placehold.co/32x32?text=UA",
-            date: "Mon, Feb 12 2024",
+            date: "2024-02-10",
+            bookedOn: "2023-12-20",
             from: { city: "Dubai", time: "10:00", code: "DXB" },
             to: { city: "London", time: "18:00", code: "LHR" },
             duration: "8h 00m",
@@ -231,12 +236,10 @@ export default function FlightBookingsPage() {
 }
 function FlightFilter({ flights, onApply }) {
     const STEP = 1;
+
     const airlinesList = [...new Set(flights.map((f) => f.airline))];
-
     const amenitiesList = [...new Set(flights.flatMap((f) => f.amenities || []))];
-
     const cabinClasses = [...new Set(flights.map((f) => f.cabinClass))];
-
     const preferences = [...new Set(flights.flatMap((f) => f.preferences || []))];
 
     const refundOptions = [
@@ -245,7 +248,6 @@ function FlightFilter({ flights, onApply }) {
     ].filter(Boolean);
 
     const stopOptions = [...new Set(flights.map((f) => f.type))];
-
     const timeOptions = ["00:00 - 06:00", "06:00 - 12:00", "12:00 - 18:00", "18:00 - 00:00"];
 
     const prices = flights.map((f) => f.price);
@@ -262,6 +264,7 @@ function FlightFilter({ flights, onApply }) {
     const DURATION_MAX = Math.ceil(Math.max(...durations));
 
     const [open, setOpen] = useState(false);
+
     const [selectedAirlines, setSelectedAirlines] = useState([]);
     const [selectedAmenities, setSelectedAmenities] = useState([]);
     const [selectedCabins, setSelectedCabins] = useState([]);
@@ -277,6 +280,18 @@ function FlightFilter({ flights, onApply }) {
         setter((prev) => (prev.includes(item) ? prev.filter((i) => i !== item) : [...prev, item]));
     };
 
+    const flightDates = flights.map((f) => new Date(f.date));
+    const bookedDates = flights.map((f) => new Date(f.bookedOn));
+
+    const MIN_FLIGHT_DATE = format(new Date(Math.min(...flightDates)), "yyyy-MM-dd");
+    const MAX_DATE = format(new Date(), "yyyy-MM-dd");
+    const MIN_BOOKED_DATE = format(new Date(Math.min(...bookedDates)), "yyyy-MM-dd");
+
+    const [flightDateFrom, setFlightDateFrom] = useState(MIN_FLIGHT_DATE);
+    const [flightDateTo, setFlightDateTo] = useState(MAX_DATE);
+    const [bookedDateFrom, setBookedDateFrom] = useState(MIN_BOOKED_DATE);
+    const [bookedDateTo, setBookedDateTo] = useState(MAX_DATE);
+
     const hasActiveFilters = useMemo(() => {
         return (
             [selectedAirlines, selectedAmenities, selectedCabins, selectedPrefs, selectedRefunds, stops, arrivalTime, departureTime].some(
@@ -289,30 +304,52 @@ function FlightFilter({ flights, onApply }) {
 
     const handleApply = () => {
         let filtered = [...flights];
+
         if (selectedAirlines.length) filtered = filtered.filter((f) => selectedAirlines.includes(f.airline));
         if (stops.length) filtered = filtered.filter((f) => stops.includes(f.type));
+
+        filtered = filtered.filter((f) => {
+            const flightD = new Date(f.date);
+            const from = new Date(flightDateFrom);
+            const to = new Date(flightDateTo);
+            return !isBefore(flightD, from) && !isAfter(flightD, to);
+        });
+
+        filtered = filtered.filter((f) => {
+            const booked = new Date(f.bookedOn);
+            const from = new Date(bookedDateFrom);
+            const to = new Date(bookedDateTo);
+            return !isBefore(booked, from) && !isAfter(booked, to);
+        });
+
         setOpen(false);
         if (onApply) onApply(filtered);
     };
 
     const renderCheckboxList = (label, items, selected, setter) => (
         <div>
-            <div className="mb-2 flex justify-between">
-                <span className="font-medium text-gray-700">{label}</span>
-                <div className="flex gap-2 text-xs text-blue-600">
-                    <button onClick={() => setter(items)}>Select All</button>
-                    <button onClick={() => setter([])}>Deselect All</button>
-                </div>
+            <div className="mb-2 flex items-center justify-between border-b py-3 text-base">
+                <span className="font-extrabold text-gray-700">{label}</span>
+                <label className="flex items-center gap-1 text-xs font-medium text-blue-600">
+                    <span className="mr-3 cursor-pointer"> Select All</span>
+                    <input
+                        type="checkbox"
+                        className="cursor-pointer"
+                        checked={selected.length === items.length}
+                        onChange={(e) => setter(e.target.checked ? items : [])}
+                    />
+                </label>
             </div>
             <div className="space-y-2">
                 {items.map((item) => (
                     <label
                         key={item}
-                        className="flex items-center justify-between rounded-lg border px-3 py-2"
+                        className="flex items-center justify-between py-3"
                     >
-                        <span className="text-gray-700">{item}</span>
+                        <span className="cursor-pointer text-gray-700">{item}</span>
                         <input
                             type="checkbox"
+                            className="cursor-pointer"
                             checked={selected.includes(item)}
                             onChange={() => toggleSelection(item, setter)}
                         />
@@ -324,7 +361,7 @@ function FlightFilter({ flights, onApply }) {
 
     const renderRangeSlider = (label, range, setRange, min, max, unit = "") => (
         <div>
-            <label className="mb-2 block text-gray-700">{label}</label>
+            <label className="block py-3 text-base font-extrabold text-gray-700">{label}</label>
             <div className="mb-1 flex justify-between text-gray-500">
                 <span>
                     {unit}
@@ -335,27 +372,29 @@ function FlightFilter({ flights, onApply }) {
                     {range[1]}
                 </span>
             </div>
-            <Range
-                step={STEP}
-                min={min}
-                max={max}
-                values={range}
-                onChange={setRange}
-                renderTrack={({ props, children }) => (
-                    <div
-                        {...props}
-                        className="h-2 w-full rounded-full bg-gray-200"
-                    >
-                        {children}
-                    </div>
-                )}
-                renderThumb={({ props }) => (
-                    <div
-                        {...props}
-                        className="h-5 w-5 rounded-full bg-blue-600"
-                    />
-                )}
-            />
+            <div className="p-2">
+                <Range
+                    step={STEP}
+                    min={min}
+                    max={max}
+                    values={range}
+                    onChange={setRange}
+                    renderTrack={({ props, children }) => (
+                        <div
+                            {...props}
+                            className="h-2 w-full rounded-full bg-gray-200"
+                        >
+                            {children}
+                        </div>
+                    )}
+                    renderThumb={({ props }) => (
+                        <div
+                            {...props}
+                            className="h-5 w-5 rounded-full bg-blue-600"
+                        />
+                    )}
+                />
+            </div>
         </div>
     );
 
@@ -371,7 +410,6 @@ function FlightFilter({ flights, onApply }) {
             {open && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 p-4 backdrop-blur">
                     <div className="max-h-[95%] w-full max-w-md overflow-auto rounded-2xl bg-white shadow-xl">
-                        {/* Header */}
                         <div className="sticky top-0 z-10 flex items-center justify-between border-b bg-white px-6 py-4">
                             <h2 className="text-lg font-semibold">Apply filters</h2>
                             <X
@@ -379,12 +417,54 @@ function FlightFilter({ flights, onApply }) {
                                 onClick={() => setOpen(false)}
                             />
                         </div>
-
-                        {/* Body */}
                         <div className="space-y-6 px-6 py-4 text-sm">
                             {renderRangeSlider("Price Range", priceRange, setPriceRange, PRICE_MIN, PRICE_MAX, "$")}
                             <div>
-                                <label className="mb-2 block text-gray-700">Number of Stops</label>
+                                <label className="block py-3 text-base font-extrabold text-gray-700">Flight Date</label>
+                                <div className="flex items-center gap-4">
+                                    <input
+                                        type="date"
+                                        className="w-full rounded border px-2 py-1 text-sm"
+                                        min={MIN_FLIGHT_DATE}
+                                        max={MAX_DATE}
+                                        value={flightDateFrom}
+                                        onChange={(e) => setFlightDateFrom(e.target.value)}
+                                    />
+                                    <span className="text-gray-500">to</span>
+                                    <input
+                                        type="date"
+                                        className="w-full rounded border px-2 py-1 text-sm"
+                                        min={MIN_FLIGHT_DATE}
+                                        max={MAX_DATE}
+                                        value={flightDateTo}
+                                        onChange={(e) => setFlightDateTo(e.target.value)}
+                                    />
+                                </div>
+                            </div>
+                            <div>
+                                <label className="block py-3 text-base font-extrabold text-gray-700">Booked On Date</label>
+                                <div className="flex items-center gap-4">
+                                    <input
+                                        type="date"
+                                        className="w-full rounded border px-2 py-1 text-sm"
+                                        min={MIN_BOOKED_DATE}
+                                        max={MAX_DATE}
+                                        value={bookedDateFrom}
+                                        onChange={(e) => setBookedDateFrom(e.target.value)}
+                                    />
+                                    <span className="text-gray-500">to</span>
+                                    <input
+                                        type="date"
+                                        className="w-full rounded border px-2 py-1 text-sm"
+                                        min={MIN_BOOKED_DATE}
+                                        max={MAX_DATE}
+                                        value={bookedDateTo}
+                                        onChange={(e) => setBookedDateTo(e.target.value)}
+                                    />
+                                </div>
+                            </div>
+                            <div>
+                                <label className="block py-3 text-base font-extrabold text-gray-700">Number of Stops</label>
                                 <div className="grid grid-cols-3 gap-2">
                                     {stopOptions.map((stop) => (
                                         <button
@@ -398,16 +478,14 @@ function FlightFilter({ flights, onApply }) {
                                 </div>
                             </div>
                             {renderRangeSlider("Flight Duration (hrs)", flightDuration, setFlightDuration, DURATION_MIN, DURATION_MAX)}
-
                             {renderCheckboxList("Airlines", airlinesList, selectedAirlines, setSelectedAirlines)}
                             {renderCheckboxList("Amenities", amenitiesList, selectedAmenities, setSelectedAmenities)}
                             {renderCheckboxList("Refund & Reschedule", refundOptions, selectedRefunds, setSelectedRefunds)}
                             {renderCheckboxList("Flight Preferences", preferences, selectedPrefs, setSelectedPrefs)}
                             {renderCheckboxList("Cabin Class", cabinClasses, selectedCabins, setSelectedCabins)}
 
-                            {/* Arrival & Departure Time */}
                             <div>
-                                <label className="mb-2 block text-gray-700">Arrival Time</label>
+                                <label className="block py-3 text-base font-extrabold text-gray-700">Arrival Time</label>
                                 <div className="grid grid-cols-2 gap-2">
                                     {timeOptions.map((opt) => (
                                         <button
@@ -421,7 +499,7 @@ function FlightFilter({ flights, onApply }) {
                                 </div>
                             </div>
                             <div>
-                                <label className="mb-2 block text-gray-700">Departure Time</label>
+                                <label className="block py-3 text-base font-extrabold text-gray-700">Departure Time</label>
                                 <div className="grid grid-cols-2 gap-2">
                                     {timeOptions.map((opt) => (
                                         <button
@@ -435,8 +513,6 @@ function FlightFilter({ flights, onApply }) {
                                 </div>
                             </div>
                         </div>
-
-                        {/* Footer */}
                         <div className="sticky bottom-0 flex justify-between border-t bg-white px-6 py-4">
                             <button
                                 onClick={() => {
