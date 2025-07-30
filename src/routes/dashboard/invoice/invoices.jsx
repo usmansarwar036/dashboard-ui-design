@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { TrendingUp, TrendingDown, Clock4, CheckCircle2, XCircle, Eye } from "lucide-react";
+import { TrendingDown, Clock4, CheckCircle2, XCircle, Eye } from "lucide-react";
 import { Link } from "react-router-dom";
 
 export default function InvoicesPage() {
@@ -153,11 +153,11 @@ export default function InvoicesPage() {
                                     <span className={`rounded-full px-3 py-1 text-xs font-medium capitalize ${badge[inv.status]}`}>{inv.status}</span>
                                 </td>
                                 <td className="px-4 py-3 text-center">
-                                    <a href="/invoices/details">
+                                    <Link to="/invoices/details">
                                         <button className="rounded-lg p-2 text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800">
                                             <Eye size={18} />
                                         </button>
-                                    </a>
+                                    </Link>
                                 </td>
                             </tr>
                         ))}
