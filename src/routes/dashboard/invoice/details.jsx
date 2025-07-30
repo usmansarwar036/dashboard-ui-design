@@ -3,7 +3,6 @@ import { User, CalendarDays, CreditCard, Wallet, CheckCircle, Clock } from "luci
 // updated
 
 export default function InvoiceDetailsPage() {
-    return "hello";
     const products = [
         {
             name: "Flowbite Developer Edition",
