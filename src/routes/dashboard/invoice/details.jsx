@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { User, CalendarDays, CreditCard, Wallet, CheckCircle, Clock } from "lucide-react";
+// updated
 
 export default function InvoiceDetailsPage() {
     const products = [
