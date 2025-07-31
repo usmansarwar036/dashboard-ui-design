@@ -20,6 +20,7 @@ import {
     Share2,
     FileText,
     Plane,
+    Car,
 } from "lucide-react";
 
 import ProfileImage from "@/assets/profile-image.jpg";
@@ -58,6 +59,11 @@ export const navbarLinks = [
                 label: "Flight",
                 icon: Plane,
                 path: "/bookings/flights",
+            },
+            {
+                label: "Transport",
+                icon: Car,
+                path: "/bookings/transport",
             },
         ],
     },

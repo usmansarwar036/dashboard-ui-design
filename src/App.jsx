@@ -30,6 +30,7 @@ import InvoicesPage from "./routes/dashboard/invoice/invoices";
 import CreateInvoicePage from "./routes/dashboard/invoice/create";
 import FlightBookingsPage from "./routes/dashboard/bookings/flights";
 import InvoiceDetailsPage from "./routes/dashboard/invoice/details";
+import TransportBookingsPage from "./routes/dashboard/bookings/transport";
 
 function App() {
     const router = createBrowserRouter([
@@ -54,6 +55,7 @@ function App() {
                 { path: "invoices/create", element: <CreateInvoicePage /> },
                 { path: "invoices/details", element: <InvoiceDetailsPage /> },
                 { path: "bookings/flights", element: <FlightBookingsPage /> },
+                { path: "bookings/transport", element: <TransportBookingsPage /> },
 
                 {
                     path: "roles",

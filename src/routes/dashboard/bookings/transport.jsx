@@ -4,9 +4,9 @@ import { isAfter, isBefore } from "date-fns";
 import { Range } from "react-range";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { Plane, Filter, X, LayoutGrid, List } from "lucide-react";
+import { CarFront, Users, Briefcase, Fuel, CircleDot, Star, Filter, X, LayoutGrid, List, Plane, Car } from "lucide-react";
 
-export default function FlightBookingsPage() {
+export default function TransportBookingsPage() {
     const flights = [
         {
             id: 1,
@@ -89,6 +89,288 @@ export default function FlightBookingsPage() {
             arrivalTime: "18:00",
         },
     ];
+    const transports = [
+        {
+            title: "Audi A5",
+            company: "Sixt",
+            logo: "https://i.ibb.co/QjHzhDqN/image-removebg-preview.png",
+            image: "https://i.ibb.co/QjHzhDqN/image-removebg-preview.png",
+            rating: 4.5,
+            details: {
+                type: "Medium",
+                capacity: 4,
+                bags: "2–3",
+                doors: 2,
+                fuel: "Gasoline",
+                transmission: "Automatic",
+            },
+            pickup: {
+                city: "Dubai",
+                date: "Mon, Dec 16",
+                time: "09:00 AM",
+                location: "DXB - Dubai International Airport",
+            },
+            dropoff: {
+                city: "Dubai",
+                date: "Fri, Dec 20",
+                time: "23:00 PM",
+                location: "DWC - Dubai World Central Airport",
+            },
+            duration: "5 Days",
+        },
+        {
+            title: "BMW 3 Series",
+            company: "Hertz",
+            logo: "https://i.ibb.co/QjHzhDqN/image-removebg-preview.png",
+            image: "https://i.ibb.co/QjHzhDqN/image-removebg-preview.png",
+            rating: 4.7,
+            details: {
+                type: "Sedan",
+                capacity: 5,
+                bags: "2",
+                doors: 4,
+                fuel: "Diesel",
+                transmission: "Manual",
+            },
+            pickup: {
+                city: "Berlin",
+                date: "Tue, Jan 10",
+                time: "10:00 AM",
+                location: "TXL - Berlin Tegel Airport",
+            },
+            dropoff: {
+                city: "Berlin",
+                date: "Sat, Jan 14",
+                time: "20:00 PM",
+                location: "TXL - Berlin Tegel Airport",
+            },
+            duration: "4 Days",
+        },
+        {
+            title: "Toyota Corolla",
+            company: "Avis",
+            logo: "https://i.ibb.co/QjHzhDqN/image-removebg-preview.png",
+            image: "https://i.ibb.co/QjHzhDqN/image-removebg-preview.png",
+            rating: 4.2,
+            details: {
+                type: "Economy",
+                capacity: 5,
+                bags: "2",
+                doors: 4,
+                fuel: "Gasoline",
+                transmission: "Automatic",
+            },
+            pickup: {
+                city: "New York",
+                date: "Mon, Feb 5",
+                time: "08:00 AM",
+                location: "JFK - John F. Kennedy Airport",
+            },
+            dropoff: {
+                city: "New York",
+                date: "Fri, Feb 9",
+                time: "22:00 PM",
+                location: "LGA - LaGuardia Airport",
+            },
+            duration: "5 Days",
+        },
+        {
+            title: "Mercedes C-Class",
+            company: "Enterprise",
+            logo: "https://i.ibb.co/QjHzhDqN/image-removebg-preview.png",
+            image: "https://i.ibb.co/QjHzhDqN/image-removebg-preview.png",
+            rating: 4.8,
+            details: {
+                type: "Luxury",
+                capacity: 5,
+                bags: "3",
+                doors: 4,
+                fuel: "Gasoline",
+                transmission: "Automatic",
+            },
+            pickup: {
+                city: "Paris",
+                date: "Fri, Mar 1",
+                time: "11:30 AM",
+                location: "CDG - Charles de Gaulle Airport",
+            },
+            dropoff: {
+                city: "Paris",
+                date: "Tue, Mar 5",
+                time: "19:00 PM",
+                location: "ORY - Orly Airport",
+            },
+            duration: "4 Days",
+        },
+        {
+            title: "Kia Sportage",
+            company: "Thrifty",
+            logo: "https://i.ibb.co/QjHzhDqN/image-removebg-preview.png",
+            image: "https://i.ibb.co/QjHzhDqN/image-removebg-preview.png",
+            rating: 4.3,
+            details: {
+                type: "SUV",
+                capacity: 5,
+                bags: "3",
+                doors: 4,
+                fuel: "Hybrid",
+                transmission: "Automatic",
+            },
+            pickup: {
+                city: "Istanbul",
+                date: "Sat, Apr 6",
+                time: "07:00 AM",
+                location: "IST - Istanbul Airport",
+            },
+            dropoff: {
+                city: "Istanbul",
+                date: "Wed, Apr 10",
+                time: "21:00 PM",
+                location: "SAW - Sabiha Gökçen Airport",
+            },
+            duration: "5 Days",
+        },
+        {
+            title: "Honda Civic",
+            company: "Budget",
+            logo: "https://i.ibb.co/QjHzhDqN/image-removebg-preview.png",
+            image: "https://i.ibb.co/QjHzhDqN/image-removebg-preview.png",
+            rating: 4.0,
+            details: {
+                type: "Compact",
+                capacity: 5,
+                bags: "2",
+                doors: 4,
+                fuel: "Gasoline",
+                transmission: "Manual",
+            },
+            pickup: {
+                city: "Toronto",
+                date: "Mon, May 15",
+                time: "09:30 AM",
+                location: "YYZ - Pearson Airport",
+            },
+            dropoff: {
+                city: "Toronto",
+                date: "Fri, May 19",
+                time: "18:00 PM",
+                location: "YYZ - Pearson Airport",
+            },
+            duration: "4 Days",
+        },
+        {
+            title: "Tesla Model 3",
+            company: "Sixt",
+            logo: "https://i.ibb.co/QjHzhDqN/image-removebg-preview.png",
+            image: "https://i.ibb.co/QjHzhDqN/image-removebg-preview.png",
+            rating: 4.9,
+            details: {
+                type: "Electric",
+                capacity: 5,
+                bags: "2",
+                doors: 4,
+                fuel: "Electric",
+                transmission: "Automatic",
+            },
+            pickup: {
+                city: "Los Angeles",
+                date: "Wed, Jun 20",
+                time: "10:00 AM",
+                location: "LAX - Los Angeles Airport",
+            },
+            dropoff: {
+                city: "San Francisco",
+                date: "Sun, Jun 24",
+                time: "20:00 PM",
+                location: "SFO - San Francisco Airport",
+            },
+            duration: "5 Days",
+        },
+        {
+            title: "Hyundai Elantra",
+            company: "Alamo",
+            logo: "https://i.ibb.co/QjHzhDqN/image-removebg-preview.png",
+            image: "https://i.ibb.co/QjHzhDqN/image-removebg-preview.png",
+            rating: 4.1,
+            details: {
+                type: "Standard",
+                capacity: 5,
+                bags: "2",
+                doors: 4,
+                fuel: "Gasoline",
+                transmission: "Automatic",
+            },
+            pickup: {
+                city: "Doha",
+                date: "Thu, Jul 11",
+                time: "08:00 AM",
+                location: "DOH - Hamad International Airport",
+            },
+            dropoff: {
+                city: "Doha",
+                date: "Mon, Jul 15",
+                time: "22:00 PM",
+                location: "DOH - Hamad International Airport",
+            },
+            duration: "5 Days",
+        },
+        {
+            title: "Ford Explorer",
+            company: "National",
+            logo: "https://i.ibb.co/QjHzhDqN/image-removebg-preview.png",
+            image: "https://i.ibb.co/QjHzhDqN/image-removebg-preview.png",
+            rating: 4.6,
+            details: {
+                type: "SUV",
+                capacity: 7,
+                bags: "4",
+                doors: 4,
+                fuel: "Gasoline",
+                transmission: "Automatic",
+            },
+            pickup: {
+                city: "Chicago",
+                date: "Sun, Aug 18",
+                time: "11:00 AM",
+                location: "ORD - O'Hare Airport",
+            },
+            dropoff: {
+                city: "Chicago",
+                date: "Fri, Aug 23",
+                time: "19:00 PM",
+                location: "MDW - Midway Airport",
+            },
+            duration: "6 Days",
+        },
+        {
+            title: "Chevrolet Malibu",
+            company: "Fox",
+            logo: "https://i.ibb.co/QjHzhDqN/image-removebg-preview.png",
+            image: "https://i.ibb.co/QjHzhDqN/image-removebg-preview.png",
+            rating: 4.0,
+            details: {
+                type: "Full Size",
+                capacity: 5,
+                bags: "3",
+                doors: 4,
+                fuel: "Gasoline",
+                transmission: "Automatic",
+            },
+            pickup: {
+                city: "Miami",
+                date: "Mon, Sep 9",
+                time: "07:30 AM",
+                location: "MIA - Miami International Airport",
+            },
+            dropoff: {
+                city: "Orlando",
+                date: "Fri, Sep 13",
+                time: "17:00 PM",
+                location: "MCO - Orlando International Airport",
+            },
+            duration: "5 Days",
+        },
+    ];
 
     const [filteredFlights, setFilteredFlights] = useState(flights);
     const [lgGridView, setLgGridView] = useState(true);
@@ -110,7 +392,7 @@ export default function FlightBookingsPage() {
         <div className="w-full">
             {/* Header */}
             <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03]">
-                <h2 className="text-xl font-semibold text-gray-800 dark:text-white/90">Flight Bookings</h2>
+                <h2 className="text-xl font-semibold text-gray-800 dark:text-white/90">Transport Bookings</h2>
                 <nav>
                     <ol className="flex items-center gap-1.5 text-sm">
                         <li className="text-gray-800 dark:text-white/90">
@@ -151,122 +433,158 @@ export default function FlightBookingsPage() {
 
             {/* Flight Cards */}
             <div className={`grid grid-cols-1 gap-6 ${lgGridView && "lg:grid-cols-2"}`}>
-                {paginatedFlights.map((flight) => (
+                {/* content start here */}
+                {transports.map((item, index) => (
                     <div
-                        key={flight.id}
-                        className="rounded-lg border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]"
+                        key={index}
+                        className="w-full rounded-xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-white/[0.03] dark:text-white"
                     >
-                        <div className="p-5">
-                            {/* Top Info */}
-                            <div className="mb-3 flex items-center justify-between border-b pb-3">
-                                <div className="flex items-center space-x-2">
-                                    <img
-                                        src={flight.logo}
-                                        alt="logo"
-                                        className="h-8 w-8 rounded-full"
-                                    />
-                                    <span className="text-base font-semibold text-black dark:text-white">{flight.airline}</span>
-                                </div>
-                                <span className="text-sm text-[#6B7280]">{flight.date}</span>
-                            </div>
-
-                            {/* Flight Info */}
-                            <div className="flex items-center justify-between">
-                                {/* From */}
-                                <div className="mr-3 text-center">
-                                    <div className="mb-1 text-sm text-[#6B7280]">{flight.from.city}</div>
-                                    <div className="text-2xl font-semibold leading-none text-black dark:text-white">{flight.from.time}</div>
-                                    <div className="mt-1 text-sm text-[#6B7280]">{flight.from.code}</div>
-                                </div>
-
-                                {/* Arc with Plane */}
-                                <div className="relative mx-auto mt-[-30px] h-[56px] w-full">
-                                    <svg
-                                        className="absolute inset-0 mx-auto h-full w-[calc(100%-10px)]"
-                                        viewBox="0 0 100 30"
-                                        preserveAspectRatio="none"
-                                        fill="none"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                        <path
-                                            d="M0 30C20 0 80 0 100 30"
-                                            stroke="url(#paint0_linear)"
-                                            strokeWidth="2"
-                                            fill="none"
-                                        />
-                                        <defs>
-                                            <linearGradient
-                                                id="paint0_linear"
-                                                x1="0"
-                                                y1="30"
-                                                x2="100"
-                                                y2="30"
-                                                gradientUnits="userSpaceOnUse"
-                                            >
-                                                <stop
-                                                    stopColor="#4D8CFE"
-                                                    stopOpacity="0.2"
-                                                />
-                                                <stop
-                                                    offset="0.5"
-                                                    stopColor="#1A6BFF"
-                                                />
-                                                <stop
-                                                    offset="1"
-                                                    stopColor="#4D8CFE"
-                                                    stopOpacity="0.2"
-                                                />
-                                            </linearGradient>
-                                        </defs>
-                                    </svg>
-
-                                    {/* Endpoints */}
-                                    <div className="sm:bottom absolute bottom-0 left-0 h-3 w-3 rounded-full border-2 border-[#1A6BFF] bg-white"></div>
-                                    <div className="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-[#1A6BFF] bg-white"></div>
-
-                                    {/* Plane Icon */}
-                                    <div className="absolute left-1/2 top-[0%] -translate-x-1/2 rotate-45 text-[#1A6BFF]">
-                                        <Plane
-                                            size={28}
-                                            fill="#1A6BFF"
-                                            stroke="#1A6BFF"
-                                        />
-                                    </div>
-
-                                    {/* Duration Info */}
-                                    <div className="absolute top-[35px] w-full text-center text-sm text-[#6B7280]">
-                                        <div>{flight.duration}</div>
-                                        <div>{flight.type}</div>
-                                    </div>
-                                </div>
-
-                                {/* To */}
-                                <div className="ml-3 text-center">
-                                    <div className="mb-1 text-sm text-[#6B7280]">{flight.to.city}</div>
-                                    <div className="text-2xl font-semibold leading-none text-black dark:text-white">{flight.to.time}</div>
-                                    <div className="mt-1 text-sm text-[#6B7280]">{flight.to.code}</div>
+                        {/* Top: Title and logo */}
+                        <div className="flex items-center justify-between">
+                            <div className="text-lg font-bold text-gray-800 dark:text-white">{item.title}</div>
+                            <div className="flex items-center gap-2">
+                                <img
+                                    src={item.logo}
+                                    alt={item.company}
+                                    className="h-5"
+                                />
+                                <span className="text-sm text-gray-600 dark:text-white">{item.company}</span>
+                                <div className="flex items-center text-sm text-yellow-500">
+                                    <Star className="h-4 w-4 fill-yellow-500 text-yellow-500" />
+                                    <span className="ml-1 font-semibold">{item.rating}</span>
                                 </div>
                             </div>
                         </div>
-                        <div className="flex flex-wrap border-t border-gray-300 pb-3 pt-3 dark:border-gray-700">
-                            <div className="flex-1 text-center">
-                                <h6 className="m-0 inline-block text-sm font-medium">ATO Invoice</h6>
+
+                        <div className="flex pt-5">
+                            {/* Image */}
+                            <div className="w-[40%]">
+                                <img
+                                    src={item.image}
+                                    alt={item.title}
+                                    className="my-4 w-full object-contain"
+                                />
                             </div>
-                            <div className="flex-1 text-center">
-                                <h6 className="m-0 inline-block text-sm font-medium">Customer Invoice</h6>
+
+                            {/* Details Row */}
+                            <div className="mb-3 flex w-[60%] flex-wrap justify-between gap-x-10 gap-y-5 px-10 text-sm text-gray-600 dark:text-white">
+                                <div className="flex items-center gap-1">
+                                    <CarFront className="h-4 w-4" />
+                                    {item.details.type}
+                                </div>
+                                <div className="flex items-center gap-1">
+                                    <Users className="h-4 w-4" />
+                                    {item.details.capacity}
+                                </div>
+                                <div className="flex items-center gap-1">
+                                    <Briefcase className="h-4 w-4" />
+                                    {item.details.bags}
+                                </div>
+                                <div className="flex items-center gap-1">
+                                    <CircleDot className="h-4 w-4" />
+                                    {item.details.doors}
+                                </div>
+                                <div className="flex items-center gap-1">
+                                    <Fuel className="h-4 w-4" />
+                                    {item.details.fuel}
+                                </div>
+                                <div className="flex items-center gap-1">
+                                    <Fuel className="h-4 w-4" />
+                                    <span className="text-sm font-medium">{item.details.transmission}</span>
+                                </div>
                             </div>
-                            <div className="flex-1 text-center">
-                                <h6 className="m-0 inline-block text-sm font-medium">Web Check-In</h6>
+                        </div>
+
+                        {/* Divider */}
+                        <div className="my-3 border-t border-dashed border-gray-300 dark:border-gray-700"></div>
+
+                        {/* Date Info */}
+                        <div className="flex items-center justify-between">
+                            {/* Pick-up */}
+                            <div className="mr-3 text-nowrap text-center">
+                                <div className="mb-1 text-sm text-[#6B7280]">Pick-up date</div>
+                                <div className="text-2xl font-semibold leading-none text-black dark:text-white">{item.pickup.date}</div>
+                                <div className="mt-1 text-sm text-[#6B7280]">{item.pickup.time}</div>
                             </div>
-                            <div className="flex-1 text-center">
-                                <h6 className="m-0 inline-block text-sm font-medium">Print E-Ticket</h6>
+
+                            {/* Arc with car */}
+                            <div className="relative mx-auto mt-[-30px] h-[56px] w-full">
+                                <svg
+                                    className="absolute inset-0 mx-auto h-full w-[calc(100%-10px)]"
+                                    viewBox="0 0 100 30"
+                                    preserveAspectRatio="none"
+                                    fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                >
+                                    <path
+                                        d="M0 30C20 0 80 0 100 30"
+                                        stroke="url(#paint0_linear)"
+                                        strokeWidth="2"
+                                        fill="none"
+                                    />
+                                    <defs>
+                                        <linearGradient
+                                            id="paint0_linear"
+                                            x1="0"
+                                            y1="30"
+                                            x2="100"
+                                            y2="30"
+                                            gradientUnits="userSpaceOnUse"
+                                        >
+                                            <stop
+                                                stopColor="#4D8CFE"
+                                                stopOpacity="0.2"
+                                            />
+                                            <stop
+                                                offset="0.5"
+                                                stopColor="#1A6BFF"
+                                            />
+                                            <stop
+                                                offset="1"
+                                                stopColor="#4D8CFE"
+                                                stopOpacity="0.2"
+                                            />
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                                <div className="absolute bottom-0 left-0 h-3 w-3 rounded-full border-2 border-[#1A6BFF] bg-white"></div>
+                                <div className="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-[#1A6BFF] bg-white"></div>
+                                <div className="absolute left-1/2 top-[0%] -translate-x-1/2 text-[#1A6BFF]">
+                                    <Car
+                                        size={28}
+                                        fill="#1A6BFF"
+                                        stroke="#1A6BFF"
+                                    />
+                                </div>
+                                <div className="absolute top-[35px] w-full text-center text-sm text-[#6B7280]">
+                                    <div>{item.duration}</div>
+                                </div>
                             </div>
-                            <div className="flex-1 text-center">
-                                <h6 className="m-0 inline-block text-sm font-medium">Email E-Ticket</h6>
+
+                            {/* Drop-off */}
+                            <div className="ml-3 text-nowrap text-center">
+                                <div className="mb-1 text-sm text-[#6B7280]">Drop-off Date</div>
+                                <div className="text-2xl font-semibold leading-none text-black dark:text-white">{item.dropoff.date}</div>
+                                <div className="mt-1 text-sm text-[#6B7280]">{item.dropoff.time}</div>
                             </div>
+                        </div>
+
+                        {/* Divider */}
+                        <div className="my-3 border-t border-dashed border-gray-300 dark:border-gray-700"></div>
+
+                        {/* Pickup / Drop-off */}
+                        <div className="mt-4 text-sm text-gray-700 dark:text-white">
+                            <p>
+                                <span className="font-semibold">Pick-up :</span> {item.pickup.location}
+                            </p>
+                            <p>
+                                <span className="font-semibold">Drop-off :</span> {item.dropoff.location}
+                            </p>
+                            <p className="mt-2 text-xs text-gray-500 dark:text-white">Note : All times are in local time</p>
                         </div>
                     </div>
                 ))}
+                {/* content ends here */}
             </div>
             {paginatedFlights.length == 0 && (
                 <div className="rounded-lg border-t border-gray-200 bg-white px-4 py-3 text-center text-sm dark:border-gray-800">
