@@ -14,6 +14,8 @@ import {
     UserRound,
     CircleDollarSign,
     BookText,
+    FileX,
+    BookmarkPlus,
 } from "lucide-react";
 
 export default function FlightBookingDetials() {
@@ -147,7 +149,7 @@ export default function FlightBookingDetials() {
 
                     {/* Flight Amenities */}
                     <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03]">
-                        <div className="mb-3 flex gap-3 border-b pb-2">
+                        <div className="mb-3 flex items-center gap-3 border-b pb-2">
                             <PlaneTakeoff size={20} />
                             <p className="text-base font-semibold text-black dark:text-white">Flight Amenities</p>
                         </div>
@@ -161,7 +163,7 @@ export default function FlightBookingDetials() {
                     </div>
                     {/* Passengers */}
                     <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03]">
-                        <div className="mb-3 flex gap-3 border-b pb-2">
+                        <div className="mb-3 flex items-center gap-3 border-b pb-2">
                             <UserRound size={20} />
                             <p className="text-base font-semibold text-black dark:text-white">Passenger(s) </p>
                         </div>
@@ -169,12 +171,50 @@ export default function FlightBookingDetials() {
                             <User size={16} />
                             Mr. Andrew Ainsley
                         </div>
+                        <div className="mt-4 flex flex-wrap justify-between gap-4 text-sm">
+                            <div>
+                                <span className="text-gray-600 dark:text-white/80"> Flight Number:</span>
+                                <span> Wke32</span>
+                            </div>
+                            <div>
+                                <span className="text-gray-600 dark:text-white/80"> Class:</span>
+                                <span> Economy</span>
+                            </div>
+                            <div>
+                                <span className="text-gray-600 dark:text-white/80"> Gate:</span>
+                                <span> 24</span>
+                            </div>
+                            <div>
+                                <span className="text-gray-600 dark:text-white/80"> Seat Number:</span>
+                                <span> B2</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03]">
+                        <div className="mb-3 flex items-center gap-3 border-b pb-2">
+                            <BookmarkPlus size={20} />
+                            <p className="text-base font-semibold text-black dark:text-white">Add on(s) </p>
+                        </div>
+                        <ul className="list-disc space-y-1 pl-4 text-sm text-gray-600 dark:text-white/80">
+                            <li>Travel insurance included</li>
+                            <li>Seat selection (extra legroom, window, aisle)</li>
+                            <li>Priority boarding</li>
+                            <li>Extra checked baggage</li>
+                            <li>Extra in-flight meal</li>
+                            <li>Wi-Fi access</li>
+                            <li>Access to airport lounge</li>
+                            <li>Fast-track security</li>
+                            <li>Pet in cabin</li>
+                            <li>Carbon offset contribution</li>
+                            <li>Infant amenities (bassinet, baby food)</li>
+                            <li>Upgrade to business/premium economy</li>
+                        </ul>
                     </div>
                 </div>
                 <div className="w-full space-y-2 lg:w-[30%]">
                     {/* Contact Details */}
                     <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03]">
-                        <div className="mb-3 flex gap-3 border-b pb-2">
+                        <div className="mb-3 flex items-center gap-3 border-b pb-2">
                             <UserRound size={20} />
                             <p className="text-base font-semibold text-black dark:text-white">Contact Details</p>
                         </div>
@@ -187,7 +227,7 @@ export default function FlightBookingDetials() {
 
                     {/* Price Details */}
                     <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03]">
-                        <div className="mb-3 flex gap-3 border-b pb-2">
+                        <div className="mb-3 flex items-center gap-3 border-b pb-2">
                             <CircleDollarSign size={20} />
                             <p className="text-base font-semibold text-black dark:text-white">Price Details</p>
                         </div>
@@ -221,7 +261,7 @@ export default function FlightBookingDetials() {
 
                     {/* Transaction Details */}
                     <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03]">
-                        <div className="mb-3 flex gap-3 border-b pb-2">
+                        <div className="mb-3 flex items-center gap-3 border-b pb-2">
                             <BookText size={20} />
                             <p className="text-base font-semibold text-black dark:text-white">Transaction Details</p>
                         </div>
@@ -247,6 +287,16 @@ export default function FlightBookingDetials() {
                                 <span>REF72738434</span>
                             </div>
                         </div>
+                    </div>
+                    <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03]">
+                        <div className="mb-3 flex items-center gap-3 border-b pb-2">
+                            <FileX size={20} />
+                            <p className="text-base font-semibold text-black dark:text-white">Cancelation Policy </p>
+                        </div>
+                        <p className="text-sm text-red-600">Not Cancelable</p>
+                        {/* <p className="text-sm text-green-500">
+                            Cancelable until <span className="font-bold"> Wed, 23 Dec 2023</span>
+                        </p> */}
                     </div>
 
                     {/* Action Buttons */}
