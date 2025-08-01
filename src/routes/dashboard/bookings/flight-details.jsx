@@ -47,7 +47,7 @@ export default function FlightBookingDetials() {
                             <p className="text-lg font-bold text-black dark:text-white">{bookingId}</p>
                         </div>
                         <img
-                            src="https://i.ibb.co/BTfJd8g/barcode.png"
+                            src="https://t4.ftcdn.net/jpg/02/28/23/91/360_F_228239110_4eEmhcqbUpZG8y1x1aazFBQMVmbGjoce.jpg"
                             alt="barcode"
                             className="mx-auto my-3 h-16"
                         />
