@@ -16,6 +16,7 @@ import {
     BookText,
     FileX,
     BookmarkPlus,
+    BookCheck,
 } from "lucide-react";
 
 export default function FlightBookingDetials() {
@@ -210,6 +211,17 @@ export default function FlightBookingDetials() {
                             <li>Upgrade to business/premium economy</li>
                         </ul>
                     </div>
+                    <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03]">
+                        <div className="mb-3 flex items-center gap-3 border-b pb-2">
+                            <BookCheck size={20} />
+                            <p className="text-base font-semibold text-black dark:text-white">Flight Policy </p>
+                        </div>
+                        <p className="text-sm text-gray-600 dark:text-white/80">
+                            Passengers are entitled to one piece of cabin baggage up to 7 kg and one checked-in bag up to 20 kg as part of the economy
+                            fare. Excess baggage will incur additional charges per kilogram, subject to airline rules. Online check-in opens 48 hours
+                            before departure and closes 2 hours prior, while airport check-in counters close 60 minutes before flight time.{" "}
+                        </p>
+                    </div>
                 </div>
                 <div className="w-full space-y-2 lg:w-[30%]">
                     {/* Contact Details */}
@@ -288,6 +300,7 @@ export default function FlightBookingDetials() {
                             </div>
                         </div>
                     </div>
+
                     <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03]">
                         <div className="mb-3 flex items-center gap-3 border-b pb-2">
                             <FileX size={20} />
