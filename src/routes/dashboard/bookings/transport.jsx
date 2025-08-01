@@ -503,35 +503,29 @@ export default function TransportBookingsPage() {
                             {/* Pick-up */}
                             <div className="mr-3 text-nowrap text-center">
                                 <div className="mb-1 text-sm text-[#6B7280]">Pick-up date</div>
-                                <div className="text-2xl font-semibold leading-none text-black dark:text-white">{item.pickup.date}</div>
+                                <div className="text-base font-semibold leading-none text-black dark:text-white">{item.pickup.date}</div>
                                 <div className="mt-1 text-sm text-[#6B7280]">{item.pickup.time}</div>
                             </div>
 
-                            {/* Arc with car */}
-                            <div className="relative mx-auto mt-[-30px] h-[56px] w-full">
+                            <div className="relative mx-auto h-[56px] w-full">
+                                {/* Gradient Line using SVG */}
                                 <svg
-                                    className="absolute inset-0 mx-auto h-full w-[calc(100%-10px)]"
-                                    viewBox="0 0 100 30"
+                                    className="absolute left-3 right-3 top-1/2 h-[5px] w-[calc(100%-24px)] -translate-y-1/2"
+                                    viewBox="0 0 100 5"
                                     preserveAspectRatio="none"
-                                    fill="none"
                                     xmlns="http://www.w3.org/2000/svg"
                                 >
-                                    <path
-                                        d="M0 30C20 0 80 0 100 30"
-                                        stroke="url(#paint0_linear)"
-                                        strokeWidth="2"
-                                        fill="none"
-                                    />
                                     <defs>
                                         <linearGradient
-                                            id="paint0_linear"
+                                            id="lineGradient"
                                             x1="0"
-                                            y1="30"
+                                            y1="2.5"
                                             x2="100"
-                                            y2="30"
+                                            y2="2.5"
                                             gradientUnits="userSpaceOnUse"
                                         >
                                             <stop
+                                                offset="0"
                                                 stopColor="#4D8CFE"
                                                 stopOpacity="0.2"
                                             />
@@ -546,25 +540,39 @@ export default function TransportBookingsPage() {
                                             />
                                         </linearGradient>
                                     </defs>
+                                    <line
+                                        x1="0"
+                                        y1="2.5"
+                                        x2="100"
+                                        y2="2.5"
+                                        stroke="url(#lineGradient)"
+                                        strokeWidth="5"
+                                        strokeLinecap="round"
+                                    />
                                 </svg>
-                                <div className="absolute bottom-0 left-0 h-3 w-3 rounded-full border-2 border-[#1A6BFF] bg-white"></div>
-                                <div className="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-[#1A6BFF] bg-white"></div>
-                                <div className="absolute left-1/2 top-[0%] -translate-x-1/2 text-[#1A6BFF]">
+
+                                {/* Endpoints */}
+                                <div className="absolute left-0 top-1/2 h-3 w-3 -translate-y-1/2 rounded-full border-2 border-[#1A6BFF] bg-white"></div>
+                                <div className="absolute right-0 top-1/2 h-3 w-3 -translate-y-1/2 rounded-full border-2 border-[#1A6BFF] bg-white"></div>
+
+                                {/* Icon in Center */}
+                                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-[#1A6BFF]">
                                     <Car
                                         size={28}
                                         fill="#1A6BFF"
                                         stroke="#1A6BFF"
                                     />
                                 </div>
-                                <div className="absolute top-[35px] w-full text-center text-sm text-[#6B7280]">
+
+                                {/* Duration Above Line */}
+                                <div className="absolute -top-1 w-full text-center text-sm text-[#6B7280]">
                                     <div>{item.duration}</div>
                                 </div>
                             </div>
-
                             {/* Drop-off */}
                             <div className="ml-3 text-nowrap text-center">
                                 <div className="mb-1 text-sm text-[#6B7280]">Drop-off Date</div>
-                                <div className="text-2xl font-semibold leading-none text-black dark:text-white">{item.dropoff.date}</div>
+                                <div className="text-base font-semibold leading-none text-black dark:text-white">{item.dropoff.date}</div>
                                 <div className="mt-1 text-sm text-[#6B7280]">{item.dropoff.time}</div>
                             </div>
                         </div>
