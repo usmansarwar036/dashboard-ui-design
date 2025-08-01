@@ -250,7 +250,12 @@ export default function FlightBookingsPage() {
                         </div>
                         <div className="flex flex-wrap border-t border-gray-300 pb-3 pt-3 dark:border-gray-700">
                             <div className="flex-1 text-center">
-                                <h6 className="m-0 inline-block text-sm font-medium">ATO Invoice</h6>
+                                <Link
+                                    to="/bookings/flights/453g"
+                                    className="inline-block text-sm font-medium text-blue-600 hover:underline dark:text-white"
+                                >
+                                    View Details
+                                </Link>
                             </div>
                             <div className="flex-1 text-center">
                                 <h6 className="m-0 inline-block text-sm font-medium">Customer Invoice</h6>
