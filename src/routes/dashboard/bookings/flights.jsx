@@ -315,15 +315,21 @@ function FlightFilter({ flights, onApply }) {
 
     const stopOptions = [...new Set(flights.map((f) => f.type))];
     const timeOptions = ["00:00 - 06:00", "06:00 - 12:00", "12:00 - 18:00", "18:00 - 00:00"];
-    const isTimeInRange = (dateStr, rangeLabel) => {
+    const isTimeInRange = (timeStr, rangeLabel) => {
         const [fromStr, toStr] = rangeLabel.split(" - ");
-        const date = new Date(dateStr);
-        const fromHour = parseInt(fromStr.split(":")[0], 10);
-        const toHour = parseInt(toStr.split(":")[0], 10);
-        const hour = date.getHours();
+        const [fromHour, fromMin] = fromStr.split(":").map(Number);
+        const [toHour, toMin] = toStr.split(":").map(Number);
+        const [hour, minute] = timeStr.split(":").map(Number);
 
-        if (fromHour > toHour) return hour >= fromHour || hour < toHour; // 18:00 - 00:00
-        return hour >= fromHour && hour < toHour;
+        const current = hour * 60 + minute;
+        const from = fromHour * 60 + fromMin;
+        const to = toHour * 60 + toMin;
+
+        if (from > to) {
+            // Time range spans midnight, e.g., 18:00 - 00:00
+            return current >= from || current < to;
+        }
+        return current >= from && current < to;
     };
 
     const prices = flights.map((f) => f.price);
@@ -402,12 +408,9 @@ function FlightFilter({ flights, onApply }) {
             const dur = getDuration(f);
             return dur >= flightDuration[0] && dur <= flightDuration[1];
         });
-        // Filter arrival time
         if (arrivalTime.length) {
             filtered = filtered.filter((f) => arrivalTime.some((label) => isTimeInRange(f.arrivalTime, label)));
         }
-
-        // Filter departure time
         if (departureTime.length) {
             filtered = filtered.filter((f) => departureTime.some((label) => isTimeInRange(f.departureTime, label)));
         }

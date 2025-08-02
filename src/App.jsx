@@ -32,6 +32,7 @@ import FlightBookingsPage from "./routes/dashboard/bookings/flights";
 import InvoiceDetailsPage from "./routes/dashboard/invoice/details";
 import TransportBookingsPage from "./routes/dashboard/bookings/transport";
 import FlightBookingDetials from "./routes/dashboard/bookings/flight-details";
+import TranportBookingDetials from "./routes/dashboard/bookings/transport-details";
 
 function App() {
     const router = createBrowserRouter([
@@ -58,6 +59,7 @@ function App() {
                 { path: "bookings/flights", element: <FlightBookingsPage /> },
                 { path: "bookings/flights/:bookingId", element: <FlightBookingDetials /> },
                 { path: "bookings/transport", element: <TransportBookingsPage /> },
+                { path: "bookings/transport/:bookingId", element: <TranportBookingDetials /> },
 
                 {
                     path: "roles",
