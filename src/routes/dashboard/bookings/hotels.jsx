@@ -6,6 +6,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { CarFront, Users, Briefcase, Fuel, CircleDot, Star, Filter, X, LayoutGrid, List, Car, ArrowRight, Hotel } from "lucide-react";
 import { USAlert } from "../../../components/alerts";
+import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 
 export default function HotelBookingsPage() {
     const hotels = [

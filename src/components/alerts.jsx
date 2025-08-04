@@ -47,16 +47,21 @@ export function USAlert({
 
     const selectedLottie = lottieMap[type] || lottieMap["alert"];
 
-    const lottieHTML = (
-        <DotLottieReact
-            src="/src/assets/Success.json"
-            loop
-            autoplay
-        />
-    );
+    function Lottie() {
+        return (
+            <div>
+                <DotLottieReact
+                    src={`/src/assets/lottie/${type}.json`}
+                    loop
+                    autoplay
+                />
+            </div>
+        );
+    }
+
     MySwal.fire({
         title,
-        html: html || lottieHTML,
+        html: html || Lottie(),
         showConfirmButton,
         showCancelButton,
         confirmButtonText,
