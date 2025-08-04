@@ -33,6 +33,8 @@ import InvoiceDetailsPage from "./routes/dashboard/invoice/details";
 import TransportBookingsPage from "./routes/dashboard/bookings/transport";
 import FlightBookingDetials from "./routes/dashboard/bookings/flight-details";
 import TranportBookingDetials from "./routes/dashboard/bookings/transport-details";
+import HotelsBookingsPage from "./routes/dashboard/bookings/hotels";
+import HotelBookingDetials from "./routes/dashboard/bookings/hotel-details";
 
 function App() {
     const router = createBrowserRouter([
@@ -60,6 +62,8 @@ function App() {
                 { path: "bookings/flights/:bookingId", element: <FlightBookingDetials /> },
                 { path: "bookings/transport", element: <TransportBookingsPage /> },
                 { path: "bookings/transport/:bookingId", element: <TranportBookingDetials /> },
+                { path: "bookings/hotels", element: <HotelsBookingsPage /> },
+                { path: "bookings/hotels/:bookingId", element: <HotelBookingDetials /> },
 
                 {
                     path: "roles",

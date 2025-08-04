@@ -314,11 +314,11 @@ export default function FlightBookingDetials() {
 
                     {/* Action Buttons */}
                     <div className="flex flex-col gap-2 rounded-2xl border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-white/[0.03]">
-                        <button className="w-full rounded-xl bg-blue-600 py-2 text-sm font-medium text-white hover:bg-blue-700">Show E-Ticket</button>
-                        <button className="w-full rounded-xl border border-gray-300 bg-white py-2 text-sm font-medium text-gray-800 hover:bg-gray-100 dark:border-gray-700 dark:bg-transparent dark:text-white dark:hover:bg-white/[0.06]">
+                        <button className="w-full rounded-lg bg-blue-600 py-2 text-sm font-medium text-white hover:bg-blue-700">Show E-Ticket</button>
+                        <button className="w-full rounded-lg border border-gray-300 bg-white py-2 text-sm font-medium text-gray-800 hover:bg-gray-100 dark:border-gray-700 dark:bg-transparent dark:text-white dark:hover:bg-white/[0.06]">
                             Reschedule Trip
                         </button>
-                        <button className="w-full rounded-xl border border-red-500 bg-white py-2 text-sm font-medium text-red-600 hover:bg-red-50 dark:border-red-500 dark:bg-transparent dark:text-red-400 dark:hover:bg-red-500/10">
+                        <button className="w-full rounded-lg border border-red-500 bg-white py-2 text-sm font-medium text-red-600 hover:bg-red-50 dark:border-red-500 dark:bg-transparent dark:text-red-400 dark:hover:bg-red-500/10">
                             Cancel Booking
                         </button>
                     </div>

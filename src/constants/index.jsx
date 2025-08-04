@@ -21,6 +21,7 @@ import {
     FileText,
     Plane,
     Car,
+    Hotel,
 } from "lucide-react";
 
 import ProfileImage from "@/assets/profile-image.jpg";
@@ -55,6 +56,12 @@ export const navbarLinks = [
     {
         title: "Bookings",
         links: [
+            {
+                label: "Hotel",
+                icon: Hotel,
+                path: "/bookings/hotels",
+            },
+
             {
                 label: "Flight",
                 icon: Plane,

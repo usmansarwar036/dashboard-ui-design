@@ -4,7 +4,7 @@ import { isAfter, isBefore } from "date-fns";
 import { Range } from "react-range";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { Plane, Filter, X, LayoutGrid, List } from "lucide-react";
+import { Plane, Filter, X, LayoutGrid, List, ArrowRight } from "lucide-react";
 
 export default function FlightBookingsPage() {
     const flights = [
@@ -248,26 +248,36 @@ export default function FlightBookingsPage() {
                                 </div>
                             </div>
                         </div>
-                        <div className="flex flex-wrap border-t border-gray-300 pb-3 pt-3 dark:border-gray-700">
-                            <div className="flex-1 text-center">
+                        {/* <div className="mt-4 flex flex-wrap justify-between">
+                            <div className="text-sm text-gray-700 dark:text-white">
+                                <p className="text-sm text-green-500">
+                                    Cancelable until <span className="font-bold"> Wed, 23 Dec 2023</span>
+                                </p>
+                            </div>
+                            <div>
                                 <Link
-                                    to="/bookings/flights/453g"
-                                    className="inline-block text-sm font-medium text-blue-600 hover:underline dark:text-white"
+                                    to="/bookings/flights/234"
+                                    className="inline-flex items-center rounded-lg border border-gray-200 bg-white p-1 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-100 dark:border-gray-800 dark:bg-white/[0.03] dark:text-white sm:p-2 md:p-3 lg:p-4"
                                 >
-                                    View Details
+                                    View Booking
+                                    <ArrowRight className="ml-2 h-4 w-4" />
                                 </Link>
                             </div>
-                            <div className="flex-1 text-center">
-                                <h6 className="m-0 inline-block text-sm font-medium">Customer Invoice</h6>
+                        </div> */}
+                        <div className="flex items-center justify-between border-t border-gray-300 p-5 py-2 align-middle dark:border-gray-700">
+                            <div className="text-sm text-gray-700 dark:text-white">
+                                <p className="text-sm">
+                                    Cancelable until <span className="font-bold"> Wed, 23 Dec 2023</span>
+                                </p>
                             </div>
-                            <div className="flex-1 text-center">
-                                <h6 className="m-0 inline-block text-sm font-medium">Web Check-In</h6>
-                            </div>
-                            <div className="flex-1 text-center">
-                                <h6 className="m-0 inline-block text-sm font-medium">Print E-Ticket</h6>
-                            </div>
-                            <div className="flex-1 text-center">
-                                <h6 className="m-0 inline-block text-sm font-medium">Email E-Ticket</h6>
+                            <div>
+                                <Link
+                                    to="/bookings/flights/234"
+                                    className="inline-flex items-center rounded-lg bg-blue-600 p-2 text-sm font-medium text-white"
+                                >
+                                    View Booking
+                                    <ArrowRight className="ml-2 h-4 w-4" />
+                                </Link>
                             </div>
                         </div>
                     </div>
