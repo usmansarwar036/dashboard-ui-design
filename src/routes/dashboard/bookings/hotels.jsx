@@ -100,10 +100,7 @@ export default function HotelBookingsPage() {
                     onClick={() =>
                         USAlert({
                             type: "success",
-                            title: "Are you sure?",
-                            showCancelButton: true,
-                            confirmButtonText: "Yes",
-                            cancelButtonText: "No",
+                            title: "Booked Successfully",
                         })
                     }
                 >

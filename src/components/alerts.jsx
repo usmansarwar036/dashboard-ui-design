@@ -1,4 +1,3 @@
-import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
@@ -18,26 +17,28 @@ import withReactContent from "sweetalert2-react-content";
  */
 export function USAlert({
     type = "info",
-    title = "Alert",
+    title = "",
     html = "",
-    showConfirmButton = true,
+    showConfirmButton = false,
     showCancelButton = false,
     confirmButtonText = "OK",
     cancelButtonText = "Cancel",
+    desc = "",
     returnUrl = "",
 } = {}) {
     const MySwal = withReactContent(Swal);
 
     if (!document.querySelector('script[src*="lottie-player"]')) {
         const script = document.createElement("script");
-        script.src = "https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js";
+        script.src = "https://unpkg.com/@lottiefiles/dotlottie-wc@0.6.2/dist/dotlottie-wc.js";
+        script.type = "module";
         script.async = true;
         document.body.appendChild(script);
     }
 
     const lottieMap = {
-        success: "https://assets7.lottiefiles.com/packages/lf20_jbrw3hcz.json",
-        error: "https://lottie.host/9f1c1ba4-8a91-407e-b7b4-26201a1faac0/Ib8nOaKbH6.json",
+        success: "https://lottie.host/444c1917-e454-4232-a2d9-d2fe3596b17a/6AyfRcu0Y0.lottie",
+        error: "https://lottie.host/c892536b-d59d-4907-a721-1c6ebd218869/HvLhEaMafZ.lottie",
         warning: "https://lottie.host/f147b49a-1a5e-4db4-b899-13406c7d5f2f/TdNDZ9zvFe.json",
         info: "https://lottie.host/b08ebf53-7b25-4cf7-b435-b2c1b30ed3a4/pRJO8L7ZZ4.json",
         question: "https://lottie.host/5d702013-479a-46b7-ae82-5425398c36f6/LUAMYum0Hs.json",
@@ -47,21 +48,24 @@ export function USAlert({
 
     const selectedLottie = lottieMap[type] || lottieMap["alert"];
 
-    function Lottie() {
-        return (
-            <div>
-                <DotLottieReact
-                    src={`/src/assets/lottie/${type}.json`}
-                    loop
-                    autoplay
-                />
-            </div>
-        );
-    }
+    const lottieHTML = `
+        <dotlottie-wc
+            src="${selectedLottie}"
+            style="width: 300px;height: 300px;margin:auto;"
+            speed="1"
+            autoplay
+            loop
+        ></dotlottie-wc>
+    `;
+
+    const combinedHTML = `
+        ${html || lottieHTML}
+        ${desc ? `<p class="mt-4 text-sm text-gray-700 dark:text-white">${desc}</p>` : ""}
+    `;
 
     MySwal.fire({
         title,
-        html: html || Lottie(),
+        html: combinedHTML,
         showConfirmButton,
         showCancelButton,
         confirmButtonText,
@@ -69,7 +73,7 @@ export function USAlert({
         customClass: {
             confirmButton: "bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700",
             cancelButton: "bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500",
-            popup: "dark:bg-black dark:text-white dark:border dark:border-gray-800",
+            popup: "dark:bg-black   dark:text-white dark:border dark:border-gray-800",
         },
     }).then((result) => {
         if (result.isConfirmed && returnUrl) {
