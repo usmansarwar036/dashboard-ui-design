@@ -99,8 +99,9 @@ export default function HotelBookingsPage() {
                 <button
                     onClick={() =>
                         USAlert({
-                            type: "success",
+                            type: "alert",
                             title: "Booked Successfully",
+                            desc: "hello",
                         })
                     }
                 >
@@ -215,7 +216,7 @@ export default function HotelBookingsPage() {
                                 <div>
                                     <Link
                                         to="/bookings/hotels/234"
-                                        className="inline-flex items-center rounded-lg bg-blue-600 p-2 text-sm font-medium text-white"
+                                        className="my-2 inline-flex items-center rounded-lg bg-blue-600 p-2 text-sm font-medium text-white"
                                     >
                                         View Booking
                                         <ArrowRight className="ml-2 h-4 w-4" />
@@ -247,9 +248,9 @@ export default function HotelBookingsPage() {
                                 </div>
                             </div>
 
-                            <div className="flex pt-5">
+                            <div className="pt-5 sm:flex">
                                 {/* Hotel Image */}
-                                <div className="flex w-[30%] items-center p-2">
+                                <div className="flex items-center p-2 sm:w-[30%]">
                                     <img
                                         src={item.image}
                                         alt={item.title}
@@ -258,7 +259,7 @@ export default function HotelBookingsPage() {
                                 </div>
 
                                 {/* Hotel Content */}
-                                <div className="w-[70%]">
+                                <div className="sm:w-[70%]">
                                     <div className="mt-3 flex flex-wrap justify-between gap-x-3 gap-y-2 px-3 text-sm text-gray-600 dark:text-white md:gap-x-5 md:gap-y-2 md:px-4 lg:gap-x-6 lg:gap-y-3 lg:px-6">
                                         {item.amenities.slice(0, 6).map((a, i) => (
                                             <div
