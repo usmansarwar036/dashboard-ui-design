@@ -99,7 +99,7 @@ export default function HotelBookingsPage() {
                 <button
                     onClick={() =>
                         USAlert({
-                            type: "alert",
+                            type: "question",
                             title: "Booked Successfully",
                             desc: "hello",
                         })

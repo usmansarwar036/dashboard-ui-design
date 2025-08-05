@@ -49,9 +49,9 @@ export default function HotelBookingDetials() {
                         </div>
 
                         {/* Content */}
-                        <div className="flex pt-5">
+                        <div className="pt-5 sm:flex">
                             {/* Hotel Image */}
-                            <div className="flex w-[30%] items-center p-2">
+                            <div className="flex items-center p-2 sm:w-[30%]">
                                 <img
                                     src="https://plus.unsplash.com/premium_photo-1661964071015-d97428970584?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8aG90ZWx8ZW58MHx8MHx8fDA%3D"
                                     alt="Hotel Paradise"
@@ -60,7 +60,7 @@ export default function HotelBookingDetials() {
                             </div>
 
                             {/* Amenities */}
-                            <div className="w-[70%]">
+                            <div className="sm:w-[70%]">
                                 <div className="mt-3 flex flex-wrap justify-between gap-x-3 gap-y-2 px-3 text-sm text-gray-600 dark:text-white md:gap-x-5 md:gap-y-4 md:px-4 lg:gap-x-6 lg:gap-y-6 lg:px-6">
                                     <div className="flex items-center gap-1">
                                         <img

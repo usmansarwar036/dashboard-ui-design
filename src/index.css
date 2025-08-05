@@ -75,6 +75,15 @@
     .table-cell {
         @apply w-fit whitespace-nowrap p-4 font-medium;
     }
+    @media (max-width: 640px) {
+        .us-mobile-bottom-popup {
+            @apply content-end !p-0;
+        }
+
+        .us-mobile-bottom-popup .swal2-popup {
+            @apply mx-auto w-full max-w-full !rounded-b-none;
+        }
+    }
 }
 
 .recharts-default-tooltip {

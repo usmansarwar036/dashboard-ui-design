@@ -8,6 +8,7 @@ import withReactContent from "sweetalert2-react-content";
  *  type?: "success" | "error" | "info" | "warning" | "question" | "confirm" | "alert",
  *  title?: string,
  *  html?: string,
+ *  desc?: string,
  *  showConfirmButton?: boolean,
  *  showCancelButton?: boolean,
  *  confirmButtonText?: string,
@@ -16,24 +17,26 @@ import withReactContent from "sweetalert2-react-content";
  * }} options
  */
 export function USAlert({
-    type = "info",
+    type = "",
     title = "",
     html = "",
+    desc = "",
     showConfirmButton = false,
     showCancelButton = false,
     confirmButtonText = "OK",
     cancelButtonText = "Cancel",
-    desc = "",
     returnUrl = "",
 } = {}) {
     const MySwal = withReactContent(Swal);
 
-    if (!document.querySelector('script[src*="lottie-player"]')) {
+    // Inject lottie script only once
+    if (!window.__lottieInjected) {
         const script = document.createElement("script");
         script.src = "https://unpkg.com/@lottiefiles/dotlottie-wc@0.6.2/dist/dotlottie-wc.js";
         script.type = "module";
         script.async = true;
         document.body.appendChild(script);
+        window.__lottieInjected = true;
     }
 
     const lottieMap = {
@@ -46,25 +49,23 @@ export function USAlert({
         alert: "https://lottie.host/7a200db5-82d6-4aad-85a7-03e92c5c4185/zUrKdgpsIq.lottie",
     };
 
-    const selectedLottie = lottieMap[type] || lottieMap["alert"];
+    const selectedLottie = lottieMap[type] || lottieMap.alert;
 
-    const lottieHTML = `
-        <dotlottie-wc
-            src="${selectedLottie}"
-            class='max-w-sm w-full m-auto'
-            speed="1"
-            autoplay
-            loop
-            ></dotlottie-wc>
-            `;
-
-    const combinedHTML = `
-        ${html || lottieHTML}
-        ${desc ? `<p class="mt-4 text-baae text-gray-700  dark:text-white">${desc}</p>` : ""}
-    `;
+    const combinedHTML =
+        html ||
+        `
+    <dotlottie-wc
+      src="${selectedLottie}"
+      class="max-w-sm w-full m-auto"
+      speed="1"
+      autoplay
+      loop
+    ></dotlottie-wc>
+    ${desc ? `<p class="mt-4 text-baae text-gray-700 dark:text-white">${desc}</p>` : ""}
+  `;
 
     MySwal.fire({
-        title: `<h1 class='text-xl'>${title}</h1>`,
+        title: `<h1 class="text-xl">${title}</h1>`,
         html: combinedHTML,
         showConfirmButton,
         showCancelButton,
@@ -73,26 +74,12 @@ export function USAlert({
         customClass: {
             confirmButton: "bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700",
             cancelButton: "bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500",
-            popup: "us-popup",
+            popup: "rounded-2xl p-4 bg-white dark:bg-white/[0.03] dark:border dark:border-gray-800 dark:text-white",
         },
         didOpen: () => {
-            const popup = document.querySelector(".us-popup");
-            if (popup) {
-                popup.classList.add(
-                    "shadow-lg",
-                    "rounded-2xl",
-                    "p-4",
-                    "bg-white",
-                    "dark:bg-white/[0.03]",
-                    "dark:border",
-                    "dark:border-gray-800",
-                    "dark:text-white",
-                );
-            }
+            document.querySelector(".swal2-container")?.classList.add("us-mobile-bottom-popup");
         },
-    }).then((result) => {
-        if (result.isConfirmed && returnUrl) {
-            window.location.href = returnUrl;
-        }
+    }).then(({ isConfirmed }) => {
+        if (isConfirmed && returnUrl) window.location.href = returnUrl;
     });
 }
