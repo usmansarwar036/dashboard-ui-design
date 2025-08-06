@@ -1,196 +1,104 @@
 import { Link } from "react-router-dom";
 import { useMemo, useState, useEffect } from "react";
-import { isAfter, isBefore } from "date-fns";
+
 import { Range } from "react-range";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { CarFront, Users, Briefcase, Fuel, CircleDot, Star, Filter, X, LayoutGrid, List, Car, ArrowRight } from "lucide-react";
+import {
+    CarFront,
+    Users,
+    Briefcase,
+    Fuel,
+    CircleDot,
+    Star,
+    Filter,
+    X,
+    LayoutGrid,
+    List,
+    Car,
+    ArrowRight,
+    Globe,
+    Plane,
+    CalendarDays,
+    Bed,
+    User,
+    Activity,
+} from "lucide-react";
+import { USAlert } from "../../../components/alerts";
+import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 
-export default function TransportBookingsPage() {
-    const transports = [
+export default function ToursBookingsPage() {
+    const tours = [
         {
             title: "Audi A5",
             company: "Sixt",
-            logo: "https://i.ibb.co/QjHzhDqN/image-removebg-preview.png",
-            image: "https://i.ibb.co/QjHzhDqN/image-removebg-preview.png",
+            logo: "https://plus.unsplash.com/premium_photo-1661964071015-d97428970584",
+            image: "https://plus.unsplash.com/premium_photo-1661964071015-d97428970584",
             rating: 4.5,
-            distance: 1.2, // in km
-            energySource: "Gasoline",
-            providerPolicy: ["Refundable", "Free Cancellation", "Instant Confirmation"],
-            price: 1250,
-            details: {
-                type: "Medium",
-                capacity: 4,
-                bags: "2–3",
-                doors: 2,
-                fuel: "Gasoline",
-                transmission: "Automatic",
-            },
             pickup: {
-                city: "Dubai",
                 date: "Mon, Dec 16",
                 time: "09:00 AM",
-                location: "DXB - Dubai International Airport",
             },
             dropoff: {
-                city: "Dubai",
                 date: "Fri, Dec 20",
                 time: "23:00 PM",
-                location: "DWC - Dubai World Central Airport",
             },
-            duration: "5 Days",
+            amenities: [
+                { img: "https://cdn-icons-png.flaticon.com/512/2972/2972185.png", text: "Free Wi-Fi" },
+                { img: "https://cdn-icons-png.flaticon.com/512/888/888879.png", text: "Parking" },
+                { img: "https://cdn-icons-png.flaticon.com/512/1046/1046871.png", text: "Swimming Pool" },
+                { img: "https://cdn-icons-png.flaticon.com/512/3595/3595455.png", text: "Fitness Center" },
+                { img: "https://cdn-icons-png.flaticon.com/512/2329/2329125.png", text: "Pet Friendly" },
+                { img: "https://cdn-icons-png.flaticon.com/512/3771/3771505.png", text: "Laundry Service" },
+            ],
         },
         {
             title: "Toyota Camry",
             company: "Avis",
-            logo: "https://i.ibb.co/QjHzhDqN/image-removebg-preview.png",
-            image: "https://i.ibb.co/QjHzhDqN/image-removebg-preview.png",
+            logo: "https://plus.unsplash.com/premium_photo-1661964071015-d97428970584",
+            image: "https://plus.unsplash.com/premium_photo-1661964071015-d97428970584",
             rating: 4.2,
-            distance: 2.3,
-            energySource: "Gasoline",
-            providerPolicy: ["Free Cancellation"],
-            price: 850,
-            details: {
-                type: "Sedan",
-                capacity: 5,
-                bags: "2–3",
-                doors: 4,
-                fuel: "Gasoline",
-                transmission: "Automatic",
-            },
             pickup: {
-                city: "Abu Dhabi",
                 date: "Tue, Dec 17",
                 time: "10:00 AM",
-                location: "AUH - Abu Dhabi Intl Airport",
             },
             dropoff: {
-                city: "Abu Dhabi",
                 date: "Sat, Dec 21",
                 time: "22:00 PM",
-                location: "AUH - Abu Dhabi Intl Airport",
             },
-            duration: "4 Days",
-        },
-        {
-            title: "Tesla Model 3",
-            company: "Budget",
-            logo: "https://i.ibb.co/QjHzhDqN/image-removebg-preview.png",
-            image: "https://i.ibb.co/QjHzhDqN/image-removebg-preview.png",
-            rating: 4.8,
-            distance: 0.5,
-            energySource: "Electric",
-            providerPolicy: ["Refundable", "Instant Confirmation"],
-            price: 1600,
-            details: {
-                type: "Electric",
-                capacity: 5,
-                bags: "2",
-                doors: 4,
-                fuel: "Electric",
-                transmission: "Automatic",
-            },
-            pickup: {
-                city: "Dubai",
-                date: "Wed, Dec 18",
-                time: "08:30 AM",
-                location: "DXB - Dubai Intl Airport",
-            },
-            dropoff: {
-                city: "Dubai",
-                date: "Mon, Dec 23",
-                time: "19:30 PM",
-                location: "DXB - Dubai Intl Airport",
-            },
-            duration: "5 Days",
-        },
-        {
-            title: "Hyundai H1 Van",
-            company: "Dollar",
-            logo: "https://i.ibb.co/QjHzhDqN/image-removebg-preview.png",
-            image: "https://i.ibb.co/QjHzhDqN/image-removebg-preview.png",
-            rating: 3.9,
-            distance: 4.8,
-            energySource: "Gasoline",
-            providerPolicy: ["Instant Confirmation"],
-            price: 1100,
-            details: {
-                type: "Van",
-                capacity: 8,
-                bags: "4–5",
-                doors: 4,
-                fuel: "Gasoline",
-                transmission: "Manual",
-            },
-            pickup: {
-                city: "Sharjah",
-                date: "Thu, Dec 19",
-                time: "11:00 AM",
-                location: "SHJ - Sharjah Airport",
-            },
-            dropoff: {
-                city: "Sharjah",
-                date: "Mon, Dec 23",
-                time: "21:00 PM",
-                location: "SHJ - Sharjah Airport",
-            },
-            duration: "4 Days",
-        },
-        {
-            title: "Chevrolet Spark",
-            company: "Thrifty",
-            logo: "https://i.ibb.co/QjHzhDqN/image-removebg-preview.png",
-            image: "https://i.ibb.co/QjHzhDqN/image-removebg-preview.png",
-            rating: 3.2,
-            distance: 9.5,
-            energySource: "Gasoline",
-            providerPolicy: [],
-            price: 600,
-            details: {
-                type: "Hatchback",
-                capacity: 4,
-                bags: "1–2",
-                doors: 4,
-                fuel: "Gasoline",
-                transmission: "Automatic",
-            },
-            pickup: {
-                city: "Dubai",
-                date: "Fri, Dec 20",
-                time: "13:00 PM",
-                location: "DXB - Dubai Intl Airport",
-            },
-            dropoff: {
-                city: "Dubai",
-                date: "Sun, Dec 22",
-                time: "21:00 PM",
-                location: "DXB - Dubai Intl Airport",
-            },
-            duration: "2 Days",
+            amenities: [
+                { img: "https://cdn-icons-png.flaticon.com/512/2972/2972185.png", text: "Free Wi-Fi" },
+                { img: "https://cdn-icons-png.flaticon.com/512/888/888879.png", text: "Parking" },
+                { img: "https://cdn-icons-png.flaticon.com/512/2933/2933245.png", text: "Air Conditioning" },
+                { img: "https://cdn-icons-png.flaticon.com/512/3132/3132693.png", text: "Spa & Wellness" },
+                { img: "https://cdn-icons-png.flaticon.com/512/2329/2329125.png", text: "Pet Friendly" },
+                { img: "https://cdn-icons-png.flaticon.com/512/3771/3771505.png", text: "Laundry Service" },
+            ],
         },
     ];
 
-    const [filteredTransports, setFilteredTransports] = useState(transports);
+    const [filteredTours, setFilteredTours] = useState(tours);
+    // console.log(filteredTours);
     const [lgGridView, setLgGridView] = useState(true);
     const [page, setPage] = useState(1);
     const perPage = 10;
 
     useEffect(() => {
         setPage(1);
-    }, [filteredTransports]);
+    }, [filteredTours]);
 
-    const totalPages = Math.ceil(filteredTransports.length / perPage);
-    const paginatedTransports = useMemo(() => {
+    const totalPages = Math.ceil(filteredTours.length / perPage);
+    const paginatedTours = useMemo(() => {
         const start = (page - 1) * perPage;
         const end = start + perPage;
-        return filteredTransports.slice(start, end);
-    }, [filteredTransports, page, perPage]);
+        return filteredTours.slice(start, end);
+    }, [filteredTours, page, perPage]);
 
     return (
         <div className="w-full">
             {/* Header */}
             <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03]">
-                <h2 className="text-xl font-semibold text-gray-800 dark:text-white/90">Transport Bookings</h2>
+                <h2 className="text-xl font-semibold text-gray-800 dark:text-white/90">Tour Bookings</h2>
                 <nav>
                     <ol className="flex items-center gap-1.5 text-sm">
                         <li className="text-gray-800 dark:text-white/90">
@@ -203,10 +111,22 @@ export default function TransportBookingsPage() {
             </div>
 
             <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03]">
-                <TransportFilter
-                    transports={transports}
-                    onApply={setFilteredTransports}
+                <TourFilter
+                    tours={tours}
+                    onApply={(e) => console.log(e)}
                 />
+                <button
+                    onClick={() =>
+                        USAlert({
+                            type: "question",
+                            title: "Booked Successfully",
+                            desc: "hello",
+                        })
+                    }
+                >
+                    Show Success Alert
+                </button>
+
                 <div className="hidden items-center gap-4 lg:flex">
                     <button
                         onClick={() => setLgGridView(true)}
@@ -232,22 +152,20 @@ export default function TransportBookingsPage() {
             {/* Flight Cards */}
             <div className={`grid grid-cols-1 gap-6 ${lgGridView && "lg:grid-cols-2"}`}>
                 {/* content start here */}
-                {filteredTransports.map((item, index) => {
+                {filteredTours.map((item, index) => {
                     const PickupDropSection = () => (
                         <>
-                            {/* Divider */}
                             <div className="my-3 border-t border-dashed border-gray-300 dark:border-gray-700"></div>
-                            {/* Date Info */}
+
                             <div className="flex items-center justify-between">
-                                {/* Pick-up */}
+                                {/* Check-in */}
                                 <div className="mr-3 text-nowrap text-center">
-                                    <div className="mb-1 text-sm text-[#6B7280]">Pick-up date</div>
-                                    <div className="text-base font-semibold leading-none text-black dark:text-white">{item.pickup.date}</div>
+                                    <div className="mb-1 text-sm text-[#6B7280]">Check in date</div>
+                                    <div className="text-base font-semibold text-black dark:text-white">{item.pickup.date}</div>
                                     <div className="mt-1 text-sm text-[#6B7280]">{item.pickup.time}</div>
                                 </div>
 
                                 <div className="relative mx-auto h-[56px] w-full">
-                                    {/* Gradient Line using SVG */}
                                     <svg
                                         className="absolute left-3 right-3 top-1/2 h-[5px] w-[calc(100%-24px)] -translate-y-1/2"
                                         viewBox="0 0 100 5"
@@ -289,49 +207,35 @@ export default function TransportBookingsPage() {
                                             strokeLinecap="round"
                                         />
                                     </svg>
-
-                                    {/* Endpoints */}
                                     <div className="absolute left-0 top-1/2 h-3 w-3 -translate-y-1/2 rounded-full border-2 border-[#1A6BFF] bg-white"></div>
                                     <div className="absolute right-0 top-1/2 h-3 w-3 -translate-y-1/2 rounded-full border-2 border-[#1A6BFF] bg-white"></div>
-
-                                    {/* Icon in Center */}
-                                    <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-[#1A6BFF]">
-                                        <Car
-                                            size={28}
-                                            fill="#1A6BFF"
-                                            stroke="#1A6BFF"
-                                        />
+                                    <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white text-[#1A6BFF]">
+                                        <Globe size={28} />
                                     </div>
-
-                                    {/* Duration Above Line */}
-                                    <div className="absolute -top-1 w-full text-center text-sm text-[#6B7280]">
-                                        <div>{item.duration}</div>
-                                    </div>
+                                    <div className="absolute -top-2 w-full text-center text-sm text-[#6B7280]">1 Night</div>
                                 </div>
-                                {/* Drop-off */}
+
+                                {/* Check-out */}
                                 <div className="ml-3 text-nowrap text-center">
-                                    <div className="mb-1 text-sm text-[#6B7280]">Drop-off Date</div>
-                                    <div className="text-base font-semibold leading-none text-black dark:text-white">{item.dropoff.date}</div>
+                                    <div className="mb-1 text-sm text-[#6B7280]">Check out date</div>
+                                    <div className="text-base font-semibold text-black dark:text-white">{item.dropoff.date}</div>
                                     <div className="mt-1 text-sm text-[#6B7280]">{item.dropoff.time}</div>
                                 </div>
                             </div>
-                            {/* Divider */}
+
                             <div className="my-3 border-t border-dashed border-gray-300 dark:border-gray-700"></div>
-                            {/* Pickup / Drop-off */}
+
                             <div className="mt-4 flex flex-wrap items-center justify-between">
                                 <div className="text-sm text-gray-700 dark:text-white">
                                     <p>
-                                        <span className="font-semibold">Pick-up :</span> {item.pickup.location}
-                                    </p>
-                                    <p>
-                                        <span className="font-semibold">Drop-off :</span> {item.dropoff.location}
+                                        <span className="font-semibold">Address :</span> Streat 23, High Way Road , Main Istanbul
                                     </p>
                                     <p className="mt-2 text-xs text-gray-500 dark:text-white">Note : All times are in local time</p>
                                 </div>
                                 <div>
                                     <Link
-                                        to="/bookings/transports/234"
-                                        className="inline-flex items-center rounded-lg bg-blue-600 p-2 text-sm font-medium text-white"
+                                        to="/bookings/tours/234"
+                                        className="my-2 inline-flex items-center rounded-lg bg-blue-600 p-2 text-sm font-medium text-white"
                                     >
                                         View Booking
                                         <ArrowRight className="ml-2 h-4 w-4" />
@@ -340,19 +244,20 @@ export default function TransportBookingsPage() {
                             </div>
                         </>
                     );
+
                     return (
                         <div
                             key={index}
                             className="w-full rounded-xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-white/[0.03] dark:text-white"
                         >
-                            {/* Top: Title and logo */}
+                            {/* Header */}
                             <div className="flex items-center justify-between">
-                                <div className="text-lg font-bold text-gray-800 dark:text-white">{item.title}</div>
+                                <div className="text-lg font-bold text-gray-800 dark:text-white"></div>
                                 <div className="flex items-center gap-2">
                                     <img
                                         src={item.logo}
                                         alt={item.company}
-                                        className="h-5"
+                                        className="h-5 rounded-md"
                                     />
                                     <span className="text-sm text-gray-600 dark:text-white">{item.company}</span>
                                     <div className="flex items-center text-sm text-yellow-500">
@@ -362,44 +267,45 @@ export default function TransportBookingsPage() {
                                 </div>
                             </div>
 
-                            <div className="flex pt-5">
-                                {/* Image */}
-                                <div className="flex w-[30%] items-center p-2">
+                            <div className="my-2 gap-4 sm:flex">
+                                <div className="aspect-[1.5] sm:w-[40%]">
                                     <img
-                                        src={item.image}
-                                        alt={item.title}
-                                        className="w-full object-contain"
+                                        src="https://images.unsplash.com/photo-1718567074329-ae4d92befb66?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bmF0dXJlJTIwYWN0aXZpdGllc3xlbnwwfHwwfHx8MA%3D%3D"
+                                        alt="Tokyo Experience"
+                                        className="h-full w-full rounded-xl object-cover"
                                     />
                                 </div>
-                                <div className="w-[70%]">
-                                    {/* Details Row */}
-                                    <div className="mt-3 flex flex-wrap justify-between gap-x-3 gap-y-2 px-3 text-sm text-gray-600 dark:text-white md:gap-x-5 md:gap-y-2 md:px-5 lg:gap-x-7 lg:gap-y-3 lg:px-7 xl:gap-x-10 xl:gap-y-5 xl:px-10">
-                                        <div className="flex items-center gap-1">
-                                            <CarFront className="h-4 w-4" />
-                                            {item.details.type}
+
+                                <div className="sm:w-[60%]">
+                                    <h2 className="my-3 text-lg font-semibold leading-tight sm:mt-0">
+                                        Tokyo & Unique Experience Where Modernity Meets Tradition (5D4N)
+                                    </h2>
+                                    <div className="mt-6 grid grid-cols-2 gap-3 text-sm">
+                                        <div className="flex items-center gap-2">
+                                            <Plane size={16} />
+                                            <span>New York / Tokyo</span>
                                         </div>
-                                        <div className="flex items-center gap-1">
-                                            <Users className="h-4 w-4" />
-                                            {item.details.capacity}
+                                        <div className="flex items-center gap-2">
+                                            <Plane size={16} />
+                                            <span>2 Flights</span>
                                         </div>
-                                        <div className="flex items-center gap-1">
-                                            <Briefcase className="h-4 w-4" />
-                                            {item.details.bags}
+                                        <div className="flex items-center gap-2">
+                                            <CalendarDays size={16} />
+                                            <span>Dec 6 - Dec 10, 2025</span>
                                         </div>
-                                        <div className="flex items-center gap-1">
-                                            <CircleDot className="h-4 w-4" />
-                                            {item.details.doors}
+                                        <div className="flex items-center gap-2">
+                                            <Bed size={16} />
+                                            <span>2 Accommodation</span>
                                         </div>
-                                        <div className="flex items-center gap-1">
-                                            <Fuel className="h-4 w-4" />
-                                            {item.details.fuel}
+                                        <div className="flex items-center gap-2">
+                                            <User size={16} />
+                                            <span>4 Adults</span>
                                         </div>
-                                        <div className="flex items-center gap-1">
-                                            <Fuel className="h-4 w-4" />
-                                            <span className="text-sm font-medium">{item.details.transmission}</span>
+                                        <div className="flex items-center gap-2">
+                                            <Activity size={16} />
+                                            <span>1 Activity</span>
                                         </div>
                                     </div>
-                                    {!lgGridView && <div className="ml-3 p-5 pb-0">{PickupDropSection()}</div>}
                                 </div>
                             </div>
 
@@ -407,9 +313,10 @@ export default function TransportBookingsPage() {
                         </div>
                     );
                 })}
+
                 {/* content ends here */}
             </div>
-            {paginatedTransports.length == 0 && (
+            {paginatedTours.length == 0 && (
                 <div className="rounded-lg border-t border-gray-200 bg-white px-4 py-3 text-center text-sm dark:border-gray-800">
                     No Results Found
                 </div>
@@ -437,14 +344,14 @@ export default function TransportBookingsPage() {
     );
 }
 
-function TransportFilter({ transports, onApply }) {
+function TourFilter({ tours, onApply }) {
     const STEP = 50;
 
-    const prices = transports.map((t) => t.price);
+    const prices = tours.map((t) => t.price);
     const PRICE_MIN = Math.floor(Math.min(...prices));
     const PRICE_MAX = Math.ceil(Math.max(...prices));
 
-    const providersList = [...new Set(transports.map((t) => t.company))];
+    const providersList = [...new Set(tours.map((t) => t.company))];
     const energyTypes = ["Gasoline", "Electric"];
     const providerPolicies = ["Instant Confirmation", "Free Cancellation", "Refundable"];
     const distanceOptions = [1, 2.5, 5, 10]; // in km
@@ -477,7 +384,7 @@ function TransportFilter({ transports, onApply }) {
     }, [seats, selectedProviders, energy, policies, distance, ratings, priceRange]);
 
     const applyFilters = () => {
-        let filtered = [...transports];
+        let filtered = [...tours];
 
         if (seats.length) {
             filtered = filtered.filter((t) => {
