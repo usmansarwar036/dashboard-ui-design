@@ -3,10 +3,12 @@ import { useMemo, useState, useEffect } from "react";
 
 import { Range } from "react-range";
 import "react-datepicker/dist/react-datepicker.css";
+import Mecca from "@/assets/mecca.png";
+
 import { Star, Filter, X, LayoutGrid, List, ArrowRight, Globe, Plane, CalendarDays, Bed, User, Activity } from "lucide-react";
 
-export default function ToursBookingsPage() {
-    const tours = [
+export default function UmrahsBookingsPage() {
+    const umrahs = [
         {
             title: "Audi A5",
             company: "Sixt",
@@ -55,28 +57,28 @@ export default function ToursBookingsPage() {
         },
     ];
 
-    const [filteredTours, setFilteredTours] = useState(tours);
-    // console.log(filteredTours);
+    const [filteredUmrahs, setFilteredUmrahs] = useState(umrahs);
+    // console.log(filteredUmrahs);
     const [lgGridView, setLgGridView] = useState(true);
     const [page, setPage] = useState(1);
     const perPage = 10;
 
     useEffect(() => {
         setPage(1);
-    }, [filteredTours]);
+    }, [filteredUmrahs]);
 
-    const totalPages = Math.ceil(filteredTours.length / perPage);
-    const paginatedTours = useMemo(() => {
+    const totalPages = Math.ceil(filteredUmrahs.length / perPage);
+    const paginatedUmrahs = useMemo(() => {
         const start = (page - 1) * perPage;
         const end = start + perPage;
-        return filteredTours.slice(start, end);
-    }, [filteredTours, page, perPage]);
+        return filteredUmrahs.slice(start, end);
+    }, [filteredUmrahs, page, perPage]);
 
     return (
         <div className="w-full">
             {/* Header */}
             <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03]">
-                <h2 className="text-xl font-semibold text-gray-800 dark:text-white/90">Tour Bookings</h2>
+                <h2 className="text-xl font-semibold text-gray-800 dark:text-white/90">Umrah Bookings</h2>
                 <nav>
                     <ol className="flex items-center gap-1.5 text-sm">
                         <li className="text-gray-800 dark:text-white/90">
@@ -89,8 +91,8 @@ export default function ToursBookingsPage() {
             </div>
 
             <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03]">
-                <TourFilter
-                    tours={tours}
+                <UmrahFilter
+                    umrahs={umrahs}
                     onApply={(e) => console.log(e)}
                 />
 
@@ -119,7 +121,7 @@ export default function ToursBookingsPage() {
             {/* Flight Cards */}
             <div className={`grid grid-cols-1 gap-6 ${lgGridView && "lg:grid-cols-2"}`}>
                 {/* content start here */}
-                {filteredTours.map((item, index) => {
+                {filteredUmrahs.map((item, index) => {
                     const PickupDropSection = () => (
                         <>
                             <div className="my-3 border-t border-dashed border-gray-300 dark:border-gray-700"></div>
@@ -177,9 +179,13 @@ export default function ToursBookingsPage() {
                                     <div className="absolute left-0 top-1/2 h-3 w-3 -translate-y-1/2 rounded-full border-2 border-[#1A6BFF] bg-white"></div>
                                     <div className="absolute right-0 top-1/2 h-3 w-3 -translate-y-1/2 rounded-full border-2 border-[#1A6BFF] bg-white"></div>
                                     <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white text-[#1A6BFF]">
-                                        <Globe size={28} />
+                                        <img
+                                            src={Mecca}
+                                            alt="Mecca"
+                                            className="h-[28px] w-[28px] flex-shrink-0"
+                                        />
                                     </div>
-                                    <div className="absolute -top-2 w-full text-center text-sm text-[#6B7280]">1 Night</div>
+                                    <div className="absolute -top-2 w-full text-center text-sm text-[#6B7280]">5D 4N</div>
                                 </div>
 
                                 {/* Check-out */}
@@ -201,7 +207,7 @@ export default function ToursBookingsPage() {
                                 </div>
                                 <div>
                                     <Link
-                                        to="/bookings/tours/234"
+                                        to="/bookings/umrahs/234"
                                         className="my-2 inline-flex items-center rounded-lg bg-blue-600 p-2 text-sm font-medium text-white"
                                     >
                                         View Booking
@@ -237,7 +243,7 @@ export default function ToursBookingsPage() {
                             <div className="my-2 gap-4 sm:flex">
                                 <div className="aspect-[1.5] sm:w-[40%]">
                                     <img
-                                        src="https://images.unsplash.com/photo-1718567074329-ae4d92befb66?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bmF0dXJlJTIwYWN0aXZpdGllc3xlbnwwfHwwfHx8MA%3D%3D"
+                                        src="https://b2bzend.s3.ap-south-1.amazonaws.com/img/4539/package/images/daily-umrah---days_1697788736"
                                         alt="Tokyo Experience"
                                         className="h-full w-full rounded-xl object-cover"
                                     />
@@ -245,7 +251,7 @@ export default function ToursBookingsPage() {
 
                                 <div className="sm:w-[60%]">
                                     <h2 className="my-3 text-lg font-semibold leading-tight sm:mt-0">
-                                        Tokyo & Unique Experience Where Modernity Meets Tradition (5D4N)
+                                        Spiritual Journey to Makkah & Madinah – 10D/9N Umrah Package
                                     </h2>
                                     <div className="mt-6 grid grid-cols-2 gap-3 text-sm">
                                         <div className="flex items-center gap-2">
@@ -283,7 +289,7 @@ export default function ToursBookingsPage() {
 
                 {/* content ends here */}
             </div>
-            {paginatedTours.length == 0 && (
+            {paginatedUmrahs.length == 0 && (
                 <div className="rounded-lg border-t border-gray-200 bg-white px-4 py-3 text-center text-sm dark:border-gray-800">
                     No Results Found
                 </div>
@@ -311,14 +317,14 @@ export default function ToursBookingsPage() {
     );
 }
 
-function TourFilter({ tours, onApply }) {
+function UmrahFilter({ umrahs, onApply }) {
     const STEP = 50;
 
-    const prices = tours.map((t) => t.price);
+    const prices = umrahs.map((t) => t.price);
     const PRICE_MIN = Math.floor(Math.min(...prices));
     const PRICE_MAX = Math.ceil(Math.max(...prices));
 
-    const providersList = [...new Set(tours.map((t) => t.company))];
+    const providersList = [...new Set(umrahs.map((t) => t.company))];
     const energyTypes = ["Gasoline", "Electric"];
     const providerPolicies = ["Instant Confirmation", "Free Cancellation", "Refundable"];
     const distanceOptions = [1, 2.5, 5, 10]; // in km
@@ -351,7 +357,7 @@ function TourFilter({ tours, onApply }) {
     }, [seats, selectedProviders, energy, policies, distance, ratings, priceRange]);
 
     const applyFilters = () => {
-        let filtered = [...tours];
+        let filtered = [...umrahs];
 
         if (seats.length) {
             filtered = filtered.filter((t) => {

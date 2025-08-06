@@ -24,7 +24,7 @@ import {
     Hotel,
     Globe,
 } from "lucide-react";
-
+import Mecca from "@/assets/mecca.png";
 import ProfileImage from "@/assets/profile-image.jpg";
 import ProductImage from "@/assets/product-image.jpg";
 
@@ -77,6 +77,12 @@ export const navbarLinks = [
                 label: "Tours",
                 icon: Globe,
                 path: "/bookings/tours",
+            },
+            {
+                label: "Umrah",
+                icon: Mecca,
+                path: "/bookings/umrahs",
+                isImage: true,
             },
         ],
     },

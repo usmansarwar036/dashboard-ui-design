@@ -37,6 +37,8 @@ import HotelsBookingsPage from "./routes/dashboard/bookings/hotels";
 import HotelBookingDetials from "./routes/dashboard/bookings/hotel-details";
 import TourBookingDetials from "./routes/dashboard/bookings/tour-details";
 import ToursBookingsPage from "./routes/dashboard/bookings/tours";
+import UmrahsBookingsPage from "./routes/dashboard/bookings/umrahs";
+import UmrahBookingDetials from "./routes/dashboard/bookings/umrah-details";
 
 function App() {
     const router = createBrowserRouter([
@@ -68,6 +70,8 @@ function App() {
                 { path: "bookings/hotels/:bookingId", element: <HotelBookingDetials /> },
                 { path: "bookings/tours", element: <ToursBookingsPage /> },
                 { path: "bookings/tours/:bookingId", element: <TourBookingDetials /> },
+                { path: "bookings/umrahs", element: <UmrahsBookingsPage /> },
+                { path: "bookings/umrahs/:bookingId", element: <UmrahBookingDetials /> },
 
                 {
                     path: "roles",
