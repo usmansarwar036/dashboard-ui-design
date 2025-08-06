@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Eye, Download, FileText } from "lucide-react";
+import { Eye, Download, FileText, Link } from "lucide-react";
 import CalendarView from "./calendar";
 import CustomSelect from "./select";
 
@@ -90,12 +90,12 @@ export default function TransactionsPage() {
                 <nav>
                     <ol className="flex items-center gap-1.5 text-sm">
                         <li>
-                            <a
-                                href="/"
-                                className="inline-flex items-center gap-1.5 text-gray-500 dark:text-gray-400"
+                            <Link
+                                to="/dashboard/"
+                                className="dark:bg-dark/[0.03] inline-flex items-center gap-1.5 text-gray-500 dark:border-gray-800 dark:text-white"
                             >
                                 Home <span className="text-gray-400">/</span>
-                            </a>
+                            </Link>
                         </li>
                         <li className="text-gray-800 dark:text-white/90">Refunded</li>
                     </ol>

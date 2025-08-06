@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Eye, Download, FileText } from "lucide-react";
+import { Eye, Download, FileText, Link } from "lucide-react";
 import CalendarView from "./calendar";
 import CustomSelect from "./select";
 
@@ -92,12 +92,12 @@ export default function TransactionsPage() {
                 <nav>
                     <ol className="flex items-center gap-1.5 text-sm">
                         <li>
-                            <a
-                                href="/"
-                                className="inline-flex items-center gap-1.5 text-gray-500 dark:text-gray-400"
+                            <Link
+                                to="/dashboard/"
+                                className="dark:bg-dark/[0.03] inline-flex items-center gap-1.5 text-gray-500 dark:border-gray-800 dark:text-white"
                             >
                                 Home <span className="text-gray-400">/</span>
-                            </a>
+                            </Link>
                         </li>
                         <li className="text-gray-800 dark:text-white/90">Transactions</li>
                     </ol>
@@ -213,12 +213,12 @@ export default function TransactionsPage() {
 
                                 <td className="px-4 py-3 text-center">
                                     <div className="flex justify-center">
-                                        <a
-                                            href={`/profile/${t.customer.name}`}
-                                            className="rounded-lg p-2 text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
+                                        <Link
+                                            to={`/dashboard/profile/${t.customer.name}`}
+                                            className="dark:bg-dark/[0.03] rounded-lg p-2 text-gray-600 hover:bg-gray-100 dark:border-gray-800 dark:text-white"
                                         >
                                             <Eye size={18} />
-                                        </a>
+                                        </Link>
                                     </div>
                                 </td>
                             </tr>

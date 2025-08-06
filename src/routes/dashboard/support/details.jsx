@@ -1,4 +1,4 @@
-import { Star } from "lucide-react";
+import { Link, Star } from "lucide-react";
 import { useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
@@ -76,18 +76,18 @@ export default function TicketDetailPage() {
                 <nav>
                     <ol className="flex items-center gap-1.5 text-sm">
                         <li>
-                            <a
-                                href="/"
-                                className="inline-flex items-center gap-1.5 text-gray-500 dark:text-gray-400"
+                            <Link
+                                to="/dashboard/"
+                                className="dark:bg-dark/[0.03] inline-flex items-center gap-1.5 text-gray-500 dark:border-gray-800 dark:text-white"
                             >
                                 Home <span className="text-gray-400">/</span>
-                            </a>
-                            <a
-                                href="/tickets"
-                                className="ms-1.5 inline-flex items-center gap-1.5 text-gray-500 dark:text-gray-400"
+                            </Link>
+                            <Link
+                                to="/dashboard/tickets"
+                                className="dark:bg-dark/[0.03] ms-1.5 inline-flex items-center gap-1.5 text-gray-500 dark:border-gray-800 dark:text-white"
                             >
                                 Tickets <span className="text-gray-400">/</span>
-                            </a>
+                            </Link>
                         </li>
                         <li className="text-gray-800 dark:text-white/90">Details</li>
                     </ol>

@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { useTheme } from "@/hooks/use-theme";
 import { useClickOutside } from "@/hooks/use-click-outside";
-import { Bell, ChevronsLeft, Moon, Search, Sun } from "lucide-react";
+import { Bell, ChevronsLeft, Link, Moon, Search, Sun } from "lucide-react";
 import profileImg from "@/assets/profile-image.jpg";
 import PropTypes from "prop-types";
 import { UserCog, Settings, LifeBuoy, LogOut } from "lucide-react";
@@ -202,31 +202,31 @@ export const Header = ({ collapsed, setCollapsed }) => {
                             </div>
                             <ul className="border-b border-gray-200 pb-3 dark:border-gray-800">
                                 <li className="my-2">
-                                    <a
-                                        href="/profile"
-                                        className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-white/5"
+                                    <Link
+                                        to="/dashboard/profile/"
+                                        className="dark:bg-dark/[0.03] flex items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-gray-100 dark:border-gray-800 dark:text-white"
                                     >
                                         <UserCog className="size-5" />
                                         <span>Edit profile</span>
-                                    </a>
+                                    </Link>
                                 </li>
                                 <li className="my-2">
-                                    <a
-                                        href="/chat"
-                                        className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-white/5"
+                                    <Link
+                                        to="/dashboard/chat/"
+                                        className="dark:bg-dark/[0.03] flex items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-gray-100 dark:border-gray-800 dark:text-white"
                                     >
                                         <Settings className="size-5" />
                                         <span>Account settings</span>
-                                    </a>
+                                    </Link>
                                 </li>
                                 <li className="my-2">
-                                    <a
-                                        href="/support"
-                                        className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-white/5"
+                                    <Link
+                                        to="/dashboard/support/"
+                                        className="dark:bg-dark/[0.03] flex items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-gray-100 dark:border-gray-800 dark:text-white"
                                     >
                                         <LifeBuoy className="size-5" />
                                         <span>Support</span>
-                                    </a>
+                                    </Link>
                                 </li>
                             </ul>
 

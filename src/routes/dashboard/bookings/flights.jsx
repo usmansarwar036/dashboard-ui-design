@@ -114,7 +114,7 @@ export default function FlightBookingsPage() {
                 <nav>
                     <ol className="flex items-center gap-1.5 text-sm">
                         <li className="text-gray-800 dark:text-white/90">
-                            <Link to="/">Home</Link>
+                            <Link to="/dashboard">Home</Link>
                             <span className="text-gray-400"> /</span>
                         </li>
                         <li className="text-gray-800 dark:text-white/90">Bookings</li>
@@ -248,22 +248,7 @@ export default function FlightBookingsPage() {
                                 </div>
                             </div>
                         </div>
-                        {/* <div className="mt-4 flex flex-wrap justify-between">
-                            <div className="text-sm text-gray-700 dark:text-white">
-                                <p className="text-sm text-green-500">
-                                    Cancelable until <span className="font-bold"> Wed, 23 Dec 2023</span>
-                                </p>
-                            </div>
-                            <div>
-                                <Link
-                                    to="/bookings/flights/234"
-                                    className="inline-flex items-center rounded-lg border border-gray-200 bg-white p-1 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-100 dark:border-gray-800 dark:bg-white/[0.03] dark:text-white sm:p-2 md:p-3 lg:p-4"
-                                >
-                                    View Booking
-                                    <ArrowRight className="ml-2 h-4 w-4" />
-                                </Link>
-                            </div>
-                        </div> */}
+
                         <div className="flex items-center justify-between border-t border-gray-300 p-5 py-2 align-middle dark:border-gray-700">
                             <div className="text-sm text-gray-700 dark:text-white">
                                 <p className="text-sm">
@@ -272,7 +257,7 @@ export default function FlightBookingsPage() {
                             </div>
                             <div>
                                 <Link
-                                    to="/bookings/flights/234"
+                                    to="/dashboard/bookings/flights/234"
                                     className="inline-flex items-center rounded-lg bg-blue-600 p-2 text-sm font-medium text-white"
                                 >
                                     View Booking

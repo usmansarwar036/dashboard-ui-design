@@ -30,7 +30,7 @@ export default function UmrahBookingDetials() {
                 <nav>
                     <ol className="flex items-center gap-1.5 text-sm">
                         <li className="text-gray-800 dark:text-white/90">
-                            <Link to={"/"}>Home</Link>
+                            <Link to={"/dashboard/"}>Home</Link>
                             <span className="text-gray-400"> /</span>
                         </li>
                         <li className="text-gray-800 dark:text-white/90">Bookings</li>

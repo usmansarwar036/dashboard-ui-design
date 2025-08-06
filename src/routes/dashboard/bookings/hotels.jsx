@@ -83,7 +83,7 @@ export default function HotelBookingsPage() {
                 <nav>
                     <ol className="flex items-center gap-1.5 text-sm">
                         <li className="text-gray-800 dark:text-white/90">
-                            <Link to="/">Home</Link>
+                            <Link to="/dashboard/">Home</Link>
                             <span className="text-gray-400"> /</span>
                         </li>
                         <li className="text-gray-800 dark:text-white/90">Bookings</li>
@@ -215,7 +215,7 @@ export default function HotelBookingsPage() {
                                 </div>
                                 <div>
                                     <Link
-                                        to="/bookings/hotels/234"
+                                        to="/dashboard/bookings/hotels/234"
                                         className="my-2 inline-flex items-center rounded-lg bg-blue-600 p-2 text-sm font-medium text-white"
                                     >
                                         View Booking

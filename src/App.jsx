@@ -43,7 +43,7 @@ import UmrahBookingDetials from "./routes/dashboard/bookings/umrah-details";
 function App() {
     const router = createBrowserRouter([
         {
-            path: "/",
+            path: "/dashboard/",
             element: <Layout />,
             children: [
                 {
@@ -100,6 +100,10 @@ function App() {
             path: "/",
             element: <PublicLayout />,
             children: [
+                {
+                    index: true,
+                    element: <Login />,
+                },
                 { path: "login", element: <Login /> },
                 { path: "register", element: <Register /> },
                 { path: "forgot-password", element: <ForgotPassword /> },

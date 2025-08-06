@@ -106,7 +106,7 @@ export default function InvoicesPage() {
                     placeholder="Search invoices..."
                 />
 
-                <Link to="/invoices/create">
+                <Link to="/dashboard/invoices/create">
                     <button className="rounded-lg bg-blue-600 px-4 py-2 text-white">+</button>
                 </Link>
             </div>
@@ -153,7 +153,7 @@ export default function InvoicesPage() {
                                     <span className={`rounded-full px-3 py-1 text-xs font-medium capitalize ${badge[inv.status]}`}>{inv.status}</span>
                                 </td>
                                 <td className="px-4 py-3 text-center">
-                                    <Link to="/invoices/details">
+                                    <Link to="/dashboard/invoices/details">
                                         <button className="rounded-lg p-2 text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800">
                                             <Eye size={18} />
                                         </button>

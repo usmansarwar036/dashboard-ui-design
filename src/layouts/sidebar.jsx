@@ -44,7 +44,15 @@ export const Sidebar = forwardRef(({ collapsed }, ref) => {
                             <NavLink
                                 key={link.label}
                                 to={link.path}
-                                className={cn("sidebar-item", collapsed && "md:w-[45px]")}
+                                className={({ isActive }) =>
+                                    cn(
+                                        "sidebar-item",
+                                        collapsed && "md:w-[45px]",
+                                        isActive && ((link.label === "Dashboard" && location.pathname === link.path) || link.label !== "Dashboard")
+                                            ? "sidebar-item-active"
+                                            : "",
+                                    )
+                                }
                             >
                                 {link.isImage ? (
                                     <img

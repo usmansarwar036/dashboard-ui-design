@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { Link } from "lucide-react";
 
 const quickAmounts = [50, 100, 200, 500];
 
@@ -64,12 +65,12 @@ export default function DepositPage() {
                     <nav>
                         <ol className="flex items-center gap-1.5 text-sm">
                             <li>
-                                <a
-                                    href="/"
-                                    className="inline-flex items-center gap-1.5 text-gray-500 dark:text-gray-400"
+                                <Link
+                                    to="/dashboard/"
+                                    className="dark:bg-dark/[0.03] inline-flex items-center gap-1.5 text-gray-500 dark:border-gray-800 dark:text-white"
                                 >
                                     Home <span className="text-gray-400">/</span>
-                                </a>
+                                </Link>
                             </li>
                             <li className="text-gray-800 dark:text-white/90">Deposit</li>
                         </ol>

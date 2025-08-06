@@ -35,22 +35,22 @@ export const navbarLinks = [
             {
                 label: "Dashboard",
                 icon: Home,
-                path: "/",
+                path: "/dashboard",
             },
             {
                 label: "Profile",
                 icon: UserCircle,
-                path: "/profile",
+                path: "/dashboard/profile",
             },
             {
                 label: "Notification",
                 icon: Bell,
-                path: "/notification",
+                path: "/dashboard/notification",
             },
             {
                 label: "Activity Logs",
                 icon: Clock,
-                path: "/logs",
+                path: "/dashboard/logs",
             },
         ],
     },
@@ -60,28 +60,28 @@ export const navbarLinks = [
             {
                 label: "Hotel",
                 icon: Hotel,
-                path: "/bookings/hotels",
+                path: "/dashboard/bookings/hotels",
             },
 
             {
                 label: "Flight",
                 icon: Plane,
-                path: "/bookings/flights",
+                path: "/dashboard/bookings/flights",
             },
             {
                 label: "Transport",
                 icon: Car,
-                path: "/bookings/transports",
+                path: "/dashboard/bookings/transports",
             },
             {
                 label: "Tours",
                 icon: Globe,
-                path: "/bookings/tours",
+                path: "/dashboard/bookings/tours",
             },
             {
                 label: "Umrah",
                 icon: Mecca,
-                path: "/bookings/umrahs",
+                path: "/dashboard/bookings/umrahs",
                 isImage: true,
             },
         ],
@@ -92,17 +92,17 @@ export const navbarLinks = [
             {
                 label: "Wallet",
                 icon: Banknote,
-                path: "/wallet",
+                path: "/dashboard/wallet",
             },
             {
                 label: "Deposit",
                 icon: Coins,
-                path: "/deposit",
+                path: "/dashboard/deposit",
             },
             {
                 label: "Manage",
                 icon: Wrench,
-                path: "/manage-credits",
+                path: "/dashboard/manage-credits",
             },
         ],
     },
@@ -112,7 +112,7 @@ export const navbarLinks = [
             {
                 label: "Tickets",
                 icon: Headphones,
-                path: "/tickets",
+                path: "/dashboard/tickets",
             },
         ],
     },
@@ -122,7 +122,7 @@ export const navbarLinks = [
             {
                 label: "Invite Others",
                 icon: Share2,
-                path: "/invite",
+                path: "/dashboard/invite",
             },
         ],
     },
@@ -132,17 +132,17 @@ export const navbarLinks = [
             {
                 label: "Transactions",
                 icon: Wallet,
-                path: "/transactions",
+                path: "/dashboard/transactions",
             },
             {
                 label: "Refunded",
                 icon: RotateCcw,
-                path: "/refunded",
+                path: "/dashboard/refunded",
             },
             {
                 label: "Invoices",
                 icon: FileText,
-                path: "/invoices",
+                path: "/dashboard/invoices",
             },
         ],
     },
@@ -152,17 +152,17 @@ export const navbarLinks = [
             {
                 label: "Members",
                 icon: Users,
-                path: "/members",
+                path: "/dashboard/members",
             },
             {
                 label: "Roles",
                 icon: ShieldCheck,
-                path: "/roles",
+                path: "/dashboard/roles",
             },
             {
                 label: "Customers",
                 icon: UsersRound,
-                path: "/customers",
+                path: "/dashboard/customers",
             },
         ],
     },

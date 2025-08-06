@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { X, Package, TrendingUp, TrendingDown, ClipboardCheck, Trash, Eye, Hourglass } from "lucide-react";
+import { X, Package, TrendingUp, TrendingDown, ClipboardCheck, Trash, Eye, Hourglass, Link } from "lucide-react";
 
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
@@ -97,12 +97,12 @@ export default function SupportTicketsPage() {
                 <nav>
                     <ol className="flex items-center gap-1.5 text-sm">
                         <li>
-                            <a
-                                href="/"
-                                className="inline-flex items-center gap-1.5 text-gray-500 dark:text-gray-400"
+                            <Link
+                                to="/dashboard/"
+                                className="dark:bg-dark/[0.03] inline-flex items-center gap-1.5 text-gray-500 dark:border-gray-800 dark:text-white"
                             >
                                 Home <span className="text-gray-400">/</span>
-                            </a>
+                            </Link>
                         </li>
                         <li className="text-gray-800 dark:text-white/90">Tickets</li>
                     </ol>
@@ -256,11 +256,12 @@ export default function SupportTicketsPage() {
                                     <span className={`rounded-full px-3 py-1 text-xs font-medium capitalize ${badge[t.status]}`}>{t.status}</span>
                                 </td>
                                 <td className="px-4 py-3 text-center">
-                                    <a href="/tickets/details">
-                                        <button className="rounded-lg p-2 text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800">
-                                            <Eye size={18} />
-                                        </button>
-                                    </a>
+                                    <Link
+                                        to="/dashboard/tickets/details"
+                                        className="dark:bg-dark/[0.03] rounded-lg p-2 text-gray-600 hover:bg-gray-100 dark:border-gray-800 dark:text-white"
+                                    >
+                                        <Eye size={18} />
+                                    </Link>
                                 </td>
                             </tr>
                         ))}
