@@ -154,7 +154,7 @@ export default function FlightBookingsPage() {
                 {paginatedFlights.map((flight) => (
                     <div
                         key={flight.id}
-                        className="rounded-lg border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]"
+                        className="rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]"
                     >
                         <div className="p-5">
                             {/* Top Info */}

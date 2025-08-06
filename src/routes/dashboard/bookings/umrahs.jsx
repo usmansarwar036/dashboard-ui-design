@@ -279,6 +279,7 @@ export default function UmrahsBookingsPage() {
                                             <span>1 Activity</span>
                                         </div>
                                     </div>
+                                    {!lgGridView && <div className="py-4 pb-0">{PickupDropSection()}</div>}
                                 </div>
                             </div>
 
