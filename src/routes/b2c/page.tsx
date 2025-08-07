@@ -28,7 +28,28 @@ const popularPlaces = [
     { city: "Mumbai", country: "India", code: "BOM", desc: "Chhatrapati Shivaji Maharaj International Airport" },
 ];
 
-const seatClasses = ["Economy", "Premium Economy", "Business Class", "First Class"];
+const seatClasses = [
+    {
+        label: "Economy",
+        code: "economy",
+        desc: "Basic seating with standard amenities, ideal for budget travelers",
+    },
+    {
+        label: "Premium Economy",
+        code: "premium-economy",
+        desc: "Extra legroom and enhanced comfort with additional services",
+    },
+    {
+        label: "Business Class",
+        code: "business",
+        desc: "Spacious seating, gourmet meals, lounge access & priority boarding",
+    },
+    {
+        label: "First Class",
+        code: "first",
+        desc: "Top-tier luxury experience with exclusive services and premium privacy",
+    },
+];
 
 export default function HomePage() {
     const [step, setStep] = useState(null);
@@ -113,7 +134,7 @@ export default function HomePage() {
 
             case "dates":
                 return (
-                    <div className="dark:bg-dark/[0.03] flex flex-col overflow-hidden rounded-t-2xl bg-white dark:text-white">
+                    <div className="dark:bg-dark/[0.03] flex flex-col overflow-hidden rounded-2xl bg-white dark:text-white">
                         {/* Header */}
                         <div className="rounded-t-2xl bg-blue-600 py-5 text-center text-lg text-white">
                             {form.tripType == "round" ? " Return Date" : " Departure Date"}
@@ -218,19 +239,20 @@ export default function HomePage() {
                         <div className="rounded-t-2xl bg-blue-600 py-5 text-center text-lg text-white">
                             {step === "from" ? "Select Origin" : "Select Desctination"}
                         </div>
-                        <div className="max-h-screen space-y-2 p-4 dark:text-white">
+                        <div className="max-h-screen space-y-2 overflow-auto p-4 dark:text-white">
                             {seatClasses.map((cls) => (
                                 <div
-                                    key={cls}
-                                    onClick={() => updateFormField("seatClass", cls)}
-                                    className={cn("cursor-pointer rounded-lg border p-3", {
-                                        "dark:bg-dark/[0.03] bg-blue-100": form.seatClass === cls,
-                                        "dark:border-gray-800": true,
+                                    key={cls.code}
+                                    onClick={() => updateFormField("seatClass", cls.code)}
+                                    className={cn("dark:bg-dark/[0.03] cursor-pointer rounded-lg border p-3 dark:border-gray-800 dark:text-white", {
+                                        "bg-blue-100": form.seatClass === cls.code,
                                     })}
                                 >
-                                    {cls}
+                                    <div className="text-sm font-semibold">{cls.label}</div>
+                                    <div className="mt-1 text-sm text-gray-600 dark:text-gray-400">{cls.desc}</div>
                                 </div>
                             ))}
+
                             <div className="flex gap-2 pt-4">
                                 <button
                                     onClick={() => setStep(null)}
