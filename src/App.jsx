@@ -2,6 +2,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import { ThemeProvider } from "@/contexts/theme-context";
 
+// dashboard Pages
 import Layout from "@/routes/dashboard/layout";
 import DashboardPage from "@/routes/dashboard/page";
 import ProfilePage from "@/routes/dashboard/profile/page";
@@ -14,14 +15,6 @@ import TransactionsPage from "@/routes/dashboard/transactions/page";
 import RefundedPage from "@/routes/dashboard/transactions/refunded";
 import MembersPage from "./routes/dashboard/management/members";
 import CustomersPage from "./routes/dashboard/management/customers";
-
-// Public pages
-import PublicLayout from "@/routes/public/layout";
-import Login from "@/routes/public/login";
-import Register from "@/routes/public/register";
-import ForgotPassword from "@/routes/public/forgot-password";
-import VerifyEmail from "@/routes/public/verify-email";
-import ProfileLock from "@/routes/public/profile-lock";
 import WalletPage from "./routes/dashboard/management/wallet";
 import ManageCreditsPage from "./routes/dashboard/management/manage-credits";
 import DepositPage from "./routes/dashboard/management/deposit";
@@ -39,6 +32,16 @@ import TourBookingDetials from "./routes/dashboard/bookings/tour-details";
 import ToursBookingsPage from "./routes/dashboard/bookings/tours";
 import UmrahsBookingsPage from "./routes/dashboard/bookings/umrahs";
 import UmrahBookingDetials from "./routes/dashboard/bookings/umrah-details";
+
+// Auth pages
+import AuthLayout from "@/routes/auth/layout";
+import Login from "@/routes/auth/login";
+import Register from "@/routes/auth/register";
+import ForgotPassword from "@/routes/auth/forgot-password";
+import VerifyEmail from "@/routes/auth/verify-email";
+import ProfileLock from "@/routes/auth/profile-lock";
+
+// public pages
 
 function App() {
     const router = createBrowserRouter([
@@ -95,15 +98,11 @@ function App() {
                 },
             ],
         },
-        // Auth/Public Routes
+        // Auth/Auth Routes
         {
             path: "/",
-            element: <PublicLayout />,
+            element: <AuthLayout />,
             children: [
-                {
-                    index: true,
-                    element: <Login />,
-                },
                 { path: "login", element: <Login /> },
                 { path: "register", element: <Register /> },
                 { path: "forgot-password", element: <ForgotPassword /> },
