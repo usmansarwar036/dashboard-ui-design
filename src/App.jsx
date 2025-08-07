@@ -40,6 +40,8 @@ import Register from "@/routes/auth/register";
 import ForgotPassword from "@/routes/auth/forgot-password";
 import VerifyEmail from "@/routes/auth/verify-email";
 import ProfileLock from "@/routes/auth/profile-lock";
+import PublicLayout from "./routes/b2c/layout";
+import HomePage from "./routes/b2c/page";
 
 // public pages
 
@@ -98,7 +100,7 @@ function App() {
                 },
             ],
         },
-        // Auth/Auth Routes
+        // Auth Routes
         {
             path: "/",
             element: <AuthLayout />,
@@ -108,6 +110,17 @@ function App() {
                 { path: "forgot-password", element: <ForgotPassword /> },
                 { path: "verify-email", element: <VerifyEmail /> },
                 { path: "profile-lock", element: <ProfileLock /> },
+            ],
+        },
+        // Auth Routes
+        {
+            path: "/",
+            element: <PublicLayout />,
+            children: [
+                {
+                    index: true,
+                    element: <HomePage />,
+                },
             ],
         },
     ]);
