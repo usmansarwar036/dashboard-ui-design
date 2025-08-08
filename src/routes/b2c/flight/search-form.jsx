@@ -1,9 +1,8 @@
 import { useState } from "react";
-import { MapPin, Calendar, Users, Plane, ChevronRight } from "lucide-react";
+import { MapPin, Calendar, Users, Plane, ChevronRight, Plus, Minus, X, PlaneTakeoff, PlaneLanding } from "lucide-react";
 import { cn } from "../../../utils/cn";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
-
 const popularPlaces = [
     { city: "New York", country: "USA", code: "JFK", desc: "John F. Kennedy International Airport" },
     { city: "Paris", country: "France", code: "CDG", desc: "Charles de Gaulle Airport" },
@@ -28,50 +27,21 @@ const popularPlaces = [
 ];
 
 const seatClasses = [
-    {
-        label: "Economy",
-        code: "economy",
-        desc: "Basic seating with standard amenities, ideal for budget travelers",
-    },
-    {
-        label: "Premium Economy",
-        code: "premium-economy",
-        desc: "Extra legroom and enhanced comfort with additional services",
-    },
-    {
-        label: "Business Class",
-        code: "business",
-        desc: "Spacious seating, gourmet meals, lounge access & priority boarding",
-    },
-    {
-        label: "First Class",
-        code: "first",
-        desc: "Top-tier luxury experience with exclusive services and premium privacy",
-    },
+    { label: "Economy", code: "economy", desc: "Basic seating with standard amenities" },
+    { label: "Premium Economy", code: "premium-economy", desc: "Extra legroom and enhanced comfort" },
+    { label: "Business Class", code: "business", desc: "Spacious seating & priority boarding" },
+    { label: "First Class", code: "first", desc: "Luxury experience with exclusive services" },
 ];
 
 export default function FlightSearchForm() {
     const [step, setStep] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
-    const [form, setForm] = useState({
-        tripType: "oneway",
-        // TODO::
-        // prompt:
-        // remove fromcode,departDate, to,returnDate from , tocode feilds from form, set a new feilds of array inside array, do full functionality as well.
-        // route: [
-        //  [
-        // from: [{ city: "San Francisco", country: "USA", code: "SFO", desc: "San Francisco International Airport" },date:'']
-        // to: [ { city: "Mumbai", country: "India", code: "BOM", desc: "Chhatrapati Shivaji Maharaj International Airport" }, ,date:'']
-        //  ],
-        //  other arrays for multicity purpose
-        // ]
+    const [segmentIndex, setSegmentIndex] = useState(0);
+    const [fieldType, setFieldType] = useState(""); // "from" | "to" | "date"
 
-        from: "",
-        fromCode: "",
-        to: "",
-        toCode: "",
-        departDate: "",
-        returnDate: "",
+    const [form, setForm] = useState({
+        tripType: "oneway", // round , multicity
+        route: [{ from: null, to: null, date: "" }],
         passengers: { adult: 1, child: 0, infant: 0 },
         seatClass: "economy",
     });
@@ -79,275 +49,376 @@ export default function FlightSearchForm() {
     const filteredPlaces =
         searchTerm.length >= 3 ? popularPlaces.filter((p) => p.city.toLowerCase().includes(searchTerm.toLowerCase())) : popularPlaces;
 
-    const updateFormField = (key, value) => {
-        setForm((prev) => ({ ...prev, [key]: value }));
+    const updateSegmentField = (index, key, value) => {
+        setForm((prev) => {
+            const updated = [...prev.route];
+            updated[index] = { ...updated[index], [key]: value };
+            return { ...prev, route: updated };
+        });
     };
 
-    const openStep = (name) => {
-        if (!form.from || !form.to) return setStep("from");
-        setStep(name);
+    const addSegment = () => {
+        if (form.route.length >= 6) return;
+        setForm((prev) => ({
+            ...prev,
+            route: [...prev.route, { from: null, to: null, date: "" }],
+        }));
     };
-    //
+
+    const removeSegment = (index) => {
+        if (form.route.length <= 1) return;
+        setForm((prev) => {
+            const updated = prev.route.filter((_, i) => i !== index);
+            return { ...prev, route: updated };
+        });
+    };
+
+    const openStep = (type, index) => {
+        setSegmentIndex(index);
+        setFieldType(type);
+        setStep("select");
+    };
+
+    const setTab = (type) => {
+        let newRoute = [{ from: null, to: null, date: "" }];
+        if (type === "round") {
+            newRoute = [
+                { from: null, to: null, date: "" },
+                { from: null, to: null, date: "" },
+            ];
+        }
+        setForm({ ...form, tripType: type, route: newRoute });
+    };
+    const handlePlaceSelect = (place) => {
+        updateSegmentField(segmentIndex, fieldType, place);
+
+        if (form.tripType === "round") {
+            fieldType === "from" ? updateSegmentField(segmentIndex + 1, "to", place) : updateSegmentField(segmentIndex + 1, "from", place);
+        }
+
+        setSearchTerm("");
+
+        if (form.tripType === "round" && fieldType === "to" && segmentIndex === 0) {
+            setFieldType("date");
+        } else if (fieldType === "to") {
+            setFieldType("date");
+        } else if (fieldType === "from") {
+            setFieldType("to");
+        }
+    };
+
+    const handleDateSelect = (date) => {
+        if (!date) return;
+        const isoDate = date.toLocaleDateString("en-CA");
+        updateSegmentField(segmentIndex, "date", isoDate);
+    };
+
+    const nextAfterDate = () => {
+        if (form.tripType === "round") {
+            if (segmentIndex === 0) {
+                if (form.route.length < 2) {
+                    setForm((prev) => ({
+                        ...prev,
+                        route: [prev.route[0], { from: prev.route[0].to, to: prev.route[0].from, date: "" }],
+                    }));
+                }
+                setSegmentIndex(1);
+                setFieldType("date");
+            } else {
+                setStep("passengers");
+            }
+        } else if (form.tripType === "multicity") {
+            if (segmentIndex < form.route.length - 1) {
+                setSegmentIndex(segmentIndex + 1);
+                setFieldType("from");
+            } else {
+                setStep("passengers");
+            }
+        } else {
+            setStep("passengers");
+        }
+    };
+    const getPrefix = (type, idx) => {
+        if (type === "multicity") {
+            const segmentLabels = ["First", "Second", "Third", "Fourth", "Fifth", "Sixth"];
+            return segmentLabels[idx] || `${idx + 1}th`;
+        } else return "";
+    };
+
+    const totalPassengers = form.passengers.adult + form.passengers.child + form.passengers.infant;
+
     const renderModal = () => {
-        switch (step) {
-            case "from":
-            case "to":
+        if (step === "select") {
+            if (fieldType === "date") {
                 return (
-                    <div className="">
-                        <div className="rounded-t-2xl bg-blue-600 py-5 text-center text-lg text-white">
-                            {step === "from" ? "Select Origin" : "Select Desctination"}
-                        </div>
-                        <div className="p-4">
-                            <input
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                                placeholder="Search city or airport"
-                                className="dark:bg-dark/[0.03] mb-4 w-full rounded-lg border p-2 dark:border-gray-800 dark:text-white"
-                            />
-                            <div className="max-h-[600px] overflow-y-auto sm:max-h-[500px]">
-                                {filteredPlaces.map((place) => (
-                                    <div
-                                        key={place.code}
-                                        onClick={() => {
-                                            updateFormField(step, place.city);
-                                            updateFormField(`${step}Code`, place.code);
-                                            setSearchTerm("");
-                                            setStep(step === "from" ? "to" : "dates");
-                                        }}
-                                        className="flex cursor-pointer items-center justify-between border-b p-3 dark:border-gray-800 dark:text-white"
-                                    >
-                                        <div>
-                                            <p className="font-medium">
-                                                {place.city} - {place.country}
-                                            </p>
-                                            <p className="text-sm text-gray-500 dark:text-white">
-                                                {place.code} - {place.desc}
-                                            </p>
-                                        </div>
-                                        <ChevronRight size={18} />
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-                );
-
-            case "dates":
-                return (
-                    <div className="dark:bg-dark/[0.03] flex flex-col overflow-hidden rounded-2xl bg-white dark:text-white">
-                        {/* Header */}
-                        <div className="rounded-t-2xl bg-blue-600 py-5 text-center text-lg text-white">
-                            {form.tripType == "round" ? " Return Date" : " Departure Date"}
-                        </div>
-
-                        {/* Body (scrollable) */}
-                        <div className="flex-1 p-4">
-                            {/* Date buttons */}
-                            <div className="mb-4 flex gap-2">
-                                <button
-                                    onClick={() => {
-                                        updateFormField("returnDate", "");
-                                        updateFormField("tripType", "oneway");
-                                    }}
-                                    className={`w-full rounded-lg p-2 ${
-                                        form.departDate ? "bg-blue-600 text-white" : "border border-blue-200 dark:border-gray-800 dark:text-white"
-                                    }`}
-                                >
-                                    {form.departDate || "Depart Date"}
-                                </button>
-                                <button
-                                    onClick={() => updateFormField("tripType", "round")}
-                                    className={`w-full rounded-lg p-2 ${
-                                        form.returnDate ? "bg-blue-600 text-white" : "border border-blue-200 dark:border-gray-800 dark:text-white"
-                                    }`}
-                                >
-                                    {form.returnDate || "+ Return Date"}
-                                </button>
-                            </div>
-
-                            {/* Calendar container */}
-                            <div className="max-h-[350px] overflow-y-auto">
-                                <CustomDatePicker
-                                    form={form}
-                                    updateFormField={updateFormField}
-                                />
-                            </div>
-                        </div>
-
-                        {/* Footer */}
-                        <div className="rounded-b-2xl border-t border-gray-200 p-4 dark:border-gray-800">
+                    <ModalWrapper
+                        title={`Select ${getPrefix(form.tripType, segmentIndex)} Departure Date `}
+                        onClose={() => setStep(null)}
+                    >
+                        <CustomDatePicker
+                            selectedDate={form.route[segmentIndex].date}
+                            onSelect={handleDateSelect}
+                        />
+                        <div className="flex gap-2 pt-4">
                             <button
-                                onClick={() => setStep("passengers")}
+                                onClick={() => setStep(null)}
+                                className="w-full rounded-lg border p-2 dark:border-gray-800 dark:text-white"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={nextAfterDate}
                                 className="w-full rounded-lg bg-blue-600 p-2 text-white"
                             >
                                 OK
                             </button>
                         </div>
-                    </div>
+                    </ModalWrapper>
                 );
-
-            case "passengers":
-                return (
-                    <div>
-                        <div className="rounded-t-2xl bg-blue-600 py-5 text-center text-lg text-white">Select Passengers</div>
-                        <div className="space-y-4 p-4 dark:text-white">
-                            {["adult", "child", "infant"].map((type) => (
-                                <div
-                                    key={type}
-                                    className="flex items-center justify-between"
-                                >
-                                    <p className="capitalize">{type}</p>
-                                    <select
-                                        value={form.passengers[type]}
-                                        onChange={(e) =>
-                                            setForm({
-                                                ...form,
-                                                passengers: { ...form.passengers, [type]: +e.target.value },
-                                            })
-                                        }
-                                        className="dark:bg-dark/[0.03] rounded-lg border p-2 dark:border-gray-800 dark:text-white"
-                                    >
-                                        {[...Array(6).keys()].map((i) => (
-                                            <option key={i}>{i}</option>
-                                        ))}
-                                    </select>
+            }
+            return (
+                <ModalWrapper
+                    title={`Select ${getPrefix(form.tripType, segmentIndex)} ${fieldType === "from" ? "Origin" : "Destination"} `}
+                    onClose={() => setStep(null)}
+                >
+                    <input
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        placeholder="Search city or airport"
+                        className="dark:bg-dark/[0.03] mb-4 w-full rounded-lg border p-2 dark:border-gray-800 dark:text-white"
+                    />
+                    <div className="max-h-[450px] overflow-y-auto">
+                        {filteredPlaces.map((place) => (
+                            <div
+                                key={place.code}
+                                onClick={() => handlePlaceSelect(place)}
+                                className="flex cursor-pointer items-center justify-between border-b p-3 dark:border-gray-800 dark:text-white"
+                            >
+                                <div>
+                                    <p className="font-medium">
+                                        {place.city} - {place.country}
+                                    </p>
+                                    <p className="text-sm text-gray-500 dark:text-white">
+                                        {place.code} - {place.desc}
+                                    </p>
                                 </div>
-                            ))}
-                            <div className="flex gap-2">
-                                <button
-                                    onClick={() => setStep(null)}
-                                    className="w-full rounded-lg border p-2 dark:border-gray-800 dark:text-white"
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    onClick={() => setStep("class")}
-                                    className="w-full rounded-lg bg-blue-600 p-2 text-white"
-                                >
-                                    OK
-                                </button>
+                                <ChevronRight size={18} />
                             </div>
-                        </div>
+                        ))}
                     </div>
-                );
-
-            case "class":
-                return (
-                    <div>
-                        <div className="rounded-t-2xl bg-blue-600 py-5 text-center text-lg text-white">Select Class</div>
-                        <div className="space-y-2 overflow-auto p-4 dark:text-white">
-                            {seatClasses.map((cls) => (
-                                <div
-                                    key={cls.code}
-                                    onClick={() => updateFormField("seatClass", cls.code)}
-                                    className={cn("dark:bg-dark/[0.03] cursor-pointer rounded-lg border p-3 dark:border-gray-800 dark:text-white", {
-                                        "bg-blue-100": form.seatClass === cls.code,
-                                    })}
-                                >
-                                    <div className="text-sm font-semibold">{cls.label}</div>
-                                    <div className="mt-1 text-sm text-gray-600 dark:text-gray-400">{cls.desc}</div>
-                                </div>
-                            ))}
-
-                            <div className="flex gap-2 pt-4">
-                                <button
-                                    onClick={() => setStep(null)}
-                                    className="w-full rounded-lg border p-2 dark:border-gray-800 dark:text-white"
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    onClick={() => setStep(null)}
-                                    className="w-full rounded-lg bg-blue-600 p-2 text-white"
-                                >
-                                    OK
-                                </button>
-                            </div>
+                </ModalWrapper>
+            );
+        }
+        if (step === "passengers") {
+            return (
+                <ModalWrapper
+                    title="Select Passengers"
+                    onClose={() => setStep(null)}
+                >
+                    {["adult", "child", "infant"].map((type) => (
+                        <div
+                            key={type}
+                            className="flex items-center justify-between py-2"
+                        >
+                            <p className="capitalize">{type}</p>
+                            <select
+                                value={form.passengers[type]}
+                                onChange={(e) =>
+                                    setForm({
+                                        ...form,
+                                        passengers: { ...form.passengers, [type]: +e.target.value },
+                                    })
+                                }
+                                className="dark:bg-dark/[0.03] rounded-lg border p-2 dark:border-gray-800 dark:text-white"
+                            >
+                                {[...Array(6).keys()].map((i) => (
+                                    <option key={i}>{i}</option>
+                                ))}
+                            </select>
                         </div>
+                    ))}
+                    <div className="flex gap-2 pt-4">
+                        <button
+                            onClick={() => setStep(null)}
+                            className="w-full rounded-lg border p-2 dark:border-gray-800 dark:text-white"
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            onClick={() => setStep("class")}
+                            className="w-full rounded-lg bg-blue-600 p-2 text-white"
+                        >
+                            OK
+                        </button>
                     </div>
-                );
+                </ModalWrapper>
+            );
+        }
+        if (step === "class") {
+            return (
+                <ModalWrapper
+                    title="Select Class"
+                    onClose={() => setStep(null)}
+                >
+                    {seatClasses.map((cls) => (
+                        <div
+                            key={cls.code}
+                            onClick={() => setForm({ ...form, seatClass: cls.code })}
+                            className={cn("dark:bg-dark/[0.03] my-2 cursor-pointer rounded-lg border p-3 dark:border-gray-800 dark:text-white", {
+                                "bg-blue-100": form.seatClass === cls.code,
+                            })}
+                        >
+                            <div className="text-sm font-semibold">{cls.label}</div>
+                            <div className="mt-1 text-sm text-gray-600 dark:text-gray-400">{cls.desc}</div>
+                        </div>
+                    ))}
+                    <div className="flex gap-2 pt-4">
+                        <button
+                            onClick={() => setStep(null)}
+                            className="w-full rounded-lg border p-2 dark:border-gray-800 dark:text-white"
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            onClick={() => setStep(null)}
+                            className="w-full rounded-lg bg-blue-600 p-2 text-white"
+                        >
+                            OK
+                        </button>
+                    </div>
+                </ModalWrapper>
+            );
         }
     };
 
     return (
-        <div className="mx-auto space-y-6 rounded-xl bg-white p-4 shadow-xl">
-            {/* Header */}
-            <div className="flex items-center justify-between">
-                <div>
-                    <p className="text-sm text-gray-500 dark:text-white">Good morning 👋</p>
-                    <h2 className="font-bold dark:text-white">Andrew Ainsley</h2>
+        <div className="">
+            <div className="mx-auto space-y-6 rounded-xl bg-white p-4 shadow-xl">
+                {/* Trip Type */}
+                <div className="flex max-w-sm space-x-2">
+                    {["oneway", "round", "multicity"].map((type) => (
+                        <button
+                            key={type}
+                            onClick={() => setTab(type)}
+                            className={cn(
+                                "flex-1 rounded-lg border p-2 text-sm",
+                                form.tripType === type
+                                    ? "bg-blue-600 text-white"
+                                    : "dark:bg-dark/[0.03] border-gray-300 text-gray-600 dark:border-gray-800 dark:text-white",
+                            )}
+                        >
+                            {type === "oneway" ? "One-Way" : type === "round" ? "Round Trip" : "Multi-City"}
+                        </button>
+                    ))}
                 </div>
-                <div className="dark:bg-dark/[0.03] h-10 w-10 rounded-full bg-gray-200" />
-            </div>
 
-            {/* Trip Type */}
-            <div className="flex max-w-sm space-x-2">
-                {["oneway", "round"].map((type) => (
-                    <button
-                        key={type}
-                        onClick={() => setForm({ ...form, tripType: type, returnDate: "" })}
-                        className={cn(
-                            "flex-1 rounded-lg border p-2 text-sm",
-                            form.tripType === type
-                                ? "bg-blue-600 text-white"
-                                : "dark:bg-dark/[0.03] border-gray-300 text-gray-600 dark:border-gray-800 dark:text-white",
-                        )}
-                    >
-                        {type === "oneway" ? "One-Way" : "Round Trip"}
-                    </button>
-                ))}
-            </div>
+                {/* Segments */}
+                {form.tripType === "round" ? (
+                    <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
+                        <FormField
+                            label="Origin"
+                            value={form.route[0].from ? `${form.route[0].from.city} (${form.route[0].from.code})` : "Select"}
+                            icon={<PlaneTakeoff size={16} />}
+                            onClick={() => openStep("from", 0)}
+                        />
+                        <FormField
+                            label="Destination"
+                            value={form.route[0].to ? `${form.route[0].to.city} (${form.route[0].to.code})` : "Select"}
+                            icon={<PlaneLanding size={16} />}
+                            onClick={() => openStep("to", 0)}
+                        />
+                        <FormField
+                            label="Depart"
+                            value={form.route[0].date || "Select"}
+                            icon={<Calendar size={16} />}
+                            onClick={() => openStep("date", 0)}
+                        />
+                        <FormField
+                            label="Return"
+                            value={form.route[1]?.date || "Select"}
+                            icon={<Calendar size={16} />}
+                            onClick={() => openStep("date", 1)}
+                        />
+                        {/* Passengers + Class */}
+                        <FormField
+                            label="Travelers & Class"
+                            value={`${totalPassengers} Passengers, ${seatClasses.find((s) => s.code === form.seatClass)?.label}`}
+                            icon={<Users size={16} />}
+                            onClick={() => setStep("passengers")}
+                        />
+                    </div>
+                ) : (
+                    form.route.map((seg, idx) => {
+                        return (
+                            <div
+                                key={idx}
+                                className="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+                            >
+                                <FormField
+                                    label={getPrefix(form.tripType, idx) + " Origin"}
+                                    value={seg.from ? `${seg.from.city} (${seg.from.code})` : "Select"}
+                                    icon={<PlaneTakeoff size={16} />}
+                                    onClick={() => openStep("from", idx)}
+                                />
+                                <FormField
+                                    label={getPrefix(form.tripType, idx) + " Destination"}
+                                    value={seg.to ? `${seg.to.city} (${seg.to.code})` : "Select"}
+                                    icon={<PlaneLanding size={16} />}
+                                    onClick={() => openStep("to", idx)}
+                                />
+                                <FormField
+                                    label="Date"
+                                    value={seg.date || "Select"}
+                                    icon={<Calendar size={16} />}
+                                    onClick={() => openStep("date", idx)}
+                                />
 
-            {/* Search Form */}
-            <div
-                className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5"
-                onClick={() => openStep("from")}
-            >
-                <FormField
-                    label="From"
-                    value={form.from && form.fromCode ? `${form.from} (${form.fromCode})` : "Origin"}
-                    icon={<MapPin size={16} />}
-                />
-                <FormField
-                    label="To"
-                    value={form.to && form.toCode ? `${form.to} (${form.toCode})` : "Destination"}
-                    icon={<MapPin size={16} />}
-                />
-                <FormField
-                    label="Departure"
-                    value={form.departDate}
-                    icon={<Calendar size={16} />}
-                />
-                {form.tripType === "round" && (
-                    <FormField
-                        label="Return"
-                        value={form.returnDate}
-                        icon={<Calendar size={16} />}
-                    />
+                                {(form.tripType === "oneway" || (form.tripType === "multicity" && idx === form.route.length - 1)) && (
+                                    <FormField
+                                        label="Travelers & Class"
+                                        value={`${totalPassengers} Passengers, ${seatClasses.find((s) => s.code === form.seatClass)?.label}`}
+                                        icon={<Users size={16} />}
+                                        onClick={() => setStep("passengers")}
+                                    />
+                                )}
+
+                                {form.tripType === "multicity" && idx !== form.route.length - 1 && (
+                                    <div className="flex justify-end align-middle">
+                                        <button
+                                            onClick={() => removeSegment(idx)}
+                                            className="rounded-lg border p-6 text-red-500"
+                                        >
+                                            <Minus size={16} />
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        );
+                    })
                 )}
 
-                <FormField
-                    label="Passengers"
-                    value={`${form.passengers.adult} Seat`}
-                    icon={<Users size={16} />}
-                />
-                <FormField
-                    label="Class"
-                    value={form.seatClass}
-                    icon={<Plane size={16} />}
-                />
-            </div>
-            <div className="flex align-middle">
-                <button
-                    onClick={() => console.log("🛫 Final Flight Form", form)}
-                    className="mx-auto w-full max-w-sm rounded-lg bg-blue-600 p-3 text-white"
-                >
-                    Search Flights
-                </button>
+                {form.tripType === "multicity" && (
+                    <button
+                        onClick={addSegment}
+                        className="ml-auto flex items-center gap-1 rounded-lg border p-2 text-sm dark:border-gray-800 dark:text-white"
+                    >
+                        <Plus size={16} /> Add Flight
+                    </button>
+                )}
+
+                {/* Search */}
+                <div className="flex align-middle">
+                    <button
+                        onClick={() => console.log("🛫 Final Flight Form", form)}
+                        className="mx-auto w-full max-w-sm rounded-lg bg-blue-600 p-3 text-white"
+                    >
+                        Search Flights
+                    </button>
+                </div>
             </div>
             {/* Modal */}
             {step && (
-                <div className="fixed inset-0 z-50 !m-0 flex items-end justify-center bg-black/40 sm:items-center">
+                <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 sm:items-center">
                     <div className="dark:bg-dark/[0.03] max-h-[90vh] w-full max-w-md rounded-t-2xl bg-white dark:border dark:border-gray-800 sm:rounded-b-2xl">
                         {renderModal()}
                     </div>
@@ -357,64 +428,46 @@ export default function FlightSearchForm() {
     );
 }
 
-const FormField = ({ label, value, icon }) => (
-    <div className="dark:bg-dark/[0.03] flex w-full items-center justify-between rounded-lg border p-3 dark:border-gray-800 dark:text-white">
+const FormField = ({ label, value, icon, onClick }) => (
+    <div
+        onClick={onClick}
+        className="dark:bg-dark/[0.03] flex w-full cursor-pointer items-center justify-between rounded-lg border p-3 dark:border-gray-800 dark:text-white"
+    >
         <div>
             <p className="text-xs text-gray-500 dark:text-white">{label}</p>
-            <p className="font-medium">{value || "Not selected"}</p>
+            <p className="font-medium">{value}</p>
         </div>
         <div>{icon}</div>
     </div>
 );
 
-const CustomDatePicker = ({ form, updateFormField }) => {
-    const handleSelect = (date) => {
-        const isoDate = date?.toLocaleDateString("en-CA");
-        if (!isoDate) return;
-
-        if (!form.departDate) {
-            updateFormField("departDate", isoDate);
-        } else if (form.tripType === "round") {
-            const departDate = new Date(form.departDate);
-            const selectedDate = new Date(isoDate);
-
-            if (selectedDate >= departDate) {
-                updateFormField("returnDate", isoDate);
-            } else {
-                // Optional: show alert or feedback here
-                console.warn("Return date cannot be before departure date.");
-            }
-        } else {
-            updateFormField("departDate", isoDate);
-        }
-    };
-
-    // Restrict return date to not be before departDate
-    const disabledDays =
-        form.tripType === "round" && form.departDate
-            ? {
-                  before: new Date(form.departDate),
-              }
-            : undefined;
-
-    return (
-        <div className="dark:bg-dark/[0.03] flex w-full justify-center font-sans dark:text-white">
-            <DayPicker
-                animate
-                mode="single"
-                selected={form.returnDate ? new Date(form.returnDate) : form.departDate ? new Date(form.departDate) : undefined}
-                onSelect={handleSelect}
-                numberOfMonths={1}
-                fromMonth={new Date()}
-                disabled={disabledDays}
-                className="dark:border-gray-800"
-                styles={{
-                    caption: { color: "inherit" },
-                    nav_button_previous: { color: "inherit" },
-                    nav_button_next: { color: "inherit" },
-                    table: { width: "100%" },
-                }}
+const ModalWrapper = ({ title, onClose, children }) => (
+    <div className="dark:bg-dark/[0.03] flex flex-col overflow-hidden rounded-2xl bg-white dark:text-white">
+        <div className="relative flex items-center justify-center rounded-t-2xl bg-blue-600 px-4 py-5 text-white">
+            {/* Close button on left */}
+            <X
+                size={20}
+                className="absolute left-4 cursor-pointer"
+                onClick={onClose}
             />
+
+            {/* Centered title */}
+            <span className="text-lg font-medium">{title}</span>
         </div>
-    );
-};
+
+        <div className="p-4">{children}</div>
+    </div>
+);
+
+const CustomDatePicker = ({ selectedDate, onSelect }) => (
+    <div className="dark:bg-dark/[0.03] flex w-full justify-center font-sans dark:text-white">
+        <DayPicker
+            mode="single"
+            selected={selectedDate ? new Date(selectedDate) : undefined}
+            onSelect={onSelect}
+            numberOfMonths={1}
+            fromMonth={new Date()}
+            className="dark:border-gray-800"
+        />
+    </div>
+);
