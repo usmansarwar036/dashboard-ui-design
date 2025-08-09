@@ -1,4 +1,4 @@
-import FlightSearchForm from "./flight/search-form";
+import FlightSearchForm from "./flight/util/search-form";
 
 export default function HomePage() {
     return (

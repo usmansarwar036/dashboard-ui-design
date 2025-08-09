@@ -42,6 +42,7 @@ import VerifyEmail from "@/routes/auth/verify-email";
 import ProfileLock from "@/routes/auth/profile-lock";
 import PublicLayout from "./routes/b2c/layout";
 import HomePage from "./routes/b2c/page";
+import SearchFlights from "./routes/b2c/flight/1-search-flights";
 
 // public pages
 
@@ -121,6 +122,7 @@ function App() {
                     index: true,
                     element: <HomePage />,
                 },
+                { path: "flights/search", element: <SearchFlights /> },
             ],
         },
     ]);

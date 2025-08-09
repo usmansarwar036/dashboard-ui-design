@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Calendar, Users, ChevronRight, Plus, Minus, X, PlaneTakeoff, PlaneLanding } from "lucide-react";
-import { cn } from "../../../utils/cn";
+import { cn } from "../../../../utils/cn";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
+import { useNavigate } from "react-router-dom";
 const popularPlaces = [
     { city: "New York", country: "USA", code: "JFK", desc: "John F. Kennedy International Airport" },
     { city: "Paris", country: "France", code: "CDG", desc: "Charles de Gaulle Airport" },
@@ -143,6 +144,22 @@ export default function FlightSearchForm() {
             const segmentLabels = ["First", "Second", "Third", "Fourth", "Fifth", "Sixth"];
             return segmentLabels[idx] || `${idx + 1}th`;
         } else return "";
+    };
+    const navigate = useNavigate();
+    const handleFlightsSearch = () => {
+        console.log("🛫 Final Flight Form", form);
+        const params = new URLSearchParams();
+        Object.entries(form).forEach(([key, value]) => {
+            if (value !== undefined && value !== null && value !== "") {
+                if (typeof value === "object") {
+                    params.append(key, JSON.stringify(value)); // stringify objects
+                } else {
+                    params.append(key, value);
+                }
+            }
+        });
+        const query = params.toString();
+        navigate(`/flights/search?${query}`);
     };
 
     const totalPassengers = form.passengers.adult + form.passengers.child + form.passengers.infant;
@@ -418,7 +435,7 @@ export default function FlightSearchForm() {
                 {/* Search */}
                 <div className="flex align-middle">
                     <button
-                        onClick={() => console.log("🛫 Final Flight Form", form)}
+                        onClick={handleFlightsSearch}
                         className="mx-auto w-full max-w-sm rounded-lg bg-blue-600 p-3 text-white"
                     >
                         Search Flights
