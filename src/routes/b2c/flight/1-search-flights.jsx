@@ -1,5 +1,5 @@
 // SearchFlights.jsx
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import {
     MoreHorizontal,
@@ -16,7 +16,7 @@ import {
     Facebook,
     MessageSquare,
 } from "lucide-react";
-import { Range, getTrackBackground } from "react-range";
+import { Range } from "react-range";
 import "react-day-picker/dist/style.css";
 
 /**
@@ -40,7 +40,7 @@ const defaultForm = {
                 code: "JFK",
                 desc: "John F. Kennedy International Airport",
             },
-            date: "2025-08-06",
+            date: "2025-08-13",
         },
     ],
     passengers: { adult: 1, child: 0, infant: 0 },
@@ -224,7 +224,7 @@ function applySortToList(list, type) {
  */
 function OrigionDestinationArrowComponent({ flight }) {
     return (
-        <div className="p-5">
+        <div className="p-2">
             <div className="mb-3 flex items-center justify-between border-b pb-3 dark:border-gray-800">
                 <div className="flex items-center space-x-2">
                     <img
@@ -234,7 +234,10 @@ function OrigionDestinationArrowComponent({ flight }) {
                     />
                     <span className="text-base font-semibold text-black dark:text-white">{flight.airline}</span>
                 </div>
-                <span className="text-sm text-[#6B7280]">{flight.date}</span>
+                <div className="flex items-center justify-end gap-3">
+                    <div className="text-sm text-gray-600">{flight.cabinClass}</div>
+                    <div className="text-lg font-semibold">${flight.price}</div>
+                </div>
             </div>
 
             <div className="flex items-center justify-between">
@@ -315,9 +318,9 @@ function OrigionDestinationArrowComponent({ flight }) {
 function Modal({ open, onClose, title, children, footer, centerOnDesktop = true }) {
     if (!open) return null;
     return (
-        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 p-4 backdrop-blur">
+        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 p-4 backdrop-blur sm:items-center">
             <div
-                className={`max-h-screen w-full ${centerOnDesktop ? "max-w-md" : "max-w-3xl"} dark:bg-dark/[0.03] overflow-y-auto rounded-2xl bg-white text-black shadow-xl dark:text-white`}
+                className={`max-h-[90vh] w-full ${centerOnDesktop ? "max-w-md" : "max-w-3xl"} dark:bg-dark/[0.03] overflow-y-auto rounded-2xl bg-white text-black shadow-xl dark:text-white`}
                 style={{ WebkitOverflowScrolling: "touch" }}
             >
                 <div className="dark:bg-dark/[0.03] sticky top-0 z-10 flex items-center justify-between border-b bg-white px-4 py-3 dark:border-gray-800">
@@ -402,8 +405,9 @@ function ShareModal({ open, onClose }) {
  * PriceAlertModal: shows flight preview & posts to /api/price-alerts
  */
 function PriceAlertModal({ open, onClose, flight }) {
-    const [minTarget, setMinTarget] = useState("");
-    const [maxTarget, setMaxTarget] = useState("");
+    const DURATION_MIN = 0;
+    const DURATION_MAX = 1000; // arbitrary max for duration slider
+    const [durationRange, setDurationRange] = useState([DURATION_MIN, DURATION_MAX]);
     const [onlyDirect, setOnlyDirect] = useState(false);
     const [loading, setLoading] = useState(false);
 
@@ -411,8 +415,7 @@ function PriceAlertModal({ open, onClose, flight }) {
         // simple validation
         const payload = {
             flightId: flight?.id,
-            minTarget: minTarget ? Number(minTarget) : null,
-            maxTarget: maxTarget ? Number(maxTarget) : null,
+            durationRange,
             onlyDirect,
             createdAt: new Date().toISOString(),
         };
@@ -476,24 +479,7 @@ function PriceAlertModal({ open, onClose, flight }) {
                 <div className="dark:bg-dark/[0.03] rounded-lg border p-2 dark:border-gray-800">
                     {flight ? <OrigionDestinationArrowComponent flight={flight} /> : <div className="text-sm text-gray-500">No flight selected</div>}
                 </div>
-
-                <div>
-                    <label className="text-sm font-semibold">Target price range</label>
-                    <div className="mt-2 flex gap-2">
-                        <input
-                            value={minTarget}
-                            onChange={(e) => setMinTarget(e.target.value)}
-                            placeholder="Min"
-                            className="dark:bg-dark/[0.03] w-1/2 rounded border px-3 py-2 text-sm dark:border-gray-800"
-                        />
-                        <input
-                            value={maxTarget}
-                            onChange={(e) => setMaxTarget(e.target.value)}
-                            placeholder="Max"
-                            className="dark:bg-dark/[0.03] w-1/2 rounded border px-3 py-2 text-sm dark:border-gray-800"
-                        />
-                    </div>
-                </div>
+                <div>{RangeSlider("Target price range", durationRange, setDurationRange, DURATION_MIN, DURATION_MAX, "$")}</div>
 
                 <label className="flex items-center gap-2 text-sm">
                     <input
@@ -511,7 +497,55 @@ function PriceAlertModal({ open, onClose, flight }) {
 /**
  * FiltersModal: dual-thumb sliders (react-range), checkbox lists, auto-apply
  */
-function FiltersModal({ open, onClose, flights, onApply }) {
+
+const STEP = 1; // step for range sliders
+// RangeSlider (kept same as your code)
+const RangeSlider = (label, range, setRange, min, max, unit = "") => (
+    <div>
+        <label className="block py-2 text-sm font-semibold">{label}</label>
+
+        <div className="mb-1 flex justify-between text-gray-500">
+            <span>
+                {unit}
+                {range[0]}
+            </span>
+            <span>
+                {unit}
+                {range[1]}
+            </span>
+        </div>
+        <div className="p-2">
+            <Range
+                step={STEP}
+                min={min}
+                max={max}
+                values={range}
+                onChange={setRange}
+                renderTrack={({ props, children }) => (
+                    <div
+                        {...props}
+                        className="h-2 w-full rounded-full bg-gray-200"
+                    >
+                        {children}
+                    </div>
+                )}
+                renderThumb={({ props }) => (
+                    <div
+                        {...props}
+                        className="h-5 w-5 rounded-full bg-blue-600"
+                    />
+                )}
+            />
+        </div>
+    </div>
+);
+function FiltersModal({
+    open,
+    onClose,
+    flights,
+    onApply,
+    isModal = true, // 👈 new prop
+}) {
     // derived options
     const airlinesList = useMemo(() => [...new Set(flights.map((f) => f.airline))], [flights]);
     const stopsOptions = useMemo(() => [...new Set(flights.map((f) => f.type))], [flights]);
@@ -532,7 +566,6 @@ function FiltersModal({ open, onClose, flights, onApply }) {
     const [arrivalTimes, setArrivalTimes] = useState([]);
 
     useEffect(() => {
-        // auto apply when filters change
         const filters = {
             airlines: selectedAirlines,
             stops: selectedStops,
@@ -577,175 +610,113 @@ function FiltersModal({ open, onClose, flights, onApply }) {
         </div>
     );
 
-    // Range rendering helper (dual thumb)
-    const RangeSlider = ({ values, min, max, step = 1, onChange, unit = "$", ticks = 5 }) => {
-        const stepWidth = (max - min) / (ticks - 1);
-        const ticksArr = Array.from({ length: ticks }, (_, i) => Math.round(min + i * stepWidth));
-        return (
+    // filters content (shared between modal and inline)
+    const content = (
+        <div className="space-y-4">
             <div>
-                <div className="mb-1 flex justify-between text-sm text-gray-600">
-                    <div>
-                        {unit}
-                        {values[0]}
-                    </div>
-                    <div>
-                        {unit}
-                        {values[1]}
-                    </div>
-                </div>
+                <div className="mt-2">{RangeSlider("Price Range", priceRange, setPriceRange, PRICE_MIN, PRICE_MAX, "$")}</div>
+            </div>
 
-                <Range
-                    values={values}
-                    step={step}
-                    min={min}
-                    max={max}
-                    onChange={onChange}
-                    renderTrack={({ props, children }) => (
-                        <div
-                            {...props}
-                            style={{
-                                ...props.style,
-                                height: "36px",
-                                display: "flex",
-                                width: "100%",
-                            }}
-                        >
-                            <div
-                                style={{
-                                    height: "6px",
-                                    width: "100%",
-                                    borderRadius: "6px",
-                                    alignSelf: "center",
-                                    background: getTrackBackground({
-                                        values,
-                                        colors: ["#E5E7EB", "#1A6BFF", "#E5E7EB"],
-                                        min,
-                                        max,
-                                    }),
-                                }}
-                                className="rounded"
-                            >
-                                {children}
-                            </div>
-                        </div>
-                    )}
-                    renderThumb={({ props, index }) => (
-                        <div
-                            {...props}
-                            className="dark:bg-dark/[0.03] flex h-5 w-5 items-center justify-center rounded-full border bg-white dark:border-gray-800"
-                        >
-                            <div className="h-2 w-2 rounded-full bg-blue-600" />
-                        </div>
-                    )}
-                />
+            <div>{RangeSlider("Duration (hrs)", durationRange, setDurationRange, DURATION_MIN, DURATION_MAX)}</div>
 
-                <div className="mt-2 flex justify-between text-xs text-gray-400">
-                    {ticksArr.map((t) => (
-                        <span key={t}>
-                            {unit}
-                            {t}
-                        </span>
+            <div>
+                <label className="block text-sm font-semibold">Airlines</label>
+                <div className="mt-2 flex flex-wrap gap-2">
+                    {airlinesList.map((a) => (
+                        <button
+                            key={a}
+                            onClick={() => toggle(a, setSelectedAirlines)}
+                            className={`rounded-lg border px-3 py-2 text-sm ${
+                                selectedAirlines.includes(a) ? "border-blue-600 text-blue-600" : "border-gray-300 text-gray-700"
+                            } dark:border-gray-800`}
+                        >
+                            {a}
+                        </button>
                     ))}
                 </div>
             </div>
-        );
-    };
 
-    return (
+            <div>
+                <label className="block text-sm font-semibold">Stops</label>
+                <div className="mt-2 flex gap-2">
+                    {stopsOptions.map((s) => (
+                        <button
+                            key={s}
+                            onClick={() => toggle(s, setSelectedStops)}
+                            className={`rounded-lg border px-3 py-2 text-sm ${
+                                selectedStops.includes(s) ? "border-blue-600 text-blue-600" : "border-gray-300 text-gray-700"
+                            } dark:border-gray-800`}
+                        >
+                            {s}
+                        </button>
+                    ))}
+                </div>
+            </div>
+
+            <div>
+                <label className="block text-sm font-semibold">Departure Time</label>
+                <div className="mt-2 grid grid-cols-2 gap-2">
+                    {timeOptions.map((t) => (
+                        <button
+                            key={t}
+                            onClick={() => toggle(t, setDepartureTimes)}
+                            className={`rounded-lg border px-3 py-2 text-sm ${
+                                departureTimes.includes(t) ? "border-blue-600 text-blue-600" : "border-gray-300 text-gray-700"
+                            } dark:border-gray-800`}
+                        >
+                            {t}
+                        </button>
+                    ))}
+                </div>
+            </div>
+
+            <div>
+                <label className="block text-sm font-semibold">Arrival Time</label>
+                <div className="mt-2 grid grid-cols-2 gap-2">
+                    {timeOptions.map((t) => (
+                        <button
+                            key={t}
+                            onClick={() => toggle(t, setArrivalTimes)}
+                            className={`rounded-lg border px-3 py-2 text-sm ${
+                                arrivalTimes.includes(t) ? "border-blue-600 text-blue-600" : "border-gray-300 text-gray-700"
+                            } dark:border-gray-800`}
+                        >
+                            {t}
+                        </button>
+                    ))}
+                </div>
+            </div>
+        </div>
+    );
+
+    // if isModal → wrap inside Modal, otherwise show plain
+    return isModal ? (
         <Modal
             open={open}
             onClose={onClose}
             title="Filter"
             footer={footer}
         >
-            <div className="space-y-4">
-                <div>
-                    <label className="block text-sm font-semibold">Price Range</label>
-                    <div className="mt-2">
-                        <RangeSlider
-                            values={priceRange}
-                            min={PRICE_MIN}
-                            max={PRICE_MAX}
-                            onChange={(v) => setPriceRange(v)}
-                            unit="$"
-                        />
-                    </div>
+            {content}
+        </Modal>
+    ) : (
+        <div>
+            <div className="mb-3 flex items-center justify-between px-1">
+                <div className="flex items-center gap-1">
+                    <Filter size={18} />
+                    <span className="font-semibold">Filters</span>
                 </div>
-
-                <div>
-                    <label className="block text-sm font-semibold">Duration (hrs)</label>
-                    <div className="mt-2">
-                        <RangeSlider
-                            values={durationRange}
-                            min={DURATION_MIN}
-                            max={DURATION_MAX}
-                            onChange={(v) => setDurationRange(v)}
-                            unit=""
-                        />
-                    </div>
-                </div>
-
-                <div>
-                    <label className="block text-sm font-semibold">Airlines</label>
-                    <div className="mt-2 flex flex-wrap gap-2">
-                        {airlinesList.map((a) => (
-                            <button
-                                key={a}
-                                onClick={() => toggle(a, setSelectedAirlines)}
-                                className={`rounded-full border px-3 py-1 text-sm ${selectedAirlines.includes(a) ? "border-blue-600 text-blue-600" : "border-gray-300 text-gray-700"} dark:border-gray-800`}
-                            >
-                                {a}
-                            </button>
-                        ))}
-                    </div>
-                </div>
-
-                <div>
-                    <label className="block text-sm font-semibold">Stops</label>
-                    <div className="mt-2 flex gap-2">
-                        {stopsOptions.map((s) => (
-                            <button
-                                key={s}
-                                onClick={() => toggle(s, setSelectedStops)}
-                                className={`rounded-lg border px-3 py-2 text-sm ${selectedStops.includes(s) ? "border-blue-600 text-blue-600" : "border-gray-300 text-gray-700"} dark:border-gray-800`}
-                            >
-                                {s}
-                            </button>
-                        ))}
-                    </div>
-                </div>
-
-                <div>
-                    <label className="block text-sm font-semibold">Departure Time</label>
-                    <div className="mt-2 grid grid-cols-2 gap-2">
-                        {timeOptions.map((t) => (
-                            <button
-                                key={t}
-                                onClick={() => toggle(t, setDepartureTimes)}
-                                className={`rounded-lg border px-3 py-2 text-sm ${departureTimes.includes(t) ? "border-blue-600 text-blue-600" : "border-gray-300 text-gray-700"} dark:border-gray-800`}
-                            >
-                                {t}
-                            </button>
-                        ))}
-                    </div>
-                </div>
-
-                <div>
-                    <label className="block text-sm font-semibold">Arrival Time</label>
-                    <div className="mt-2 grid grid-cols-2 gap-2">
-                        {timeOptions.map((t) => (
-                            <button
-                                key={t}
-                                onClick={() => toggle(t, setArrivalTimes)}
-                                className={`rounded-lg border px-3 py-2 text-sm ${arrivalTimes.includes(t) ? "border-blue-600 text-blue-600" : "border-gray-300 text-gray-700"} dark:border-gray-800`}
-                            >
-                                {t}
-                            </button>
-                        ))}
-                    </div>
+                <div className="text-sm text-gray-600">
+                    <button
+                        onClick={resetAll}
+                        className="text-sm text-blue-600"
+                    >
+                        Reset
+                    </button>
                 </div>
             </div>
-        </Modal>
+            <div className="rounded-xl bg-white p-4 shadow-sm">{content}</div>
+        </div>
     );
 }
 
@@ -796,6 +767,141 @@ function SortModal({ open, onClose, onApply }) {
     );
 }
 
+function MenuButtons({ openModal }) {
+    const [menu, setMenu] = useState(false);
+    const menuRef = useRef(null);
+
+    // Close on outside click
+    useEffect(() => {
+        function handleClickOutside(event) {
+            if (menuRef.current && !menuRef.current.contains(event.target)) {
+                setMenu(false);
+            }
+        }
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
+
+    return (
+        <div className="flex items-center gap-3">
+            {/* Desktop */}
+            <div className="mr-2 hidden items-center gap-3 md:flex">
+                <button
+                    onClick={() => openModal("share")}
+                    title="Share results"
+                    className="flex items-center gap-2"
+                >
+                    <Share2 />
+                </button>
+                <button
+                    onClick={() => openModal("priceAlert")}
+                    title="Price alerts"
+                    className="flex items-center gap-2"
+                >
+                    <Bell />
+                </button>
+                <button
+                    onClick={() => openModal("sort")}
+                    title="Sort"
+                    className="flex items-center gap-2"
+                >
+                    <Sliders />
+                </button>
+            </div>
+
+            {/* Mobile */}
+            <div
+                className="relative md:hidden"
+                ref={menuRef}
+            >
+                <button
+                    className="rounded-full bg-white/10 p-2"
+                    title="Open menu"
+                    onClick={() => setMenu((prev) => !prev)}
+                >
+                    <MoreHorizontal />
+                </button>
+                {menu && (
+                    <div className="dark:bg-dark/[0.03] absolute right-0 z-10 mt-2 w-40 rounded-xl border bg-white p-2 text-black shadow-lg dark:border-gray-800 dark:text-white">
+                        <button
+                            onClick={() => openModal("share")}
+                            className="dark:hover:bg-dark/30 flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-100"
+                        >
+                            <Share2 size={16} /> Share
+                        </button>
+                        <button
+                            onClick={() => openModal("priceAlert")}
+                            className="dark:hover:bg-dark/30 flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-100"
+                        >
+                            <Bell size={16} /> Price Alerts
+                        </button>
+                        <button
+                            onClick={() => openModal("sort")}
+                            className="dark:hover:bg-dark/30 flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-100"
+                        >
+                            <Sliders size={16} /> Sort
+                        </button>
+                        <button
+                            onClick={() => openModal("filter")}
+                            className="dark:hover:bg-dark/30 flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-100"
+                        >
+                            <Filter size={16} /> Filter
+                        </button>
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+}
+
+function HorizontalCalendar({ date }) {
+    const selectedDate = new Date(date);
+
+    // Generate 20 days → 9 before, 1 selected, 10 after
+    const dates = Array.from({ length: 20 }, (_, i) => {
+        const d = new Date(selectedDate);
+        d.setDate(selectedDate.getDate() - 9 + i);
+        return d;
+    });
+
+    const [current, setCurrent] = useState(selectedDate.toDateString());
+
+    return (
+        <div className="relative mt-3 flex items-center">
+            {/* Fixed left button */}
+            <div className="sticky left-0 z-10 mr-2 flex h-full items-center">
+                <button className="dark:bg-dark/[0.03] items-center rounded-lg bg-white/20 px-3 py-2 text-center text-sm transition dark:border-gray-800 dark:text-white">
+                    <Calendar />
+                </button>
+            </div>
+
+            {/* Dates row (exact 20, no overflow) */}
+            <div className="flex flex-1 snap-x snap-mandatory justify-center gap-2 overflow-hidden">
+                {dates.map((d) => {
+                    const label = d.toISOString().slice(0, 10);
+                    const isSelected = current === d.toDateString();
+                    return (
+                        <button
+                            key={label}
+                            onClick={() => {
+                                if (!isSelected) {
+                                    console.log("Clicked:", label);
+                                }
+                            }}
+                            className={`min-w-[72px] rounded-lg px-3 py-2 text-center text-sm transition ${
+                                isSelected ? "bg-white text-blue-500" : "dark:bg-dark/[0.03] bg-white/20 dark:border-gray-800 dark:text-white"
+                            }`}
+                        >
+                            <div className="text-xs">{d.toLocaleDateString("en-US", { weekday: "short" })}</div>
+                            <div className="font-semibold">{d.getDate()}</div>
+                        </button>
+                    );
+                })}
+            </div>
+        </div>
+    );
+}
+
 /**
  * -------------------------------
  * Main page component
@@ -819,69 +925,23 @@ export default function SearchFlights() {
         const sorted = applySortToList(filtered, type);
         setFiltered(sorted);
     };
-
     useEffect(() => {
         setFiltered(flights);
     }, [flights]);
 
     return (
-        <div className="dark:bg-dark/[0.03] min-h-screen bg-white dark:text-white">
+        <div className="dark:bg-dark/[0.03]">
             {/* Blue header */}
-            <div className="bg-gradient-to-b from-[#1A6BFF] to-[#4D8CFE] p-4 text-white">
-                <div className="flex items-center justify-between">
-                    <Link
-                        to="/"
-                        className="flex items-center gap-3"
-                    >
-                        <ArrowLeft />
-                        <span className="font-semibold">Search Flights</span>
-                    </Link>
-
-                    <div className="hidden items-center gap-3 md:flex">
-                        <button
-                            onClick={() => openModal("share")}
-                            title="Share results"
-                            className="flex items-center gap-2"
-                        >
-                            <Share2 />
-                        </button>
-                        <button
-                            onClick={() => openModal("priceAlert")}
-                            title="Price alerts"
-                            className="flex items-center gap-2"
-                        >
-                            <Bell />
-                        </button>
-                        <button
-                            onClick={() => openModal("sort")}
-                            title="Sort"
-                            className="flex items-center gap-2"
-                        >
-                            <Sliders />
-                        </button>
-                        <button
-                            onClick={() => openModal("filter")}
-                            title="Filter"
-                            className="flex items-center gap-2"
-                        >
-                            <Filter />
-                        </button>
-                    </div>
-
-                    <div className="md:hidden">
-                        <button
-                            className="rounded-full bg-white/10 p-2"
-                            title="Open menu"
-                            onClick={() => openModal("share")}
-                        >
-                            <MoreHorizontal />
-                        </button>
-                    </div>
-                </div>
-
-                <div className="mt-4 rounded-xl bg-white/10 p-3">
+            <div className="bg-blue-600 p-1 text-white sm:p-2">
+                <div className="p-2">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
+                            <Link
+                                to="/"
+                                className="flex items-center gap-3"
+                            >
+                                <ArrowLeft />
+                            </Link>
                             <div className="rounded-full bg-white/20 p-2">
                                 <Plane />
                             </div>
@@ -891,82 +951,46 @@ export default function SearchFlights() {
                             </div>
                         </div>
 
-                        <button
-                            onClick={() => openModal("filter")}
-                            className="flex items-center gap-2 rounded-lg bg-white/10 px-3 py-2 text-sm"
-                        >
-                            <Calendar />
-                            Dates
-                            <ChevronDown />
-                        </button>
+                        <MenuButtons openModal={openModal} />
                     </div>
-
-                    {/* horizontal date row (scrollable) */}
-                    <div className="mt-3 flex gap-3 overflow-x-auto py-2">
-                        {Array.from({ length: 10 }).map((_, i) => {
-                            const d = new Date();
-                            d.setDate(d.getDate() + i);
-                            const label = d.toISOString().slice(0, 10);
-                            return (
-                                <button
-                                    key={label}
-                                    className="min-w-[72px] rounded-lg bg-white/20 px-3 py-2 text-center text-sm"
-                                >
-                                    <div className="text-xs">Mon</div>
-                                    <div className="font-semibold">{d.getDate()}</div>
-                                </button>
-                            );
-                        })}
+                    <div className="sm:p-2">
+                        {/* horizontal date row (scrollable) */}
+                        <HorizontalCalendar date={defaultForm.route[0].date} />
                     </div>
                 </div>
             </div>
 
             {/* content */}
-            <div className="p-4">
-                <div className="mb-3 flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                        <Filter />
-                        <span className="font-semibold">Flights</span>
+            <div className="flex">
+                <div className="hidden h-[stretch] p-4 pr-0 md:block md:w-[35%] lg:w-[30%]">
+                    <div className="overflow-y-auto">
+                        <FiltersModal
+                            isModal={false}
+                            flights={flights}
+                            onApply={handleApplyFilters}
+                        />
                     </div>
-                    <div className="text-sm text-gray-600">{filtered.length} results</div>
                 </div>
+                <div className="w-full p-4 md:w-[65%] lg:w-[70%]">
+                    <div className="mb-3 flex items-center justify-between px-1">
+                        <div className="flex items-center gap-3">
+                            <span className="font-semibold">Flights</span>
+                        </div>
+                        <div className="text-sm text-gray-600">{filtered.length} results</div>
+                    </div>
 
-                <div className="space-y-4">
-                    {filtered.map((flight) => (
-                        <div
-                            key={flight.id}
-                            className="rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]"
-                        >
-                            <div className="p-5">
-                                <OrigionDestinationArrowComponent flight={flight} />
-                                <div className="mt-2 flex items-center justify-between px-2">
-                                    <div className="flex items-center gap-3">
-                                        <div className="text-lg font-semibold">${flight.price}</div>
-                                        <div className="text-sm text-gray-600">{flight.cabinClass}</div>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <button
-                                            onClick={() => {
-                                                setSelectedFlightForAlert(flight);
-                                                openModal("priceAlert");
-                                            }}
-                                            className="text-sm"
-                                        >
-                                            Price Alert
-                                        </button>
-                                        <button
-                                            onClick={() => {
-                                                openModal("share");
-                                            }}
-                                            className="text-sm"
-                                        >
-                                            Share
-                                        </button>
-                                    </div>
+                    <div className="space-y-4">
+                        {filtered.map((flight) => (
+                            <div
+                                key={flight.id}
+                                className="rounded-xl border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-white/[0.03]"
+                            >
+                                <div className="p-2">
+                                    <OrigionDestinationArrowComponent flight={flight} />
                                 </div>
                             </div>
-                        </div>
-                    ))}
+                        ))}
+                    </div>
                 </div>
             </div>
 
