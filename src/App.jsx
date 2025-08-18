@@ -43,6 +43,7 @@ import ProfileLock from "@/routes/auth/profile-lock";
 import PublicLayout from "./routes/b2c/layout";
 import HomePage from "./routes/b2c/page";
 import SearchFlights from "./routes/b2c/flight/1-search-flights";
+import FlightDetailsPage from "./routes/b2c/flight/2-flight-details";
 
 // public pages
 
@@ -123,6 +124,7 @@ function App() {
                     element: <HomePage />,
                 },
                 { path: "flights/search", element: <SearchFlights /> },
+                { path: "flights/details", element: <FlightDetailsPage /> },
             ],
         },
     ]);

@@ -1,6 +1,8 @@
 // SearchFlights.jsx
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
+import OrigionDestinationArrowComponent from "./util/flight-component";
+
 import {
     MoreHorizontal,
     Share2,
@@ -217,103 +219,6 @@ function applySortToList(list, type) {
     return copy;
 }
 
-/**
- * -------------------------------
- * Presentational components
- * -------------------------------
- */
-function OrigionDestinationArrowComponent({ flight }) {
-    return (
-        <div className="p-2">
-            <div className="mb-3 flex items-center justify-between border-b pb-3 dark:border-gray-800">
-                <div className="flex items-center space-x-2">
-                    <img
-                        src={flight.logo}
-                        alt="logo"
-                        className="h-8 w-8 rounded-full"
-                    />
-                    <span className="text-base font-semibold text-black dark:text-white">{flight.airline}</span>
-                </div>
-                <div className="flex items-center justify-end gap-3">
-                    <div className="text-sm text-gray-600">{flight.cabinClass}</div>
-                    <div className="text-lg font-semibold">${flight.price}</div>
-                </div>
-            </div>
-
-            <div className="flex items-center justify-between">
-                <div className="mr-3 text-center">
-                    <div className="mb-1 text-sm text-[#6B7280]">{flight.from.city}</div>
-                    <div className="text-2xl font-semibold leading-none text-black dark:text-white">{flight.from.time}</div>
-                    <div className="mt-1 text-sm text-[#6B7280]">{flight.from.code}</div>
-                </div>
-
-                <div className="relative mx-auto mt-[-30px] h-[56px] w-full">
-                    <svg
-                        className="absolute inset-0 mx-auto h-full w-[calc(100%-10px)]"
-                        viewBox="0 0 100 30"
-                        preserveAspectRatio="none"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                    >
-                        <path
-                            d="M0 30C20 0 80 0 100 30"
-                            stroke="url(#paint0_linear)"
-                            strokeWidth="2"
-                            fill="none"
-                        />
-                        <defs>
-                            <linearGradient
-                                id="paint0_linear"
-                                x1="0"
-                                y1="30"
-                                x2="100"
-                                y2="30"
-                                gradientUnits="userSpaceOnUse"
-                            >
-                                <stop
-                                    stopColor="#4D8CFE"
-                                    stopOpacity="0.2"
-                                />
-                                <stop
-                                    offset="0.5"
-                                    stopColor="#1A6BFF"
-                                />
-                                <stop
-                                    offset="1"
-                                    stopColor="#4D8CFE"
-                                    stopOpacity="0.2"
-                                />
-                            </linearGradient>
-                        </defs>
-                    </svg>
-
-                    <div className="absolute bottom-0 left-0 h-3 w-3 rounded-full border-2 border-[#1A6BFF] bg-white"></div>
-                    <div className="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-[#1A6BFF] bg-white"></div>
-
-                    <div className="absolute left-1/2 top-[0%] -translate-x-1/2 rotate-45 text-[#1A6BFF]">
-                        <Plane
-                            size={28}
-                            fill="#1A6BFF"
-                            stroke="#1A6BFF"
-                        />
-                    </div>
-
-                    <div className="absolute top-[35px] w-full text-center text-sm text-[#6B7280]">
-                        <div>{flight.duration}</div>
-                        <div>{flight.type}</div>
-                    </div>
-                </div>
-
-                <div className="ml-3 text-center">
-                    <div className="mb-1 text-sm text-[#6B7280]">{flight.to.city}</div>
-                    <div className="text-2xl font-semibold leading-none text-black dark:text-white">{flight.to.time}</div>
-                    <div className="mt-1 text-sm text-[#6B7280]">{flight.to.code}</div>
-                </div>
-            </div>
-        </div>
-    );
-}
-
 /* Reusable modal wrapper */
 function Modal({ open, onClose, title, children, footer, centerOnDesktop = true }) {
     if (!open) return null;
@@ -476,9 +381,7 @@ function PriceAlertModal({ open, onClose, flight }) {
                     </div>
                 </div>
 
-                <div className="dark:bg-dark/[0.03] rounded-lg border p-2 dark:border-gray-800">
-                    {flight ? <OrigionDestinationArrowComponent flight={flight} /> : <div className="text-sm text-gray-500">No flight selected</div>}
-                </div>
+                {flight ? <OrigionDestinationArrowComponent flight={flight} /> : <div className="text-sm text-gray-500">No flight selected</div>}
                 <div>{RangeSlider("Target price range", durationRange, setDurationRange, DURATION_MIN, DURATION_MAX, "$")}</div>
 
                 <label className="flex items-center gap-2 text-sm">
@@ -715,7 +618,7 @@ function FiltersModal({
                     </button>
                 </div>
             </div>
-            <div className="rounded-xl bg-white p-4 shadow-sm">{content}</div>
+            <div className="rounded-lg bg-white p-4 shadow-md">{content}</div>
         </div>
     );
 }
@@ -910,7 +813,11 @@ function HorizontalCalendar({ date }) {
 export default function SearchFlights() {
     const [flights, setFlights] = useState(flightsbookings);
     const [filtered, setFiltered] = useState(flightsbookings);
-
+    const navigate = useNavigate();
+    const selectedFlight = (flight) => {
+        console.log("Selected flight:", flight);
+        navigate("/flights/details");
+    };
     // modal state
     const [modals, setModals] = useState({ filter: false, sort: false, share: false, priceAlert: false });
 
@@ -983,11 +890,12 @@ export default function SearchFlights() {
                         {filtered.map((flight) => (
                             <div
                                 key={flight.id}
-                                className="rounded-xl border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-white/[0.03]"
+                                onClick={() => {
+                                    selectedFlight(flight);
+                                }}
+                                className="r cursor-pointer"
                             >
-                                <div className="p-2">
-                                    <OrigionDestinationArrowComponent flight={flight} />
-                                </div>
+                                <OrigionDestinationArrowComponent flight={flight} />
                             </div>
                         ))}
                     </div>
