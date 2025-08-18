@@ -310,7 +310,7 @@ export default function FlightDetailsPage() {
     return (
         <div className="dark:bg-dark/[0.03] flex min-h-screen flex-col">
             {/* Header */}
-            <div className="flex items-center justify-between border-b bg-blue-600 p-3 text-white dark:border-gray-800 md:py-5">
+            <div className="flex items-center justify-between border-b bg-blue-600 p-5 text-white dark:border-gray-800">
                 <button>
                     <ArrowLeft />
                 </button>

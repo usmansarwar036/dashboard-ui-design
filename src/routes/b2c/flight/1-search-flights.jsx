@@ -48,8 +48,7 @@ const defaultForm = {
     passengers: { adult: 1, child: 0, infant: 0 },
     seatClass: "economy",
 };
-
-const flightsbookings = [
+const flightslist = [
     {
         id: 1,
         airline: "Japan Airlines",
@@ -63,8 +62,7 @@ const flightsbookings = [
         price: 320,
         stopDuration: 0,
         amenities: ["Wi-Fi", "In-flight Meal"],
-        refundable: true,
-        reschedulable: true,
+        refundOptions: ["Refundable", "Reschedule Available"],
         cabinClass: "Economy",
         preferences: [],
         departureTime: "09:40",
@@ -83,10 +81,9 @@ const flightsbookings = [
         price: 280,
         stopDuration: 2,
         amenities: ["Power & USB Port", "In-flight Entertainment"],
-        refundable: false,
-        reschedulable: true,
+        refundOptions: ["Reschedule Available"], // not refundable
         cabinClass: "Business Class",
-        preferences: ["Exclude overnight stop(s)"],
+        preferences: ["Exclude overnight stopover"],
         departureTime: "02:30",
         arrivalTime: "05:00",
     },
@@ -103,10 +100,9 @@ const flightsbookings = [
         price: 450,
         stopDuration: 6,
         amenities: ["Wi-Fi", "In-flight Meal", "In-flight Entertainment"],
-        refundable: true,
-        reschedulable: false,
+        refundOptions: ["Refundable"], // not reschedulable
         cabinClass: "Premium Economy",
-        preferences: ["Exclude late-night flights"],
+        preferences: ["Exclude red-eye flights"],
         departureTime: "06:45",
         arrivalTime: "11:20",
     },
@@ -123,10 +119,9 @@ const flightsbookings = [
         price: 390,
         stopDuration: 0,
         amenities: ["Baggage", "In-flight Meal"],
-        refundable: false,
-        reschedulable: false,
+        refundOptions: [], // neither refundable nor reschedulable
         cabinClass: "First Class",
-        preferences: ["Exclude code-share flights"],
+        preferences: ["Exclude codeshare flights"],
         departureTime: "10:00",
         arrivalTime: "18:00",
     },
@@ -158,53 +153,6 @@ const isTimeInRange = (timeStr, rangeLabel) => {
     if (from > to) return current >= from || current < to;
     return current >= from && current < to;
 };
-
-/**
- * applyFilters: ed so unit tests can import
- * filters param: {
- *  airlines: [], stops: [], priceRange: [min,max],
- *  durationRange: [min,max], departureTimes: [], arrivalTimes: [], dateFrom, dateTo
- * }
- */
-function applyFiltersToList(list, filters) {
-    let filtered = [...list];
-
-    const {
-        airlines = [],
-        stops = [],
-        priceRange = [Number.MIN_SAFE_INTEGER, Number.MAX_SAFE_INTEGER],
-        durationRange = [0, Number.MAX_SAFE_INTEGER],
-        departureTimes = [],
-        arrivalTimes = [],
-        dateFrom,
-        dateTo,
-    } = filters || {};
-
-    if (airlines.length) filtered = filtered.filter((f) => airlines.includes(f.airline));
-    if (stops.length) filtered = filtered.filter((f) => stops.includes(f.type));
-    filtered = filtered.filter((f) => f.price >= priceRange[0] && f.price <= priceRange[1]);
-
-    filtered = filtered.filter((f) => {
-        const dur = parseDurationHours(f.duration);
-        return dur >= durationRange[0] && dur <= durationRange[1];
-    });
-
-    if (departureTimes.length) {
-        filtered = filtered.filter((f) => departureTimes.some((r) => isTimeInRange(f.departureTime, r)));
-    }
-    if (arrivalTimes.length) {
-        filtered = filtered.filter((f) => arrivalTimes.some((r) => isTimeInRange(f.arrivalTime, r)));
-    }
-
-    if (dateFrom && dateTo) {
-        filtered = filtered.filter((f) => {
-            const d = new Date(f.date);
-            return d >= new Date(dateFrom) && d <= new Date(dateTo);
-        });
-    }
-
-    return filtered;
-}
 
 /**
  * applySortToList: ed for unit tests
@@ -442,16 +390,10 @@ const RangeSlider = (label, range, setRange, min, max, unit = "") => (
         </div>
     </div>
 );
-function FiltersModal({
-    open,
-    onClose,
-    flights,
-    onApply,
-    isModal = true, // 👈 new prop
-}) {
+function FiltersModal({ open, onClose, flights, onApply, isModal = true }) {
     // derived options
     const airlinesList = useMemo(() => [...new Set(flights.map((f) => f.airline))], [flights]);
-    const stopsOptions = useMemo(() => [...new Set(flights.map((f) => f.type))], [flights]);
+    const stopsOptions = ["Direct", "1 Stop", "2+ Stops"];
     const durations = flights.map((f) => parseDurationHours(f.duration));
     const DURATION_MIN = Math.floor(Math.min(...durations));
     const DURATION_MAX = Math.ceil(Math.max(...durations));
@@ -460,27 +402,63 @@ function FiltersModal({
     const PRICE_MAX = Math.ceil(Math.max(...prices));
     const timeOptions = ["00:00 - 06:00", "06:00 - 12:00", "12:00 - 18:00", "18:00 - 00:00"];
 
+    const stopDurations = flights.map((f) => f.stopDuration || 0);
+    const STOP_DURATION_MIN = Math.floor(Math.min(...stopDurations));
+    const STOP_DURATION_MAX = Math.ceil(Math.max(...stopDurations));
+
     // state
     const [selectedAirlines, setSelectedAirlines] = useState([]);
     const [selectedStops, setSelectedStops] = useState([]);
     const [priceRange, setPriceRange] = useState([PRICE_MIN, PRICE_MAX]);
     const [durationRange, setDurationRange] = useState([DURATION_MIN, DURATION_MAX]);
+    const [stopDuration, setStopDuration] = useState([STOP_DURATION_MIN, STOP_DURATION_MAX]);
+
     const [departureTimes, setDepartureTimes] = useState([]);
     const [arrivalTimes, setArrivalTimes] = useState([]);
+    const [amenities, setAmenities] = useState([]);
+    const [refundOptions, setRefundOptions] = useState([]);
+    const [preferences, setPreferences] = useState([]);
+    const [cabinClasses, setCabinClasses] = useState([]);
 
+    // ✅ Dynamic option groups from flights
+    const amenitiesOptions = useMemo(() => [...new Set(flights.flatMap((f) => f.amenities || []))], [flights]);
+
+    const refundOptionsList = useMemo(() => [...new Set(flights.flatMap((f) => f.refundOptions || []))], [flights]);
+
+    const preferencesOptions = useMemo(() => [...new Set(flights.flatMap((f) => f.preferences || []))], [flights]);
+
+    const cabinOptions = useMemo(() => [...new Set(flights.map((f) => f.cabin || "Economy"))], [flights]);
+
+    // auto-apply filters
     useEffect(() => {
         const filters = {
             airlines: selectedAirlines,
             stops: selectedStops,
             priceRange,
             durationRange,
+            stopDuration,
             departureTimes,
             arrivalTimes,
+            amenities,
+            refundOptions,
+            preferences,
+            cabinClasses,
         };
         const result = applyFiltersToList(flights, filters);
         onApply(result);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [selectedAirlines, selectedStops, priceRange, durationRange, departureTimes, arrivalTimes]);
+    }, [
+        selectedAirlines,
+        selectedStops,
+        priceRange,
+        durationRange,
+        stopDuration,
+        departureTimes,
+        arrivalTimes,
+        amenities,
+        refundOptions,
+        preferences,
+        cabinClasses,
+    ]);
 
     const toggle = (item, setter) => setter((prev) => (prev.includes(item) ? prev.filter((p) => p !== item) : [...prev, item]));
 
@@ -489,10 +467,96 @@ function FiltersModal({
         setSelectedStops([]);
         setPriceRange([PRICE_MIN, PRICE_MAX]);
         setDurationRange([DURATION_MIN, DURATION_MAX]);
+        setStopDuration([0, 5]);
         setDepartureTimes([]);
         setArrivalTimes([]);
+        setAmenities([]);
+        setRefundOptions([]);
+        setPreferences([]);
+        setCabinClasses([]);
         onApply(flights);
     };
+    function applyFiltersToList(list, filters) {
+        let filtered = [...list];
+
+        const {
+            airlines = [],
+            stops = [],
+            priceRange = [Number.MIN_SAFE_INTEGER, Number.MAX_SAFE_INTEGER],
+            durationRange = [0, Number.MAX_SAFE_INTEGER],
+            stopDuration = [0, Number.MAX_SAFE_INTEGER],
+            departureTimes = [],
+            arrivalTimes = [],
+            amenities = [],
+            refundOptions = [],
+            preferences = [],
+            cabinClasses = [],
+            dateFrom,
+            dateTo,
+        } = filters || {};
+
+        // Airlines
+        if (airlines.length) {
+            filtered = filtered.filter((f) => airlines.includes(f.airline));
+        }
+
+        // Stops
+        if (stops.length) {
+            filtered = filtered.filter((f) => stops.includes(f.type));
+        }
+
+        // Price
+        filtered = filtered.filter((f) => f.price >= priceRange[0] && f.price <= priceRange[1]);
+
+        // Flight Duration
+        filtered = filtered.filter((f) => {
+            const dur = parseDurationHours(f.duration);
+            return dur >= durationRange[0] && dur <= durationRange[1];
+        });
+
+        // Stop Duration
+        filtered = filtered.filter((f) => f.stopDuration >= stopDuration[0] && f.stopDuration <= stopDuration[1]);
+
+        // Departure Time
+        if (departureTimes.length) {
+            filtered = filtered.filter((f) => departureTimes.some((r) => isTimeInRange(f.departureTime, r)));
+        }
+
+        // Arrival Time
+        if (arrivalTimes.length) {
+            filtered = filtered.filter((f) => arrivalTimes.some((r) => isTimeInRange(f.arrivalTime, r)));
+        }
+
+        // Amenities (safe check)
+        if (amenities.length) {
+            filtered = filtered.filter((f) => amenities.some((a) => (f.amenities || []).includes(a)));
+        }
+
+        // Refund Options (safe check)
+        if (refundOptions.length) {
+            filtered = filtered.filter((f) => refundOptions.some((r) => (f.refundOptions || []).includes(r)));
+        }
+
+        // Preferences (safe check)
+        if (preferences.length) {
+            filtered = filtered.filter((f) => preferences.some((p) => (f.preferences || []).includes(p)));
+        }
+
+        // Cabin Class
+        if (cabinClasses.length) {
+            filtered = filtered.filter((f) => cabinClasses.includes(f.cabinClass));
+        }
+
+        // Date Range
+        if (dateFrom && dateTo) {
+            filtered = filtered.filter((f) => {
+                const d = new Date(f.date);
+                return d >= new Date(dateFrom) && d <= new Date(dateTo);
+            });
+        }
+
+        return filtered;
+    }
 
     const footer = (
         <div className="flex items-center justify-between">
@@ -507,40 +571,69 @@ function FiltersModal({
                     onClick={onClose}
                     className="rounded-lg bg-blue-600 px-4 py-2 text-white"
                 >
-                    Done
+                    Apply
                 </button>
             </div>
         </div>
     );
+    {
+        /* Reusable Checkbox Group */
+    }
+    function CheckboxGroup({ label, options, selected, setSelected }) {
+        const allSelected = options.length > 0 && selected.length === options.length;
 
-    // filters content (shared between modal and inline)
-    const content = (
-        <div className="space-y-4">
+        const toggleOption = (opt) => {
+            setSelected((prev) => (prev.includes(opt) ? prev.filter((o) => o !== opt) : [...prev, opt]));
+        };
+
+        const toggleAll = () => {
+            if (allSelected) {
+                setSelected([]); // unselect all
+            } else {
+                setSelected([...options]); // select all
+            }
+        };
+
+        return (
             <div>
-                <div className="mt-2">{RangeSlider("Price Range", priceRange, setPriceRange, PRICE_MIN, PRICE_MAX, "$")}</div>
-            </div>
-
-            <div>{RangeSlider("Duration (hrs)", durationRange, setDurationRange, DURATION_MIN, DURATION_MAX)}</div>
-
-            <div>
-                <label className="block text-sm font-semibold">Airlines</label>
-                <div className="mt-2 flex flex-wrap gap-2">
-                    {airlinesList.map((a) => (
-                        <button
-                            key={a}
-                            onClick={() => toggle(a, setSelectedAirlines)}
-                            className={`rounded-lg border px-3 py-2 text-sm ${
-                                selectedAirlines.includes(a) ? "border-blue-600 text-blue-600" : "border-gray-300 text-gray-700"
-                            } dark:border-gray-800`}
+                <div className="flex items-center justify-between">
+                    <label className="block font-bold">{label}</label>
+                    <button
+                        onClick={toggleAll}
+                        className="text-xs text-blue-600"
+                    >
+                        {allSelected ? "Unselect All" : "Select All"}
+                    </button>
+                </div>
+                <div className="mt-2 flex flex-col gap-3">
+                    {options.map((opt) => (
+                        <label
+                            key={opt}
+                            className="flex items-center justify-between border-gray-300 text-sm dark:border-gray-800"
                         >
-                            {a}
-                        </button>
+                            <span>{opt}</span>
+                            <input
+                                type="checkbox"
+                                checked={selected.includes(opt)}
+                                onChange={() => toggleOption(opt)}
+                                className="form-checkbox h-4 w-4 cursor-pointer rounded text-blue-600"
+                            />
+                        </label>
                     ))}
                 </div>
             </div>
+        );
+    }
 
+    // filters content
+    const content = (
+        <div className="space-y-4">
+            {/* Price */}
+            {RangeSlider("Price Range", priceRange, setPriceRange, PRICE_MIN, PRICE_MAX, "$")}
+
+            {/* Stops */}
             <div>
-                <label className="block text-sm font-semibold">Stops</label>
+                <label className="block text-sm font-semibold">Number of Stops</label>
                 <div className="mt-2 flex gap-2">
                     {stopsOptions.map((s) => (
                         <button
@@ -556,23 +649,29 @@ function FiltersModal({
                 </div>
             </div>
 
-            <div>
-                <label className="block text-sm font-semibold">Departure Time</label>
-                <div className="mt-2 grid grid-cols-2 gap-2">
-                    {timeOptions.map((t) => (
-                        <button
-                            key={t}
-                            onClick={() => toggle(t, setDepartureTimes)}
-                            className={`rounded-lg border px-3 py-2 text-sm ${
-                                departureTimes.includes(t) ? "border-blue-600 text-blue-600" : "border-gray-300 text-gray-700"
-                            } dark:border-gray-800`}
-                        >
-                            {t}
-                        </button>
-                    ))}
-                </div>
-            </div>
+            {/* Stop Duration */}
+            {RangeSlider("Stop Duration (hrs)", stopDuration, setStopDuration, STOP_DURATION_MIN, STOP_DURATION_MAX)}
 
+            {/* Flight Duration */}
+            {RangeSlider("Flight Duration (hrs)", durationRange, setDurationRange, DURATION_MIN, DURATION_MAX)}
+
+            {/* Airlines */}
+            <CheckboxGroup
+                label="Airlines"
+                options={airlinesList}
+                selected={selectedAirlines}
+                setSelected={setSelectedAirlines}
+            />
+
+            {/* Amenities */}
+            <CheckboxGroup
+                label="Amenities"
+                options={amenitiesOptions}
+                selected={amenities}
+                setSelected={setAmenities}
+            />
+
+            {/* Arrival Time */}
             <div>
                 <label className="block text-sm font-semibold">Arrival Time</label>
                 <div className="mt-2 grid grid-cols-2 gap-2">
@@ -589,10 +688,51 @@ function FiltersModal({
                     ))}
                 </div>
             </div>
+
+            {/* Departure Time */}
+            <div>
+                <label className="block text-sm font-semibold">Departure Time</label>
+                <div className="mt-2 grid grid-cols-2 gap-2">
+                    {timeOptions.map((t) => (
+                        <button
+                            key={t}
+                            onClick={() => toggle(t, setDepartureTimes)}
+                            className={`rounded-lg border px-3 py-2 text-sm ${
+                                departureTimes.includes(t) ? "border-blue-600 text-blue-600" : "border-gray-300 text-gray-700"
+                            } dark:border-gray-800`}
+                        >
+                            {t}
+                        </button>
+                    ))}
+                </div>
+            </div>
+            {/* Refund & Reschedule */}
+            <CheckboxGroup
+                label="Refund & Reschedule"
+                options={refundOptionsList}
+                selected={refundOptions}
+                setSelected={setRefundOptions}
+            />
+
+            {/* Flight Preferences */}
+            <CheckboxGroup
+                label="Flight Preferences"
+                options={preferencesOptions}
+                selected={preferences}
+                setSelected={setPreferences}
+            />
+
+            {/* Cabin Class */}
+            <CheckboxGroup
+                label="Cabin Class"
+                options={cabinOptions}
+                selected={cabinClasses}
+                setSelected={setCabinClasses}
+            />
         </div>
     );
 
-    // if isModal → wrap inside Modal, otherwise show plain
+    // modal or inline
     return isModal ? (
         <Modal
             open={open}
@@ -618,7 +758,7 @@ function FiltersModal({
                     </button>
                 </div>
             </div>
-            <div className="rounded-lg bg-white p-4 shadow-md">{content}</div>
+            <div className="dark:bg-dark/[0.03] rounded-lg bg-white p-4 shadow-md dark:border-gray-800 dark:text-white">{content}</div>
         </div>
     );
 }
@@ -811,8 +951,8 @@ function HorizontalCalendar({ date }) {
  * -------------------------------
  */
 export default function SearchFlights() {
-    const [flights, setFlights] = useState(flightsbookings);
-    const [filtered, setFiltered] = useState(flightsbookings);
+    const [flights, setFlights] = useState(flightslist);
+    const [filtered, setFiltered] = useState(flightslist);
     const navigate = useNavigate();
     const selectedFlight = (flight) => {
         console.log("Selected flight:", flight);
@@ -821,7 +961,7 @@ export default function SearchFlights() {
     // modal state
     const [modals, setModals] = useState({ filter: false, sort: false, share: false, priceAlert: false });
 
-    const [selectedFlightForAlert, setSelectedFlightForAlert] = useState(flightsbookings[0]);
+    const [selectedFlightForAlert, setSelectedFlightForAlert] = useState(flightslist[0]);
 
     const openModal = (name) => setModals((s) => ({ ...s, [name]: true }));
     const closeModal = (name) => setModals((s) => ({ ...s, [name]: false }));
