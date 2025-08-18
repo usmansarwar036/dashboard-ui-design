@@ -70,7 +70,7 @@ function PackageDetailsModal({ open, onClose }) {
 
 // ------------Flgiht Tab----------
 const FlightsTab = () => (
-    <div className="dark:bg-dark/[0.03] rounded-lg bg-white p-3 shadow-md dark:border dark:border-gray-800">
+    <div className="dark:bg-dark/[0.03] h-full rounded-lg bg-white p-3 shadow-md dark:border dark:border-gray-800">
         <div className="flex items-center gap-2 border-b pb-3 dark:border-gray-800">
             <p className="text-white dark:text-black">
                 <CircleCheck
@@ -209,7 +209,7 @@ const FlightsTab = () => (
 );
 // ------------Refund Tab----------
 const RefundsTab = () => (
-    <div className="dark:bg-dark/[0.03] rounded-lg bg-white p-3 shadow-md dark:border dark:border-gray-800">
+    <div className="dark:bg-dark/[0.03] h-full rounded-lg bg-white p-3 shadow-md dark:border dark:border-gray-800">
         <div className="flex items-center gap-2 border-b pb-3 dark:border-gray-800">
             <p className="text-white dark:text-black">
                 <CircleCheck
@@ -252,7 +252,7 @@ const RefundsTab = () => (
 
 // ------------Reshedule Tab----------
 const RescheduleTab = () => (
-    <div className="dark:bg-dark/[0.03] rounded-lg bg-white p-3 shadow-md dark:border dark:border-gray-800">
+    <div className="dark:bg-dark/[0.03] h-full rounded-lg bg-white p-3 shadow-md dark:border dark:border-gray-800">
         <div className="flex items-center gap-2 border-b pb-3 dark:border-gray-800">
             <p className="text-white dark:text-black">
                 <CircleCheck
@@ -326,15 +326,18 @@ export default function FlightDetailsPage() {
             </div>
 
             {/* Body */}
-            <div className="flex flex-1 flex-col gap-3 overflow-auto p-3 lg:flex-row">
-                <div className="hidden h-fit lg:grid lg:w-2/3">
-                    <div className="grid grid-cols-[1.1fr_1fr_1fr] gap-3">
-                        <FlightsTab />
-                        <RefundsTab />
-                        <RescheduleTab />
-                    </div>
+            <div className="m-2 grid gap-3 sm:m-3 xl:grid-cols-4">
+                <div className="col-span-1 hidden xl:block">
+                    <FlightsTab />
                 </div>
-                <div className="flex flex-col gap-3 lg:w-1/3">
+                <div className="col-span-1 hidden xl:block">
+                    <RefundsTab />
+                </div>
+                <div className="col-span-1 hidden xl:block">
+                    <RescheduleTab />
+                </div>
+
+                <div className="flex min-h-screen flex-col gap-3 xl:min-h-fit">
                     <OrigionDestinationArrowComponent flight={flight} />
                     <div className="dark:bg-dark/[0.03] rounded-lg bg-white p-3 shadow-md dark:border dark:border-gray-800">
                         {/* Top Section: Airline + Price */}
@@ -396,7 +399,7 @@ export default function FlightDetailsPage() {
                         {/* Details Button (with 4 icons left) */}
                         <button
                             onClick={() => setModalOpen(true)}
-                            className="mt-3 flex w-full items-center justify-between text-sm font-medium lg:hidden"
+                            className="mt-3 flex w-full items-center justify-between text-sm font-medium xl:hidden"
                         >
                             {/* Left: Four icons */}
                             <div className="flex items-center gap-3">
