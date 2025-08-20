@@ -536,7 +536,7 @@ function PackageDetailsModal({ open, onClose, flight }) {
                         </div>
                     )}
                 </div>
-                <div className="dark:bg-dark/[0.03] mt-4 hidden items-center justify-between rounded-b-xl border-t bg-white p-3 shadow-lg dark:border-gray-800 lg:flex">
+                <div className="dark:bg-dark/[0.03] mt-4 flex items-center justify-between rounded-b-xl border-t bg-white p-3 shadow-lg dark:border-gray-800">
                     <div>
                         <div className="text-xs text-gray-500">Total price / person</div>
                         <div className="text-lg font-semibold text-black dark:text-white">$240</div>
