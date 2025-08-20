@@ -124,7 +124,7 @@ function App() {
                     element: <HomePage />,
                 },
                 { path: "flights/search", element: <SearchFlights /> },
-                { path: "flights/details", element: <FlightDetailsPage /> },
+                { path: "flights/fill-details", element: <FlightDetailsPage /> },
             ],
         },
     ]);

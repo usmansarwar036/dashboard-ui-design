@@ -268,7 +268,7 @@ function PackageDetailsModal({ open, onClose, flight }) {
 
     const selectedFlight = (flight) => {
         console.log("Selected flight:", flight);
-        // navigate("/flights/details");
+        navigate("/flights/fill-details");
     };
     if (!open) return null;
 

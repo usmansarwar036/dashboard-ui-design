@@ -2,7 +2,7 @@ import { Plane } from "lucide-react";
 
 export default function OrigionDestinationArrowComponent({ flight }) {
     return (
-        <div className="rounded-lg bg-white p-2 shadow-md dark:bg-gray-900">
+        <div className="rounded-lg bg-white p-4 shadow-md dark:bg-gray-900">
             <div className="mb-3 flex items-center justify-between border-b pb-3 dark:border-gray-800">
                 <div className="flex items-center space-x-2">
                     <img

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
     ArrowLeft,
     Bookmark,
@@ -19,6 +19,8 @@ import {
     Layout,
 } from "lucide-react";
 import OrigionDestinationArrowComponent from "./util/flight-component";
+import SeatMap from "./util/seat-map";
+import { seatMap } from "../../../data/seatmapdata";
 
 // ---------- Modal ----------
 function PackageDetailsModal({ open, onClose }) {
@@ -295,9 +297,83 @@ function PackageDetailsModal({ open, onClose }) {
     );
 }
 
+// ---------- Seat ----------
+function SeatSelectionModal({ open, onClose, passengers = 2 }) {
+    const [selectedSeats, setSelectedSeats] = useState([]);
+
+    useEffect(() => {
+        console.log(selectedSeats);
+    }, [selectedSeats]);
+
+    if (!open) return null;
+
+    return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+            <div className="dark:bg-dark/[0.03] w-full max-w-lg rounded-2xl bg-white shadow-xl">
+                {/* Header */}
+                <div className="flex items-center justify-between border-b p-4 dark:border-gray-800">
+                    <h2 className="text-lg font-semibold">Select Seat</h2>
+                    <button onClick={onClose}>
+                        <X className="h-6 w-6 text-gray-500" />
+                    </button>
+                </div>
+
+                {/* Flight Info */}
+                <div className="border-b px-4 py-2 dark:border-gray-800">
+                    <p className="font-semibold">Lufthansa</p>
+                    <p className="text-sm text-gray-500">New York → Paris</p>
+                    <p className="text-sm text-gray-500">Thu, Dec 28 2023 — 08:00 → 15:45</p>
+                </div>
+
+                {/* Seat Map */}
+                <div className="max-h-[60vh] overflow-y-auto p-4">
+                    {seatMap.data[0].decks.map((deck, i) => (
+                        <SeatMap
+                            key={i}
+                            deck={deck}
+                            passengers={passengers}
+                            selectedSeats={selectedSeats}
+                            setSelectedSeats={setSelectedSeats}
+                        />
+                    ))}
+                </div>
+
+                {/* Legend */}
+                <div className="flex justify-center gap-6 py-2 text-xs text-gray-500">
+                    <div className="flex items-center gap-1">
+                        <div className="h-4 w-4 rounded bg-blue-600"></div> Selected
+                    </div>
+                    <div className="flex items-center gap-1">
+                        <div className="h-4 w-4 rounded bg-red-500"></div> Occupied
+                    </div>
+                    <div className="flex items-center gap-1">
+                        <div className="h-4 w-4 rounded bg-green-600"></div> Available
+                    </div>
+                </div>
+
+                {/* Footer */}
+                <div className="flex flex-col items-center gap-2 border-t p-4 dark:border-gray-800">
+                    <p className="text-sm">Selected Seats: {selectedSeats.length > 0 ? selectedSeats.join(", ") : "None"}</p>
+                    <button
+                        className="w-full rounded-xl bg-blue-600 py-3 font-semibold text-white disabled:opacity-50"
+                        disabled={selectedSeats.length !== passengers}
+                        onClick={() => {
+                            console.log("Confirmed seats:", selectedSeats);
+                            onClose();
+                        }}
+                    >
+                        OK
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+}
+
 // ---------- Main Page ----------
 export default function FlightDetailsPage() {
     const [modalOpen, setModalOpen] = useState(false);
+    const [seatModal, setSeatModal] = useState(false);
     const [flight] = useState({
         logo: "https://picsum.photos/500/500",
         airline: "Airline Name",
@@ -419,6 +495,12 @@ export default function FlightDetailsPage() {
                     </div>
                 </div>
             </div>
+            <button
+                className="rounded-xl bg-blue-600 px-6 py-3 text-white"
+                onClick={() => setSeatModal(true)}
+            >
+                Select Seat
+            </button>
 
             {/* Bottom fixed */}
             <div className="sticky bottom-0 lg:hidden">
@@ -430,6 +512,12 @@ export default function FlightDetailsPage() {
                     <button className="rounded-xl bg-blue-600 px-6 py-2 text-white shadow">Continue</button>
                 </div>
             </div>
+
+            <SeatSelectionModal
+                open={seatModal}
+                onClose={() => setSeatModal(false)}
+                passengers={3}
+            />
 
             {/* Modal */}
             <PackageDetailsModal
