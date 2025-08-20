@@ -1,12 +1,12 @@
 // ---------- Seat ----------
 const Seat = ({ number, availability, onSelect, isSelected }) => {
     const isAvailable = availability === "AVAILABLE";
-    const bg = isSelected ? "bg-blue-600" : isAvailable ? "bg-green-600" : "bg-red-500";
+    const bg = isSelected ? "text-white bg-blue-600" : isAvailable ? "bg-blue-200 text-blue-600" : "text-white bg-gray-500";
 
     return (
         <div
             onClick={() => isAvailable && onSelect(number)}
-            className={`m-auto flex h-8 w-8 items-center justify-center rounded text-[0.75rem] text-white transition ${
+            className={`m-auto flex aspect-square w-full items-center justify-center rounded-lg text-[0.75rem] transition ${
                 isAvailable ? "cursor-pointer hover:scale-105" : "cursor-not-allowed opacity-60"
             } ${bg}`}
         >
@@ -17,14 +17,14 @@ const Seat = ({ number, availability, onSelect, isSelected }) => {
 
 // ---------- Facility ----------
 const Facility = ({ code }) => (
-    <div className="flex h-8 w-10 items-center justify-center rounded bg-yellow-200 text-[0.7rem] font-medium">{code}</div>
+    <div className="flex w-full items-center justify-center rounded-lg bg-yellow-200 py-2 text-[0.7rem] font-medium">{code}</div>
 );
 
 // ---------- Exit ----------
 const Exit = () => (
     <div className="col-span-full flex justify-between text-[0.7rem] font-semibold text-white">
-        <span className="rounded bg-green-600 px-2 py-0.5">EXIT</span>
-        <span className="rounded bg-green-600 px-2 py-0.5">EXIT</span>
+        <span className="rounded-lg bg-green-600 p-2">EXIT</span>
+        <span className="rounded-lg bg-green-600 p-2">EXIT</span>
     </div>
 );
 
@@ -104,7 +104,7 @@ const SeatMap = ({ deck, selectedSeats, setSelectedSeats, passengers }) => {
 
     return (
         <div
-            className="my-4 grid gap-1 rounded-lg border-2 border-gray-300 p-2 dark:border-gray-800"
+            className="grid gap-1 rounded-lg border-2 border-gray-300 p-2 dark:border-gray-800"
             style={{
                 gridTemplateColumns: `repeat(${width}, minmax(0, 1fr))`,
             }}
