@@ -13,10 +13,18 @@ import {
     Calendar,
     ArrowLeft,
     Filter,
-    ChevronDown,
     Copy,
     Facebook,
     MessageSquare,
+    Luggage,
+    CircleCheck,
+    Repeat,
+    RotateCcw,
+    Shield,
+    Utensils,
+    Film,
+    Battery,
+    Layout,
 } from "lucide-react";
 import { Range } from "react-range";
 import "react-day-picker/dist/style.css";
@@ -253,6 +261,297 @@ function ShareModal({ open, onClose }) {
         </Modal>
     );
 }
+// package details modal
+function PackageDetailsModal({ open, onClose, flight }) {
+    const [activeTab, setActiveTab] = useState("flights");
+    const navigate = useNavigate();
+
+    const selectedFlight = (flight) => {
+        console.log("Selected flight:", flight);
+        // navigate("/flights/details");
+    };
+    if (!open) return null;
+
+    return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+            <div className="dark:bg-dark/[0.03] w-full max-w-lg rounded-2xl bg-gray-100 shadow-lg dark:bg-gray-900">
+                <div className="relative mb-4 rounded-t-2xl bg-blue-600 p-4 text-center text-white">
+                    <span> Details</span>
+                    {/* Close button */}
+                    <button
+                        className="absolute right-3 top-3 rounded-full p-2"
+                        onClick={onClose}
+                    >
+                        <X size={20} />
+                    </button>
+                </div>
+
+                {/* Tabs */}
+                <div className="mb-4 flex justify-center">
+                    <div className="inline-flex rounded-lg border border-gray-200 bg-gray-200 dark:border-gray-800 dark:bg-gray-800">
+                        {["flights", "refund", "reschedule"].map((tab) => (
+                            <button
+                                key={tab}
+                                onClick={() => setActiveTab(tab)}
+                                className={`w-28 px-4 py-2 text-sm font-medium transition-colors ${activeTab === tab ? "bg-blue-600 text-white" : "text-gray-700 dark:text-white"} first:rounded-l-lg last:rounded-r-lg`}
+                            >
+                                {tab === "flights" ? "Flights" : tab === "refund" ? "Refund Info" : "Reschedule"}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Tab Content */}
+                <div className="max-h-[70vh] space-x-3 overflow-auto px-4 pt-0 text-sm text-gray-700 dark:text-white">
+                    {activeTab === "flights" && (
+                        <div className="dark:bg-dark/[0.03] h-full rounded-lg bg-white p-3 shadow-md dark:border dark:border-gray-800">
+                            <div className="flex items-center gap-2 border-b pb-3 dark:border-gray-800">
+                                <p className="text-white dark:text-black">
+                                    <CircleCheck
+                                        size={20}
+                                        className="fill-blue-600 dark:fill-white"
+                                    />
+                                </p>
+
+                                <p className="text-base font-bold text-blue-600">Flight</p>
+                            </div>
+                            <div className="mt-3 grid grid-cols-[60px_28px_1fr] gap-3">
+                                {/* LEFT: times + dates */}
+                                <div className="flex flex-col justify-between text-center">
+                                    <div>
+                                        <div className="text-base font-semibold text-black dark:text-white">09:00</div>
+                                        <div className="text-xs text-gray-500">Dec 27</div>
+                                    </div>
+                                    <div>
+                                        <div className="text-base font-semibold text-black dark:text-white">16:30</div>
+                                        <div className="text-xs text-gray-500">Dec 27</div>
+                                    </div>
+                                </div>
+
+                                {/* MIDDLE: vertical rail + plane + duration */}
+                                <div className="relative mx-auto h-full w-[2px] bg-blue-600">
+                                    {/* top & bottom nodes */}
+                                    <span className="absolute -left-[5px] top-0 h-3 w-3 rounded-full border-2 border-blue-600 bg-white"></span>
+                                    <span className="absolute -left-[5px] bottom-0 h-3 w-3 rounded-full bg-blue-600"></span>
+
+                                    {/* plane icon (downward) */}
+                                    <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rotate-[135deg] text-blue-600">
+                                        <Plane
+                                            size={20}
+                                            fill="#1A6BFF"
+                                            stroke="#1A6BFF"
+                                        />
+                                    </span>
+
+                                    {/* duration on LEFT */}
+                                    <span className="absolute -left-16 top-1/2 -translate-y-1/2 text-xs text-gray-500">7h 30m</span>
+                                </div>
+
+                                {/* RIGHT: segments + airline card */}
+                                <div className="space-y-3">
+                                    {/* ORIGIN */}
+                                    <div>
+                                        <div className="text-sm font-semibold text-black dark:text-white">New York (JFK), USA</div>
+                                        <p className="text-xs text-gray-500">John F. Kennedy International Airport · Terminal 4</p>
+                                    </div>
+
+                                    {/* AIRLINE CARD */}
+                                    <div className="rounded-lg border p-3 dark:border-gray-800">
+                                        {/* airline header */}
+                                        <div className="mb-2 flex items-center gap-2">
+                                            <span className="h-2 w-2 rounded-full bg-rose-500"></span>
+                                            <span className="text-sm font-semibold text-black dark:text-white">Emirates</span>
+                                        </div>
+                                        <div className="mb-3 border-b pb-2 text-xs text-gray-700 dark:border-gray-800 dark:text-white">
+                                            EK 202 · Economy
+                                        </div>
+
+                                        {/* amenities with icons */}
+                                        <ul className="space-y-3 text-sm text-gray-700 dark:text-white">
+                                            <li className="flex items-center gap-2">
+                                                <Luggage
+                                                    size={14}
+                                                    className="text-gray-500"
+                                                />{" "}
+                                                Cabin Baggage 1 × 7 kg
+                                            </li>
+                                            <li className="flex items-center gap-2">
+                                                <Luggage
+                                                    size={14}
+                                                    className="text-gray-500"
+                                                />{" "}
+                                                Baggage 1 × 20 kg
+                                            </li>
+                                            <li className="flex items-center gap-2">
+                                                <Repeat
+                                                    size={14}
+                                                    className="text-gray-500"
+                                                />{" "}
+                                                Reschedule Available
+                                            </li>
+                                            <li className="flex items-center gap-2">
+                                                <RotateCcw
+                                                    size={14}
+                                                    className="text-gray-500"
+                                                />{" "}
+                                                Refundable
+                                            </li>
+                                            <li className="flex items-center gap-2 border-b pb-2 dark:border-gray-800 dark:text-white">
+                                                <Shield
+                                                    size={14}
+                                                    className="text-gray-500"
+                                                />{" "}
+                                                Travel Insurance Included
+                                            </li>
+                                            <li className="flex items-center gap-2">
+                                                <Utensils
+                                                    size={14}
+                                                    className="text-gray-500"
+                                                />{" "}
+                                                Meal Available
+                                            </li>
+                                            <li className="flex items-center gap-2">
+                                                <Film
+                                                    size={14}
+                                                    className="text-gray-500"
+                                                />{" "}
+                                                Entertainment Available
+                                            </li>
+                                            <li className="flex items-center gap-2">
+                                                <Battery
+                                                    size={14}
+                                                    className="text-gray-500"
+                                                />{" "}
+                                                Power/USB Port Available
+                                            </li>
+                                            <li className="flex items-center gap-2">
+                                                <Layout
+                                                    size={14}
+                                                    className="text-gray-500"
+                                                />{" "}
+                                                Seat Pitch 30–32 inch
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                    {/* DESTINATION */}
+                                    <div>
+                                        <div className="text-sm font-semibold text-black dark:text-white">Paris (CDG), France</div>
+                                        <p className="text-xs text-gray-500">Paris Charles de Gaulle Airport</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {activeTab === "refund" && (
+                        <div className="dark:bg-dark/[0.03] h-full rounded-lg bg-white p-3 shadow-md dark:border dark:border-gray-800">
+                            <div className="flex items-center gap-2 border-b pb-3 dark:border-gray-800">
+                                <p className="text-white dark:text-black">
+                                    <CircleCheck
+                                        size={20}
+                                        className="fill-blue-600 dark:fill-white"
+                                    />
+                                </p>
+
+                                <p className="text-base font-bold text-blue-600">Refundable</p>
+                            </div>
+
+                            {/* Acceptable Reasons */}
+                            <div className="border-b py-3 dark:border-gray-800">
+                                <h3 className="mb-2 text-sm font-semibold text-black">Acceptable Reasons for Refund</h3>
+                                <ul className="list-decimal space-y-1 pl-5 text-sm text-gray-700 dark:text-white">
+                                    <li>Medical emergency (illness, serious injury, etc.)</li>
+                                    <li>Self-cancellation (change of plan)</li>
+                                    <li>Flight significantly rescheduled by airline</li>
+                                    <li>Double booking the same flights</li>
+                                    <li>Pregnancy</li>
+                                    <li>Passenger’s death</li>
+                                </ul>
+                            </div>
+
+                            {/* Terms */}
+                            <div className="rounded-lg py-3">
+                                <h3 className="mb-2 text-sm font-semibold text-black">Terms and Conditions for Refund</h3>
+                                <ul className="list-decimal space-y-2 pl-5 text-sm text-gray-700 dark:text-white">
+                                    <li>
+                                        Notification: Passengers must notify the airline in advance. They must provide relevant documentation to
+                                        support their refund request.
+                                    </li>
+                                    <li>Timing: Refund requests should be made before the scheduled departure time of the flight.</li>
+                                    <li>Refund Method: Refunds will be issued via the original payment method.</li>
+                                    <li>
+                                        Fare Type: Refund amount depends on the airline’s refund policy for the fare type and extra optional services
+                                        purchased.
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    )}
+
+                    {activeTab === "reschedule" && (
+                        <div className="dark:bg-dark/[0.03] h-full rounded-lg bg-white p-3 shadow-md dark:border dark:border-gray-800">
+                            <div className="flex items-center gap-2 border-b pb-3 dark:border-gray-800">
+                                <p className="text-white dark:text-black">
+                                    <CircleCheck
+                                        size={20}
+                                        className="fill-blue-600 dark:fill-white"
+                                    />
+                                </p>
+                                <p className="text-base font-bold text-blue-600">Reschedule Available</p>
+                            </div>
+
+                            {/* Acceptable Reasons */}
+                            <div className="border-b py-3 dark:border-gray-800">
+                                <h3 className="mb-2 text-sm font-semibold text-black">Acceptable Reasons for Rescheduling</h3>
+                                <ul className="list-decimal space-y-1 pl-5 text-sm text-gray-700 dark:text-white">
+                                    <li>Change in travel plans</li>
+                                    <li>Personal reasons (terms apply)</li>
+                                </ul>
+                            </div>
+
+                            {/* Terms */}
+                            <div className="rounded-lg py-3">
+                                <h3 className="mb-2 text-sm font-semibold text-black">Terms and Conditions for Rescheduling</h3>
+                                <ul className="list-decimal space-y-2 pl-5 text-sm text-gray-700 dark:text-white">
+                                    <li>
+                                        Notification: Passengers should notify the airline in advance, typically before the original flight departure
+                                        time.
+                                    </li>
+                                    <li>
+                                        Fare Difference: Passengers may be required to pay the fare difference if the new flight has a higher fare.
+                                    </li>
+                                    <li>
+                                        Change Fee: Airlines often charge a change fee for rescheduling flights. The fee varies by airline and fare
+                                        type.
+                                    </li>
+                                    <li>Validity Period: Rescheduled flights must fall within the validity period of the original ticket.</li>
+                                    <li>Seat Availability: Rescheduling is subject to seat availability on the new flight.</li>
+                                    <li>
+                                        Multiple Changes: Airlines may limit the number of times a booking can be rescheduled. Each change may incur
+                                        additional fees.
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    )}
+                </div>
+                <div className="dark:bg-dark/[0.03] mt-4 hidden items-center justify-between rounded-b-xl border-t bg-white p-3 shadow-lg dark:border-gray-800 lg:flex">
+                    <div>
+                        <div className="text-xs text-gray-500">Total price / person</div>
+                        <div className="text-lg font-semibold text-black dark:text-white">$240</div>
+                    </div>
+                    <button
+                        onClick={() => selectedFlight(flight)}
+                        className="rounded-xl bg-blue-600 px-6 py-2 text-white shadow"
+                    >
+                        Continue
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+}
 
 /**
  * PriceAlertModal: shows flight preview & posts to /api/price-alerts
@@ -390,6 +689,7 @@ const RangeSlider = (label, range, setRange, min, max, unit = "") => (
         </div>
     </div>
 );
+
 function FiltersModal({ open, onClose, flights, onApply, isModal = true }) {
     // derived options
     const airlinesList = useMemo(() => [...new Set(flights.map((f) => f.airline))], [flights]);
@@ -467,7 +767,7 @@ function FiltersModal({ open, onClose, flights, onApply, isModal = true }) {
         setSelectedStops([]);
         setPriceRange([PRICE_MIN, PRICE_MAX]);
         setDurationRange([DURATION_MIN, DURATION_MAX]);
-        setStopDuration([0, 5]);
+        setStopDuration([STOP_DURATION_MIN, STOP_DURATION_MAX]);
         setDepartureTimes([]);
         setArrivalTimes([]);
         setAmenities([]);
@@ -953,11 +1253,7 @@ function HorizontalCalendar({ date }) {
 export default function SearchFlights() {
     const [flights, setFlights] = useState(flightslist);
     const [filtered, setFiltered] = useState(flightslist);
-    const navigate = useNavigate();
-    const selectedFlight = (flight) => {
-        console.log("Selected flight:", flight);
-        navigate("/flights/details");
-    };
+    const [detailflight, setDetailflight] = useState({});
     // modal state
     const [modals, setModals] = useState({ filter: false, sort: false, share: false, priceAlert: false });
 
@@ -1031,7 +1327,8 @@ export default function SearchFlights() {
                             <div
                                 key={flight.id}
                                 onClick={() => {
-                                    selectedFlight(flight);
+                                    openModal("details");
+                                    setDetailflight(flight);
                                 }}
                                 className="r cursor-pointer"
                             >
@@ -1062,6 +1359,14 @@ export default function SearchFlights() {
                 open={modals.priceAlert}
                 onClose={() => closeModal("priceAlert")}
                 flight={selectedFlightForAlert}
+            />
+            <PackageDetailsModal
+                flight={detailflight}
+                open={modals.details}
+                onClose={() => {
+                    closeModal("details");
+                    setDetailflight({});
+                }}
             />
         </div>
     );
