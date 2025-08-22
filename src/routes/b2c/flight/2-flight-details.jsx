@@ -1,5 +1,23 @@
 import { useEffect, useState } from "react";
-import { ArrowLeft, Bookmark, Share2, X, Briefcase, Luggage, CheckCircle, Info, RockingChair, ChevronRight, PlaneTakeoff } from "lucide-react";
+import {
+    ArrowLeft,
+    Bookmark,
+    Share2,
+    X,
+    Briefcase,
+    Luggage,
+    CheckCircle,
+    Info,
+    RockingChair,
+    ChevronRight,
+    PlaneTakeoff,
+    User,
+    PenLine,
+    CircleDollarSign,
+    Plus,
+    Users,
+    Calendar,
+} from "lucide-react";
 import OrigionDestinationArrowComponent from "./util/flight-component";
 import SeatMap from "./util/seat-map";
 import { seatMap } from "../../../data/seatmapdata";
@@ -97,10 +115,216 @@ function SeatSelectionModal({ open, onClose, passengers, onConfirm }) {
         </div>
     );
 }
+// passengers modal
+function PassengerSelectionModal({ open, onClose, onConfirm }) {
+    const data = {
+        fname: "",
+        lname: "",
+        title: "",
+        dob: "",
+        phone: "",
+        email: "",
+        identityCard: "",
+        identityCountry: "",
+        identityIssue: "",
+        identityExpiry: "",
+        passportNumber: "",
+        passportCountry: "",
+        passportExpiry: "",
+        nationality: "",
+        drivingNumber: "",
+        drivingCountry: "",
+        drivingIssue: "",
+        drivingExpiry: "",
+    };
+    const [form, setForm] = useState(data);
+
+    const updateField = (field, value) => {
+        setForm((prev) => ({ ...prev, [field]: value }));
+    };
+
+    if (!open) return null;
+
+    return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+            <div className="dark:bg-dark/[0.03] max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl bg-white p-6 shadow-lg dark:border-gray-800 dark:text-white">
+                {/* Header */}
+                <div className="flex items-center justify-between border-b pb-3">
+                    <h2 className="text-lg font-bold">Add New Passenger</h2>
+                    <button onClick={onClose}>
+                        <X className="h-5 w-5" />
+                    </button>
+                </div>
+
+                {/* Form */}
+                <div className="mt-4 space-y-4">
+                    {/* Name */}
+                    <div className="grid grid-cols-2 gap-2">
+                        <input
+                            type="text"
+                            placeholder="First Name"
+                            value={form.fname}
+                            onChange={(e) => updateField("fname", e.target.value)}
+                            className="dark:bg-dark/[0.03] rounded-lg border px-3 py-2 text-sm dark:border-gray-800"
+                        />
+                        <input
+                            type="text"
+                            placeholder="Last Name"
+                            value={form.lname}
+                            onChange={(e) => updateField("lname", e.target.value)}
+                            className="dark:bg-dark/[0.03] rounded-lg border px-3 py-2 text-sm dark:border-gray-800"
+                        />
+                    </div>
+
+                    {/* Title & DOB */}
+                    <div className="grid grid-cols-2 gap-2">
+                        <select
+                            value={form.title}
+                            onChange={(e) => updateField("title", e.target.value)}
+                            className="dark:bg-dark/[0.03] rounded-lg border px-3 py-2 text-sm dark:border-gray-800"
+                        >
+                            <option value="">Title</option>
+                            <option>Mr.</option>
+                            <option>Mrs.</option>
+                            <option>Ms.</option>
+                        </select>
+                        <div className="relative">
+                            <input
+                                type="date"
+                                value={form.dob}
+                                onChange={(e) => updateField("dob", e.target.value)}
+                                className="dark:bg-dark/[0.03] w-full rounded-lg border px-3 py-2 text-sm dark:border-gray-800"
+                            />
+                            <Calendar className="absolute right-3 top-2.5 h-4 w-4 text-gray-400" />
+                        </div>
+                    </div>
+
+                    {/* Phone */}
+                    <input
+                        type="tel"
+                        placeholder="Phone Number"
+                        value={form.phone}
+                        onChange={(e) => updateField("phone", e.target.value)}
+                        className="dark:bg-dark/[0.03] w-full rounded-lg border px-3 py-2 text-sm dark:border-gray-800"
+                    />
+
+                    {/* Email */}
+                    <input
+                        type="email"
+                        placeholder="Email"
+                        value={form.email}
+                        onChange={(e) => updateField("email", e.target.value)}
+                        className="dark:bg-dark/[0.03] w-full rounded-lg border px-3 py-2 text-sm dark:border-gray-800"
+                    />
+
+                    {/* Identity Card */}
+                    <div>
+                        <p className="text-sm font-semibold">Identity Card</p>
+                        <input
+                            type="text"
+                            placeholder="Identity Number"
+                            value={form.identityCard}
+                            onChange={(e) => updateField("identityCard", e.target.value)}
+                            className="dark:bg-dark/[0.03] mt-2 w-full rounded-lg border px-3 py-2 text-sm dark:border-gray-800"
+                        />
+                        <div className="mt-2 grid grid-cols-2 gap-2">
+                            <input
+                                type="date"
+                                value={form.identityIssue}
+                                onChange={(e) => updateField("identityIssue", e.target.value)}
+                                className="dark:bg-dark/[0.03] rounded-lg border px-3 py-2 text-sm dark:border-gray-800"
+                            />
+                            <input
+                                type="date"
+                                value={form.identityExpiry}
+                                onChange={(e) => updateField("identityExpiry", e.target.value)}
+                                className="dark:bg-dark/[0.03] rounded-lg border px-3 py-2 text-sm dark:border-gray-800"
+                            />
+                        </div>
+                    </div>
+
+                    {/* Passport */}
+                    <div>
+                        <p className="text-sm font-semibold">Passport</p>
+                        <input
+                            type="text"
+                            placeholder="Passport Number"
+                            value={form.passportNumber}
+                            onChange={(e) => updateField("passportNumber", e.target.value)}
+                            className="dark:bg-dark/[0.03] mt-2 w-full rounded-lg border px-3 py-2 text-sm dark:border-gray-800"
+                        />
+                        <div className="mt-2 grid grid-cols-2 gap-2">
+                            <input
+                                type="text"
+                                placeholder="Country"
+                                value={form.passportCountry}
+                                onChange={(e) => updateField("passportCountry", e.target.value)}
+                                className="dark:bg-dark/[0.03] rounded-lg border px-3 py-2 text-sm dark:border-gray-800"
+                            />
+                            <input
+                                type="date"
+                                value={form.passportExpiry}
+                                onChange={(e) => updateField("passportExpiry", e.target.value)}
+                                className="dark:bg-dark/[0.03] rounded-lg border px-3 py-2 text-sm dark:border-gray-800"
+                            />
+                        </div>
+                    </div>
+
+                    {/* Driving License */}
+                    <div>
+                        <p className="text-sm font-semibold">Driving License</p>
+                        <input
+                            type="text"
+                            placeholder="Driving License Number"
+                            value={form.drivingNumber}
+                            onChange={(e) => updateField("drivingNumber", e.target.value)}
+                            className="dark:bg-dark/[0.03] mt-2 w-full rounded-lg border px-3 py-2 text-sm dark:border-gray-800"
+                        />
+                        <div className="mt-2 grid grid-cols-2 gap-2">
+                            <input
+                                type="date"
+                                value={form.drivingIssue}
+                                onChange={(e) => updateField("drivingIssue", e.target.value)}
+                                className="dark:bg-dark/[0.03] rounded-lg border px-3 py-2 text-sm dark:border-gray-800"
+                            />
+                            <input
+                                type="date"
+                                value={form.drivingExpiry}
+                                onChange={(e) => updateField("drivingExpiry", e.target.value)}
+                                className="dark:bg-dark/[0.03] rounded-lg border px-3 py-2 text-sm dark:border-gray-800"
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                {/* Footer */}
+                <div className="mt-6 flex justify-end gap-2">
+                    <button
+                        onClick={onClose}
+                        className="rounded-lg border px-4 py-2 text-sm"
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        onClick={() => {
+                            onConfirm(form);
+                            setForm(data);
+                            onClose();
+                        }}
+                        className="rounded-lg bg-blue-600 px-4 py-2 text-sm text-white"
+                    >
+                        Save
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+}
 
 // ---------- Main Page ----------
 export default function FlightDetailsPage() {
     const [seatModal, setSeatModal] = useState(false);
+    const [passengerModal, setPassengerModal] = useState(false);
     const [flight] = useState({
         logo: "https://picsum.photos/500/500",
         airline: "Airline Name",
@@ -111,11 +335,7 @@ export default function FlightDetailsPage() {
         duration: "7h 30m",
         type: "Direct",
     });
-    const passengers = [
-        { fname: "John", lname: "Doe" },
-        { fname: "Jane", lname: "Smith" },
-        { fname: "Alice", lname: "Johnson" },
-    ];
+    const [passengers, setPaseengers] = useState([]);
     const [selectedSeats, setSelectedSeats] = useState([]);
 
     const saveFlight = () => console.log("saved");
@@ -200,27 +420,49 @@ export default function FlightDetailsPage() {
                         </div>
                     </div>
                 </div>
-                <div className="rounded-lg bg-white px-2 py-3 shadow-md dark:bg-gray-800">
-                    <div
-                        className="flex cursor-pointer justify-between"
-                        onClick={() => setSeatModal(true)}
-                    >
+                <div className="mb-2 rounded-lg bg-white px-2 py-3 shadow-md dark:bg-gray-800">
+                    <div className="flex cursor-pointer justify-between border-b pb-3">
                         <div className="flex items-center gap-2">
-                            <RockingChair
+                            <User
                                 size={20}
                                 className=""
                             />
-                            <span className="text-sm font-bold">Seat Number</span>
+                            <span className="text-sm font-bold">Contact Details</span>
                         </div>
                         <div>
-                            <ChevronRight
+                            <PenLine
+                                size={20}
+                                className=""
+                            />
+                        </div>
+                    </div>
+                    <div className="mt-2">
+                        <p className="text-base font-bold">Adrew Admrin</p>
+                        <p className="text-xs">adrewadmrin@y.com - +9245657872</p>
+                    </div>
+                </div>
+
+                <div className="mb-2 rounded-lg bg-white px-2 py-3 shadow-md dark:bg-gray-800">
+                    <div
+                        className="flex cursor-pointer justify-between"
+                        onClick={() => setPassengerModal(true)}
+                    >
+                        <div className="flex items-center gap-2">
+                            <Users
+                                size={20}
+                                className=""
+                            />
+                            <span className="text-sm font-bold">Passenger Details</span>
+                        </div>
+                        <div>
+                            <Plus
                                 size={20}
                                 className=""
                             />
                         </div>
                     </div>
 
-                    {selectedSeats.length > 0 && (
+                    {passengers.length > 0 && (
                         <div className="mt-4">
                             {passengers.map((p, i) => (
                                 <div
@@ -230,18 +472,91 @@ export default function FlightDetailsPage() {
                                     <p>
                                         {p.fname} {p.lname}
                                     </p>
-                                    <p>{selectedSeats[i] ? selectedSeats[i] : "No Selection"}</p>
                                 </div>
                             ))}
                         </div>
                     )}
+                    <PassengerSelectionModal
+                        open={passengerModal} // true false
+                        onClose={() => setPassengerModal(false)}
+                        onConfirm={(passenger) => setPaseengers([...passengers, passenger])}
+                    />
                 </div>
-                <SeatSelectionModal
-                    open={seatModal}
-                    onClose={() => setSeatModal(false)}
-                    passengers={passengers}
-                    onConfirm={(seats) => setSelectedSeats(seats)}
-                />
+                {passengers.length > 0 && (
+                    <div className="rounded-lg bg-white px-2 py-3 shadow-md dark:bg-gray-800">
+                        <div
+                            className="flex cursor-pointer justify-between"
+                            onClick={() => setSeatModal(true)}
+                        >
+                            <div className="flex items-center gap-2">
+                                <RockingChair
+                                    size={20}
+                                    className=""
+                                />
+                                <span className="text-sm font-bold">Seat Number</span>
+                            </div>
+                            <div>
+                                <ChevronRight
+                                    size={20}
+                                    className=""
+                                />
+                            </div>
+                        </div>
+                        {selectedSeats.length > 0 && (
+                            <div className="mt-4">
+                                {passengers.map((p, i) => (
+                                    <div
+                                        key={i}
+                                        className="mt-2 flex justify-between bg-gray-200 px-3 py-3"
+                                    >
+                                        <p>
+                                            {p.fname} {p.lname}
+                                        </p>
+                                        <p>{selectedSeats[i] ? selectedSeats[i] : "No Selection"}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                        <SeatSelectionModal
+                            open={seatModal}
+                            onClose={() => setSeatModal(false)}
+                            passengers={passengers}
+                            onConfirm={(seats) => setSelectedSeats(seats)}
+                        />
+                    </div>
+                )}
+                <div className="my-2 rounded-lg bg-white px-2 py-3 shadow-md dark:bg-gray-800">
+                    <div className="flex cursor-pointer justify-between border-b pb-3">
+                        <div className="flex items-center gap-2">
+                            <CircleDollarSign
+                                size={20}
+                                className=""
+                            />
+                            <span className="font-bold">Price Details</span>
+                        </div>
+                    </div>
+                    <div className="mt-2 grid gap-3">
+                        <div className="flex items-center justify-between">
+                            <p className="text-sm font-bold">Emirates (Adult) x 1 </p>
+                            <p className="text-sm">$1999.00</p>
+                        </div>
+                        <div className="flex items-center justify-between">
+                            <p className="text-sm font-bold">Travel Insurance </p>
+                            <p className="text-sm">$45.00</p>
+                        </div>
+                        <div className="flex items-center justify-between">
+                            <p className="text-sm font-bold">Tax </p>
+                            <p className="text-sm">$4.00</p>
+                        </div>
+                        <div className="flex items-center justify-between border-t pt-3">
+                            <p className="text-sm font-bold">Total </p>
+                            <p className="text-sm">$4000.00</p>
+                        </div>
+                    </div>
+                </div>
+                <div className="">
+                    <button className="w-full rounded-md bg-blue-600 py-3 text-center text-white"> Continue</button>
+                </div>
             </div>
 
             {/* Modal */}
