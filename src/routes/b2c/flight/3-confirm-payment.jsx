@@ -28,7 +28,7 @@ function PaymentMethodModal({ open, value, onChange, onConfirm }) {
                 <div className="dark:bg-dark/[0.03] w-full max-w-lg rounded-2xl bg-white shadow-lg dark:border-gray-800 dark:text-white">
                     {/* Header */}
                     <div className="relative rounded-t-2xl bg-blue-600 p-4 text-white dark:border-gray-800">
-                        <h2 className="text-center text-lg font-semibold">Add Passenger Details</h2>
+                        <h2 className="text-center text-lg font-semibold">Select Payment Method</h2>
                         <button
                             className="absolute right-4 top-5"
                             onClick={onConfirm}
