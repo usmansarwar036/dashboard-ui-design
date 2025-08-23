@@ -21,6 +21,7 @@ import {
 import OrigionDestinationArrowComponent from "./util/flight-component";
 import SeatMap from "./util/seat-map";
 import { seatMap } from "../../../data/seatmapdata";
+import { useNavigate } from "react-router-dom";
 
 // ---------- Modal ----------
 
@@ -88,7 +89,7 @@ function SeatSelectionModal({ open, onClose, passengers, onConfirm }) {
                             <SeatMap
                                 key={i}
                                 deck={deck}
-                                passengers={3}
+                                passengers={passengers.length}
                                 selectedSeats={selectedSeats}
                                 setSelectedSeats={setSelectedSeats}
                             />
@@ -147,17 +148,20 @@ function PassengerSelectionModal({ open, onClose, onConfirm }) {
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-            <div className="dark:bg-dark/[0.03] max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl bg-white p-6 shadow-lg dark:border-gray-800 dark:text-white">
+            <div className="dark:bg-dark/[0.03] w-full max-w-lg rounded-2xl bg-white shadow-lg dark:border-gray-800 dark:text-white">
                 {/* Header */}
-                <div className="flex items-center justify-between border-b pb-3">
-                    <h2 className="text-lg font-bold">Add New Passenger</h2>
-                    <button onClick={onClose}>
-                        <X className="h-5 w-5" />
+                <div className="relative rounded-t-2xl bg-blue-600 p-4 text-white dark:border-gray-800">
+                    <h2 className="text-center text-lg font-semibold">Add Passenger Details</h2>
+                    <button
+                        className="absolute right-4 top-5"
+                        onClick={onClose}
+                    >
+                        <X className="h-6 w-6 text-white" />
                     </button>
                 </div>
 
                 {/* Form */}
-                <div className="mt-4 space-y-4">
+                <div className="m-4 max-h-[90vh] space-y-4 overflow-y-auto">
                     {/* Name */}
                     <div className="grid grid-cols-2 gap-2">
                         <input
@@ -298,7 +302,7 @@ function PassengerSelectionModal({ open, onClose, onConfirm }) {
                 </div>
 
                 {/* Footer */}
-                <div className="mt-6 flex justify-end gap-2">
+                <div className="m-4 flex justify-end gap-2">
                     <button
                         onClick={onClose}
                         className="rounded-lg border px-4 py-2 text-sm"
@@ -343,9 +347,16 @@ export default function FlightDetailsPage() {
         navigator.clipboard.writeText(window.location.href);
         console.log("copied");
     };
+    const navigate = useNavigate();
+
+    const confirmPage = () => {
+        console.log("Confirmed Flight");
+        navigate("/flights/confirm-payment");
+        // navigate("/flights/confirm-payment", { state: { flight, passengers, selectedSeats } });
+    };
 
     return (
-        <div className="dark:bg-dark/[0.03] flex min-h-screen max-w-sm flex-col border">
+        <div className="dark:bg-dark/[0.03] flex min-h-screen flex-col">
             {/* Header */}
             <div className="flex items-center justify-between border-b bg-blue-600 p-5 text-white dark:border-gray-800">
                 <button>
@@ -363,203 +374,213 @@ export default function FlightDetailsPage() {
             </div>
 
             {/* Body */}
-            <div className="m-2">
-                <OrigionDestinationArrowComponent flight={flight} />
-                <div className="my-2 rounded-lg bg-white px-2 py-4 shadow-md">
-                    {/* Top Section: Airline + Price */}
-                    <div className="flex items-center justify-between pb-3">
-                        <div className="flex items-center gap-2">
-                            <PlaneTakeoff
-                                size={20}
-                                className=""
-                            />
-                            <span className="text-sm font-bold">Amenties</span>
-                        </div>
-                    </div>
-
-                    {/* Amenities List */}
-                    <div className="space-y-2 border-t pt-3 dark:border-gray-800">
-                        <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-white">
-                            <Briefcase
-                                size={18}
-                                className=""
-                            />
-                            <span>Cabin Baggage 1 × 7 kg</span>
-                        </div>
-
-                        <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-white">
-                            <Luggage
-                                size={18}
-                                className=""
-                            />
-                            <span>Baggage 1 × 20 kg</span>
-                        </div>
-
-                        <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-white">
-                            <CheckCircle
-                                size={18}
-                                className=""
-                            />
-                            <span>Reschedule Available</span>
-                        </div>
-
-                        <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-white">
-                            <CheckCircle
-                                size={18}
-                                className=""
-                            />
-                            <span>Refundable</span>
-                        </div>
-
-                        <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-white">
-                            <Info
-                                size={18}
-                                className=""
-                            />
-                            <span>Travel Insurance Included</span>
-                        </div>
-                    </div>
-                </div>
-                <div className="mb-2 rounded-lg bg-white px-2 py-3 shadow-md dark:bg-gray-800">
-                    <div className="flex cursor-pointer justify-between border-b pb-3">
-                        <div className="flex items-center gap-2">
-                            <User
-                                size={20}
-                                className=""
-                            />
-                            <span className="text-sm font-bold">Contact Details</span>
-                        </div>
-                        <div>
-                            <PenLine
-                                size={20}
-                                className=""
-                            />
-                        </div>
-                    </div>
-                    <div className="mt-2">
-                        <p className="text-base font-bold">Adrew Admrin</p>
-                        <p className="text-xs">adrewadmrin@y.com - +9245657872</p>
-                    </div>
-                </div>
-
-                <div className="mb-2 rounded-lg bg-white px-2 py-3 shadow-md dark:bg-gray-800">
-                    <div
-                        className="flex cursor-pointer justify-between"
-                        onClick={() => setPassengerModal(true)}
-                    >
-                        <div className="flex items-center gap-2">
-                            <Users
-                                size={20}
-                                className=""
-                            />
-                            <span className="text-sm font-bold">Passenger Details</span>
-                        </div>
-                        <div>
-                            <Plus
-                                size={20}
-                                className=""
-                            />
-                        </div>
-                    </div>
-
-                    {passengers.length > 0 && (
-                        <div className="mt-4">
-                            {passengers.map((p, i) => (
-                                <div
-                                    key={i}
-                                    className="mt-2 flex justify-between bg-gray-200 px-3 py-3"
-                                >
-                                    <p>
-                                        {p.fname} {p.lname}
-                                    </p>
-                                </div>
-                            ))}
-                        </div>
-                    )}
-                    <PassengerSelectionModal
-                        open={passengerModal} // true false
-                        onClose={() => setPassengerModal(false)}
-                        onConfirm={(passenger) => setPaseengers([...passengers, passenger])}
-                    />
-                </div>
-                {passengers.length > 0 && (
-                    <div className="rounded-lg bg-white px-2 py-3 shadow-md dark:bg-gray-800">
-                        <div
-                            className="flex cursor-pointer justify-between"
-                            onClick={() => setSeatModal(true)}
-                        >
+            <div className="m-2 lg:flex">
+                <div className="m-2 space-y-4 lg:w-[60%]">
+                    <OrigionDestinationArrowComponent flight={flight} />
+                    <div className="rounded-lg bg-white p-4 shadow-md">
+                        {/* Top Section: Airline + Price */}
+                        <div className="flex items-center justify-between pb-3">
                             <div className="flex items-center gap-2">
-                                <RockingChair
+                                <PlaneTakeoff
                                     size={20}
                                     className=""
                                 />
-                                <span className="text-sm font-bold">Seat Number</span>
+                                <span className="text-sm font-bold">Amenties</span>
+                            </div>
+                        </div>
+
+                        {/* Amenities List */}
+                        <div className="space-y-2 border-t pt-3 dark:border-gray-800">
+                            <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-white">
+                                <Briefcase
+                                    size={18}
+                                    className=""
+                                />
+                                <span>Cabin Baggage 1 × 7 kg</span>
+                            </div>
+
+                            <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-white">
+                                <Luggage
+                                    size={18}
+                                    className=""
+                                />
+                                <span>Baggage 1 × 20 kg</span>
+                            </div>
+
+                            <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-white">
+                                <CheckCircle
+                                    size={18}
+                                    className=""
+                                />
+                                <span>Reschedule Available</span>
+                            </div>
+
+                            <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-white">
+                                <CheckCircle
+                                    size={18}
+                                    className=""
+                                />
+                                <span>Refundable</span>
+                            </div>
+
+                            <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-white">
+                                <Info
+                                    size={18}
+                                    className=""
+                                />
+                                <span>Travel Insurance Included</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="mb-2 rounded-lg bg-white p-4 shadow-md dark:bg-gray-800">
+                        <div className="flex cursor-pointer justify-between border-b pb-3">
+                            <div className="flex items-center gap-2">
+                                <User
+                                    size={20}
+                                    className=""
+                                />
+                                <span className="text-sm font-bold">Contact Details</span>
                             </div>
                             <div>
-                                <ChevronRight
+                                <PenLine
                                     size={20}
                                     className=""
                                 />
                             </div>
                         </div>
-                        {selectedSeats.length > 0 && (
+                        <div className="mt-2">
+                            <p className="text-base font-bold">Adrew Admrin</p>
+                            <p className="text-sm">adrewadmrin@y.com - +9245657872</p>
+                        </div>
+                    </div>
+
+                    <div className="mb-2 rounded-lg bg-white p-4 shadow-md dark:bg-gray-800">
+                        <div
+                            className="flex cursor-pointer justify-between"
+                            onClick={() => setPassengerModal(true)}
+                        >
+                            <div className="flex items-center gap-2">
+                                <Users
+                                    size={20}
+                                    className=""
+                                />
+                                <span className="text-sm font-bold">Passenger Details</span>
+                            </div>
+                            <div>
+                                <Plus
+                                    size={20}
+                                    className=""
+                                />
+                            </div>
+                        </div>
+
+                        {passengers.length > 0 && (
                             <div className="mt-4">
                                 {passengers.map((p, i) => (
                                     <div
                                         key={i}
-                                        className="mt-2 flex justify-between bg-gray-200 px-3 py-3"
+                                        className="mt-2 flex justify-between rounded-lg bg-gray-200 px-4 py-3"
                                     >
                                         <p>
                                             {p.fname} {p.lname}
                                         </p>
-                                        <p>{selectedSeats[i] ? selectedSeats[i] : "No Selection"}</p>
                                     </div>
                                 ))}
                             </div>
                         )}
-                        <SeatSelectionModal
-                            open={seatModal}
-                            onClose={() => setSeatModal(false)}
-                            passengers={passengers}
-                            onConfirm={(seats) => setSelectedSeats(seats)}
+                        <PassengerSelectionModal
+                            open={passengerModal} // true false
+                            onClose={() => setPassengerModal(false)}
+                            onConfirm={(passenger) => setPaseengers([...passengers, passenger])}
                         />
                     </div>
-                )}
-                <div className="my-2 rounded-lg bg-white px-2 py-3 shadow-md dark:bg-gray-800">
-                    <div className="flex cursor-pointer justify-between border-b pb-3">
-                        <div className="flex items-center gap-2">
-                            <CircleDollarSign
-                                size={20}
-                                className=""
+                    {passengers.length > 0 && (
+                        <div className="rounded-lg bg-white p-4 shadow-md dark:bg-gray-800">
+                            <div
+                                className="flex cursor-pointer justify-between"
+                                onClick={() => setSeatModal(true)}
+                            >
+                                <div className="flex items-center gap-2">
+                                    <RockingChair
+                                        size={20}
+                                        className=""
+                                    />
+                                    <span className="text-sm font-bold">Seat Number</span>
+                                </div>
+                                <div>
+                                    <ChevronRight
+                                        size={20}
+                                        className=""
+                                    />
+                                </div>
+                            </div>
+                            {selectedSeats.length > 0 && (
+                                <div className="mt-4">
+                                    {passengers.map((p, i) => (
+                                        <div
+                                            key={i}
+                                            className="mt-2 flex justify-between rounded-lg bg-gray-200 px-4 py-3"
+                                        >
+                                            <p>
+                                                {p.fname} {p.lname}
+                                            </p>
+                                            <p>{selectedSeats[i] ? selectedSeats[i] : "No Selection"}</p>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                            <SeatSelectionModal
+                                open={seatModal}
+                                onClose={() => setSeatModal(false)}
+                                passengers={passengers}
+                                onConfirm={(seats) => setSelectedSeats(seats)}
                             />
-                            <span className="font-bold">Price Details</span>
                         </div>
-                    </div>
-                    <div className="mt-2 grid gap-3">
-                        <div className="flex items-center justify-between">
-                            <p className="text-sm font-bold">Emirates (Adult) x 1 </p>
-                            <p className="text-sm">$1999.00</p>
-                        </div>
-                        <div className="flex items-center justify-between">
-                            <p className="text-sm font-bold">Travel Insurance </p>
-                            <p className="text-sm">$45.00</p>
-                        </div>
-                        <div className="flex items-center justify-between">
-                            <p className="text-sm font-bold">Tax </p>
-                            <p className="text-sm">$4.00</p>
-                        </div>
-                        <div className="flex items-center justify-between border-t pt-3">
-                            <p className="text-sm font-bold">Total </p>
-                            <p className="text-sm">$4000.00</p>
-                        </div>
-                    </div>
+                    )}
                 </div>
-                <div className="">
-                    <button className="w-full rounded-md bg-blue-600 py-3 text-center text-white"> Continue</button>
+                <div className="m-2 mt-4 space-y-4 lg:mt-2 lg:w-[40%]">
+                    <div className="mb-2 rounded-lg bg-white p-4 shadow-md dark:bg-gray-800">
+                        <div className="flex cursor-pointer justify-between border-b pb-3">
+                            <div className="flex items-center gap-2">
+                                <CircleDollarSign
+                                    size={20}
+                                    className=""
+                                />
+                                <span className="font-bold">Price Details</span>
+                            </div>
+                        </div>
+                        <div className="mt-2 grid gap-3">
+                            <div className="flex items-center justify-between">
+                                <p className="text-sm font-bold">Emirates (Adult) x 1 </p>
+                                <p className="text-base">$1999.00</p>
+                            </div>
+                            <div className="flex items-center justify-between">
+                                <p className="text-sm font-bold">Travel Insurance </p>
+                                <p className="text-base">$45.00</p>
+                            </div>
+                            <div className="flex items-center justify-between">
+                                <p className="text-sm font-bold">Tax </p>
+                                <p className="text-base">$4.00</p>
+                            </div>
+                            <div className="flex items-center justify-between border-t pt-3">
+                                <p className="text-sm font-bold">Total </p>
+                                <p className="text-base">$4000.00</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="">
+                        <button
+                            onClick={confirmPage}
+                            className="w-full rounded-lg bg-blue-600 py-3 text-center text-white"
+                        >
+                            {" "}
+                            Continue
+                        </button>
+                    </div>
+
+                    {/* Modal */}
                 </div>
             </div>
-
-            {/* Modal */}
         </div>
     );
 }

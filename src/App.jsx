@@ -44,6 +44,7 @@ import PublicLayout from "./routes/b2c/layout";
 import HomePage from "./routes/b2c/page";
 import SearchFlights from "./routes/b2c/flight/1-search-flights";
 import FlightDetailsPage from "./routes/b2c/flight/2-flight-details";
+import PaymentConfirmation from "./routes/b2c/flight/3-confirm-payment";
 
 // public pages
 
@@ -125,6 +126,7 @@ function App() {
                 },
                 { path: "flights/search", element: <SearchFlights /> },
                 { path: "flights/fill-details", element: <FlightDetailsPage /> },
+                { path: "flights/confirm-payment", element: <PaymentConfirmation /> },
             ],
         },
     ]);
