@@ -88,8 +88,8 @@ export default function HomePage() {
 
             {/* Forms */}
             <div className="mt-6">
-                {currentTab.includes("flight") && <FlightSearchForm />}
-                {currentTab.includes("hotel") && <HotelSearchForm />}
+                {currentTab === "flight" && <FlightSearchForm />}
+                {currentTab === "hotel" && <HotelSearchForm />}
             </div>
         </div>
     );
