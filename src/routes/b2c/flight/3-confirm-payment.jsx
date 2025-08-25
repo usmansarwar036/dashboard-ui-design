@@ -4,7 +4,7 @@
 // Everything is in ONE file for speed. Drop into your project and wire /api endpoints.
 
 import { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeft, ChevronRight, Wallet, CreditCard, Gift, Check, CircleDollarSign, X } from "lucide-react";
 import OrigionDestinationArrowComponent from "./util/flight-component";
 
@@ -310,40 +310,44 @@ export default function PaymentConfirmation() {
 
     // --- API: Pay action
     const [submitting, setSubmitting] = useState(false);
-    const onPay = async () => {
-        const payload = {
-            flight,
-            paymentMethod: payment,
-            discounts: appliedDiscounts.map(({ code }) => code),
-            price: {
-                baseFare,
-                insurance,
-                tax,
-                discounts: calc.discountAmount,
-                pointsValue: calc.pointsValue,
-                total: calc.total,
-            },
-            meta: {
-                secondsLeft,
-            },
-        };
+    const navigate = useNavigate();
 
-        try {
-            setSubmitting(true);
-            const res = await fetch("/api/payments/confirm", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(payload),
-            });
-            if (!res.ok) throw new Error("Payment confirmation failed");
-            // navigate or show success (replace with your router)
-            alert("Payment confirmed! (mock) — payload posted to /api/payments/confirm");
-        } catch (e) {
-            console.error(e);
-            alert("Failed to confirm payment. Please try again.");
-        } finally {
-            setSubmitting(false);
-        }
+    const onPay = async () => {
+        navigate("/flights/e-ticket"); // mock navigation to e-ticket page
+
+        // const payload = {
+        //     flight,
+        //     paymentMethod: payment,
+        //     discounts: appliedDiscounts.map(({ code }) => code),
+        //     price: {
+        //         baseFare,
+        //         insurance,
+        //         tax,
+        //         discounts: calc.discountAmount,
+        //         pointsValue: calc.pointsValue,
+        //         total: calc.total,
+        //     },
+        //     meta: {
+        //         secondsLeft,
+        //     },
+        // };
+
+        // try {
+        //     setSubmitting(true);
+        //     const res = await fetch("/api/payments/confirm", {
+        //         method: "POST",
+        //         headers: { "Content-Type": "application/json" },
+        //         body: JSON.stringify(payload),
+        //     });
+        //     if (!res.ok) throw new Error("Payment confirmation failed");
+        //     // navigate or show success (replace with your router)
+        //     alert("Payment confirmed! (mock) — payload posted to /api/payments/confirm");
+        // } catch (e) {
+        //     console.error(e);
+        //     alert("Failed to confirm payment. Please try again.");
+        // } finally {
+        //     setSubmitting(false);
+        // }
     };
 
     // helpers
@@ -415,7 +419,7 @@ export default function PaymentConfirmation() {
                 </p>
             </div>
 
-            <div className="mx-auto space-y-4 p-4">
+            <div className="container mx-auto space-y-4 pt-4">
                 {/* Flight Card */}
                 <OrigionDestinationArrowComponent flight={flight} />
 

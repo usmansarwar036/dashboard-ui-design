@@ -310,16 +310,7 @@ export default function FlightSearchForm() {
 
     return (
         <div className="">
-            <div className="mx-auto space-y-6 rounded-xl bg-white p-4 shadow-xl">
-                {/* Header */}
-                <div className="flex items-center justify-between">
-                    <div>
-                        <p className="text-sm text-gray-500 dark:text-white">Good morning 👋</p>
-                        <h2 className="font-bold dark:text-white">Andrew Ainsley</h2>
-                    </div>
-                    <div className="dark:bg-dark/[0.03] h-10 w-10 rounded-full bg-gray-200"></div>
-                </div>
-
+            <div className="mx-auto space-y-4 rounded-xl bg-white p-4 pt-10 shadow-xl">
                 {/* Trip Type */}
                 <div className="flex max-w-sm space-x-2">
                     {["oneway", "round", "multicity"].map((type) => (
